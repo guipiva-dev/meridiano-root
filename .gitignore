@@ -9,4 +9,3 @@ web/dist/
 src/Meridiano.Api/wwwroot/
 .env
 *.local.json
-.superpowers/
