@@ -448,12 +448,12 @@ Expected: linha `meridiano_api` na lista de roles.
 **Files:**
 - Create: `src/Meridiano.Data/Migrations/0001_schema_v2.sql` (cópia exata de `schema-agencia-v2.sql`), `src/Meridiano.Data/Migrations/0002_grants_api.sql`, `src/Meridiano.Data/Migrator.cs`
 - Modify: `src/Meridiano.Api/Data/MigrationsExtensions.cs`
-- Create: `tests/Meridiano.Api.Tests/Fixtures/PostgresFixture.cs`, `tests/Meridiano.Api.Tests/Fixtures/VivaApiFactory.cs`, `tests/Meridiano.Api.Tests/Fixtures/DbCollection.cs`, `tests/Meridiano.Api.Tests/MigrationsTests.cs`
+- Create: `tests/Meridiano.Api.Tests/Fixtures/PostgresFixture.cs`, `tests/Meridiano.Api.Tests/Fixtures/MeridianoApiFactory.cs`, `tests/Meridiano.Api.Tests/Fixtures/DbCollection.cs`, `tests/Meridiano.Api.Tests/MigrationsTests.cs`
 
 **Depends-on:** T01
 
 **Interfaces:**
-- Produces: `Meridiano.Data.Migrator.Aplicar(string connectionString)`; `PostgresFixture` com `ConnOwner`, `ConnApi`, `InserirAgenciaAsync(string nome) : Task<Guid>`, `InserirUsuarioAsync(Guid agenciaId, string email, string? senhaHash, string perfil, bool geraRepasse = false) : Task<Guid>`, `InserirClienteAsync(Guid agenciaId, string nome) : Task<Guid>`, `QueryOwnerAsync<T>(string sql, object? p = null)`; `VivaApiFactory(PostgresFixture)`; coleção xUnit `"db"`.
+- Produces: `Meridiano.Data.Migrator.Aplicar(string connectionString)`; `PostgresFixture` com `ConnOwner`, `ConnApi`, `InserirAgenciaAsync(string nome) : Task<Guid>`, `InserirUsuarioAsync(Guid agenciaId, string email, string? senhaHash, string perfil, bool geraRepasse = false) : Task<Guid>`, `InserirClienteAsync(Guid agenciaId, string nome) : Task<Guid>`, `QueryOwnerAsync<T>(string sql, object? p = null)`; `MeridianoApiFactory(PostgresFixture)`; coleção xUnit `"db"`.
 
 - [ ] **Step 1: Teste de migration (falha: `Migrator` não existe)**
 
@@ -520,14 +520,14 @@ public sealed class PostgresFixture : IAsyncLifetime
 }
 ```
 
-`tests/Meridiano.Api.Tests/Fixtures/VivaApiFactory.cs`:
+`tests/Meridiano.Api.Tests/Fixtures/MeridianoApiFactory.cs`:
 ```csharp
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
 
 namespace Meridiano.Api.Tests.Fixtures;
 
-public sealed class VivaApiFactory(PostgresFixture pg) : WebApplicationFactory<Program>
+public sealed class MeridianoApiFactory(PostgresFixture pg) : WebApplicationFactory<Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {
@@ -1180,7 +1180,7 @@ public sealed class AuthTests(PostgresFixture pg)
         var agencia = await pg.InserirAgenciaAsync("Auth A");
         var usuarioId = await pg.InserirUsuarioAsync(agencia, "dono@auth.com", SenhaHasher.Hash("segredo123"), "dono");
 
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var client = app.CreateClient();
 
         var login = await client.PostAsJsonAsync("/api/v1/auth/login", new { email = "dono@auth.com", senha = "segredo123" });
@@ -1203,7 +1203,7 @@ public sealed class AuthTests(PostgresFixture pg)
         var agencia = await pg.InserirAgenciaAsync("Auth B");
         await pg.InserirUsuarioAsync(agencia, "x@auth.com", SenhaHasher.Hash("certa"), "agente");
 
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var client = app.CreateClient();
 
         var r = await client.PostAsJsonAsync("/api/v1/auth/login", new { email = "x@auth.com", senha = "errada" });
@@ -1219,7 +1219,7 @@ public sealed class AuthTests(PostgresFixture pg)
         var agencia = await pg.InserirAgenciaAsync("Auth C");
         await pg.InserirUsuarioAsync(agencia, "semlogin@auth.com", null, "vendedor_externo");
 
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var r = await app.CreateClient().PostAsJsonAsync("/api/v1/auth/login", new { email = "semlogin@auth.com", senha = "qualquer" });
         Assert.Equal(HttpStatusCode.Unauthorized, r.StatusCode);
     }
@@ -1230,7 +1230,7 @@ public sealed class AuthTests(PostgresFixture pg)
         var agencia = await pg.InserirAgenciaAsync("Auth D");
         await pg.InserirUsuarioAsync(agencia, "d@auth.com", SenhaHasher.Hash("s"), "dono");
 
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var client = app.CreateClient();
 
         Assert.Equal(HttpStatusCode.Unauthorized, (await client.GetAsync("/api/v1/auth/me")).StatusCode);
@@ -1491,7 +1491,7 @@ namespace Meridiano.Api.Tests;
 [Collection("db")]
 public sealed class AutorizacaoTests(PostgresFixture pg)
 {
-    private static async Task<HttpClient> LogadoAsync(VivaApiFactory app, string email, string senha)
+    private static async Task<HttpClient> LogadoAsync(MeridianoApiFactory app, string email, string senha)
     {
         var c = app.CreateClient();
         var r = await c.PostAsJsonAsync("/api/v1/auth/login", new { email, senha });
@@ -1506,7 +1506,7 @@ public sealed class AutorizacaoTests(PostgresFixture pg)
         await pg.InserirUsuarioAsync(agencia, "agente@autz.com", SenhaHasher.Hash("s"), "agente");
         await pg.InserirUsuarioAsync(agencia, "dono@autz.com", SenhaHasher.Hash("s"), "dono");
 
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
 
         var agente = await LogadoAsync(app, "agente@autz.com", "s");
         var r = await agente.GetAsync("/api/v1/_dev/protegido");
@@ -1521,7 +1521,7 @@ public sealed class AutorizacaoTests(PostgresFixture pg)
     [Fact]
     public async Task Anonimo_recebe_401()
     {
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         Assert.Equal(HttpStatusCode.Unauthorized, (await app.CreateClient().GetAsync("/api/v1/_dev/protegido")).StatusCode);
     }
 }
@@ -1611,7 +1611,7 @@ public sealed class InfraTests(PostgresFixture pg)
     [Fact]
     public async Task Health_responde_healthy()
     {
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var r = await app.CreateClient().GetAsync("/health");
         Assert.Equal(HttpStatusCode.OK, r.StatusCode);
         Assert.Equal("Healthy", await r.Content.ReadAsStringAsync());
@@ -1623,7 +1623,7 @@ public sealed class InfraTests(PostgresFixture pg)
     [InlineData("bug", HttpStatusCode.InternalServerError, "erro_interno")]
     public async Task Excecoes_viram_problem_details_com_codigo(string tipo, HttpStatusCode status, string codigo)
     {
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var r = await app.CreateClient().GetAsync($"/api/v1/_dev/erro/{tipo}");
         Assert.Equal(status, r.StatusCode);
         Assert.Equal("application/problem+json", r.Content.Headers.ContentType?.MediaType);
@@ -1853,7 +1853,7 @@ public sealed class ConviteTests(PostgresFixture pg)
     private static (WebApplicationFactory<Program> App, EmailFake Email) AppComEmailFake(PostgresFixture pg)
     {
         var email = new EmailFake();
-        var app = new VivaApiFactory(pg).WithWebHostBuilder(b =>
+        var app = new MeridianoApiFactory(pg).WithWebHostBuilder(b =>
             b.ConfigureServices(s => s.AddSingleton<IEnviadorEmail>(email)));
         return (app, email);
     }
@@ -2173,7 +2173,7 @@ public sealed class JobsTests(PostgresFixture pg)
     [Fact]
     public async Task Ping_registra_execucao_com_sucesso()
     {
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         using var scope = app.Services.CreateScope();
         var runner = scope.ServiceProvider.GetRequiredService<JobRunner>();
 
@@ -2190,7 +2190,7 @@ public sealed class JobsTests(PostgresFixture pg)
     [Fact]
     public async Task Job_desconhecido_retorna_2()
     {
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         using var scope = app.Services.CreateScope();
         var runner = scope.ServiceProvider.GetRequiredService<JobRunner>();
         Assert.Equal(2, await runner.ExecutarAsync("nao-existe", CancellationToken.None));
@@ -2423,7 +2423,7 @@ public sealed class UsuariosTests(PostgresFixture pg)
 {
     private sealed record UsuarioDto(Guid Id, string Nome, string Email, string? Telefone, string Perfil, bool GeraRepasse, decimal PercentualPadrao, bool Ativo, string Versao);
 
-    private static async Task<HttpClient> DonoAsync(VivaApiFactory app, string email)
+    private static async Task<HttpClient> DonoAsync(MeridianoApiFactory app, string email)
     {
         var c = app.CreateClient();
         await c.PostAsJsonAsync("/api/v1/auth/login", new { email, senha = "s" });
@@ -2439,7 +2439,7 @@ public sealed class UsuariosTests(PostgresFixture pg)
         await pg.InserirUsuarioAsync(a, "agente@usra.com", null, "agente");
         await pg.InserirUsuarioAsync(b, "dono@usrb.com", SenhaHasher.Hash("s"), "dono");
 
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var c = await DonoAsync(app, "dono@usra.com");
         var lista = await c.GetFromJsonAsync<UsuarioDto[]>("/api/v1/usuarios");
 
@@ -2453,7 +2453,7 @@ public sealed class UsuariosTests(PostgresFixture pg)
         await pg.InserirUsuarioAsync(a, "dono@usrc.com", SenhaHasher.Hash("s"), "dono");
         var alvo = await pg.InserirUsuarioAsync(a, "ext@usrc.com", null, "vendedor_externo", geraRepasse: true);
 
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var c = await DonoAsync(app, "dono@usrc.com");
         var antes = (await c.GetFromJsonAsync<UsuarioDto[]>("/api/v1/usuarios"))!.Single(u => u.Id == alvo);
 
@@ -2474,7 +2474,7 @@ public sealed class UsuariosTests(PostgresFixture pg)
         var a = await pg.InserirAgenciaAsync("Usr D");
         var dono = await pg.InserirUsuarioAsync(a, "dono@usrd.com", SenhaHasher.Hash("s"), "dono");
 
-        await using var app = new VivaApiFactory(pg);
+        await using var app = new MeridianoApiFactory(pg);
         var c = await DonoAsync(app, "dono@usrd.com");
         var eu = (await c.GetFromJsonAsync<UsuarioDto[]>("/api/v1/usuarios"))!.Single();
         var r = await c.PutAsJsonAsync($"/api/v1/usuarios/{dono}", new { nome = eu.Nome, telefone = (string?)null, perfil = "dono", geraRepasse = false, percentualPadrao = 0m, ativo = false, versao = eu.Versao });

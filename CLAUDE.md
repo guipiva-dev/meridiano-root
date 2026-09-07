@@ -28,15 +28,25 @@ Proibido: EF Core, MediatR, CQRS, AutoMapper, Repository pattern, fila, Redis, m
 
 Always use the exact commands here — don't guess.
 
-- **Install:** `dotnet restore`
-- **Lint:** `dotnet format --verify-no-changes`
-- **Typecheck:** `dotnet build -c Release` (`TreatWarningsAsErrors=true`)
-- **Test:** `dotnet test` (Docker precisa estar rodando)
-- **Build:** `dotnet publish src/Meridiano.Api -c Release -o out`
-- **Run/Dev:** `docker compose up -d && dotnet run --project src/Meridiano.Api`
-- **Job:** `dotnet run --project src/Meridiano.Api -- job <nome>`
+- **Install:** `cd backend && dotnet restore`
+- **Lint:** `cd backend && dotnet format --verify-no-changes`
+- **Typecheck:** `cd backend && dotnet build -c Release` (`TreatWarningsAsErrors=true`)
+- **Test:** `cd backend && dotnet test` (Docker precisa estar rodando)
+- **Build:** `cd backend && dotnet publish src/Meridiano.Api -c Release -o out`
+- **Run/Dev:** `cd backend && docker compose up -d && dotnet run --project src/Meridiano.Api`
+- **Job:** `cd backend && dotnet run --project src/Meridiano.Api -- job <nome>`
 
-## Solution
+## Repositórios
+
+Três repositórios git independentes (não são submodules):
+
+```
+viva-erp/            root: specs, docs, harness (.claude), planos — este repo
+  backend/           Meridiano.sln (.NET) — repo próprio, ignorado pelo root
+  frontend/          React + Vite — repo próprio, ignorado pelo root (Fase 3)
+```
+
+## Solution (backend/)
 
 ```
 src/Meridiano.Api      host: Program.cs (nunca editar; stubs em extension methods), Auth/, Infra/, Jobs/, Modules/<Modulo>/

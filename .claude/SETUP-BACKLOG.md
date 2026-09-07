@@ -15,11 +15,15 @@ Marque cada item ao concluir. Última revisão: 2026-09-07.
 - [x] `.claude/rules/parallel-subagent-driven-development.md` copiado e referenciado no `CLAUDE.md`
 - [x] `python3.exe` criado em `%LOCALAPPDATA%\Programs\Python\Python314\` — corrige o hookify, que chamava o stub da Microsoft Store
 
+## Concluído em 2026-09-07 (parte 2)
+
+- [x] Stack definida (`regras-e-escopo-v2.md` §11) e `CLAUDE.md` preenchido: stack, comandos canônicos, convenções, tabela de agentes do domínio (item 1 abaixo)
+- [x] `git init`, branch `main`, commit inicial com specs v2, análise e plano da Fase 2 (item 2 abaixo)
+- [x] Nome do software: **Meridiano** (solution `Meridiano.sln`)
+
 ## Bloqueador
 
-**O diretório não tem código.** Só `CLAUDE.md` e `.claude/`. Todo item abaixo depende de definir a stack do viva-erp, ou de apontar para o diretório onde o projeto realmente vive.
-
-Decisão pendente: o projeto nasce aqui, ou já existe em outro caminho?
+Nenhum de configuração. Próximo passo: executar `docs/superpowers/plans/2026-09-07-fase-2-esqueleto.md` em ondas. **Docker Desktop** ainda não está instalado nesta máquina — sem ele, os testes de integração (Testcontainers) e o Postgres local só rodam no CI.
 
 ## Pendências, em ordem
 
