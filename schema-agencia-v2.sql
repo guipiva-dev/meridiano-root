@@ -603,6 +603,7 @@ create table despesa (
   pago           boolean not null default false,
   pago_em        date,
   recorrente     boolean not null default false,
+  forma_pagamento text check (forma_pagamento in ('pix','boleto','cartao','transferencia','dinheiro')),
   viagem_id      uuid references viagem(id) on delete restrict,
   fornecedor_id  uuid references fornecedor(id),
   observacao     text,
@@ -611,7 +612,7 @@ create table despesa (
   criado_por     uuid references usuario(id),
   criado_em      timestamptz not null default now(),
   atualizado_em  timestamptz not null default now(),
-  constraint despesa_pago_coerente check (not pago or pago_em is not null)
+  constraint despesa_pago_coerente check (not pago or (pago_em is not null and forma_pagamento is not null))
 );
 create index ix_despesa_agencia_venc on despesa (agencia_id, vencimento) where excluido_em is null;
 create index ix_despesa_viagem on despesa (viagem_id) where viagem_id is not null;

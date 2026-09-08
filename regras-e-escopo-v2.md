@@ -288,6 +288,8 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 36 | Pendência única | `tarefa` → `pendencia`, com data obrigatória, prioridade e `adiada_de`; viagem/pessoa/agenda leem a mesma tabela |
 | 37 | Custos na v1 | `despesa` simples (categoria fixo/imposto/operacional/marketing/outro, vencimento, pago, recorrente, viagem opcional). Subnav Financeiro: Conciliação · Repasses · Custos · Fechamento |
 | 38 | Filtros de viagens | data de emissão (compra), NFSe (enum), fornecedor (multi) além de fase, vendedor, tipo |
+| 39 | Pendência para vários passageiros | Na viagem, "Nova pendência" permite selecionar N passageiros: cria uma `pendencia` por passageiro (mesma data/responsável); sem seleção, fica na viagem |
+| 40 | Pagamentos com data e forma | Marcar custo pago, comissão recebida (inclusive em lote) e repasse pago abrem diálogo exigindo **data** (e forma quando aplicável). `despesa.forma_pagamento` obrigatório quando `pago` |
 | 35 | Navegação | Sidebar global (módulos) + subnav do módulo (≤ 6 itens) + tabs do registro (cada aba só com seu conteúdo). Acima de 6 itens no módulo: sub-sidebar interna por seções. Sem scroll horizontal de navegação |
 
 ### Pendências

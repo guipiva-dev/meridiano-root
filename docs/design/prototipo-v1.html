@@ -627,9 +627,9 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
               <div class="field" style="grid-column:span 2"><label>O que precisa ser feito <span style="color:var(--red-600)">*</span></label><input placeholder="Ex.: enviar voucher do hotel"></div>
               <div class="field"><label>Data <span style="color:var(--red-600)">*</span></label><input type="date" value="2026-04-10"></div>
               <div class="field"><label>Responsável</label><select><option>Guilherme</option><option>Ana Paula</option></select></div>
-              <div class="field" style="grid-column:span 2"><label>Passageiro relacionado <span style="font-weight:400;color:var(--text-muted)">(opcional — aparece na aba Pendências dele)</span></label><select><option>— viagem inteira —</option><option>Carlos Mendes</option><option>Lúcia Mendes</option></select></div>
+              <div class="field" style="grid-column:span 2"><label>Para quem <span style="font-weight:400;color:var(--text-muted)">— uma pendência por passageiro selecionado; sem seleção, fica na viagem</span></label><div class="chips"><span class="chip-t on">Carlos Mendes</span><span class="chip-t on">Lúcia Mendes</span><span class="chip-t">Pedro Mendes</span><span class="more">Todos</span></div></div>
             </div>
-            <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Criar pendência</button></div>
+            <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Criar 2 pendências</button></div>
           </div>
         </div>
 
@@ -856,6 +856,12 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
           <div class="inline-banner neutral" style="display:none"><b>Valor menor que o esperado.</b><span>Registre a diferença como divergência com motivo, ou deixe em aberto para receber o saldo depois.</span></div>
           <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Confirmar recebimento</button></div>
         </div>
+        <div class="modal" style="max-width:520px">
+          <h3>Marcar 2 comissões como recebidas</h3>
+          <p>CVC · K7X2PQ (R$ 1.600,00) e Decolar · DCL-88213 (R$ 320,00). Cada uma gera um recebimento com o valor esperado.</p>
+          <div class="grid-4" style="grid-template-columns:1fr 1fr"><div class="field"><label>Data do recebimento <span style="color:var(--red-600)">*</span></label><input type="date" value="2026-04-07"></div><div class="field"><label>Forma</label><select><option>Transferência</option><option>PIX</option><option>Boleto</option></select></div></div>
+          <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Confirmar R$ 1.920,00</button></div>
+        </div>
       </div>
     </section>
 
@@ -971,9 +977,16 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
             <div class="field"><label>Vencimento <span style="color:var(--red-600)">*</span></label><input type="date" value="2026-04-15"></div>
             <div class="field"><label>Situação</label><select><option>A pagar</option><option>Pago</option></select></div>
             <div class="field"><label>Repete todo mês</label><select><option>Não</option><option>Sim</option></select></div>
+            <div class="field"><label>Forma de pagamento</label><select><option>PIX</option><option>Boleto</option><option>Cartão</option><option>Transferência</option><option>Dinheiro</option></select></div>
             <div class="field"><label>Viagem <span style="font-weight:400;color:var(--text-muted)">(opcional)</span></label><select><option>—</option><option>VG-2026-0042 · Carlos Mendes · Lisboa</option></select></div>
           </div>
           <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Salvar custo</button></div>
+        </div>
+        <div class="modal" style="max-width:480px">
+          <h3>Marcar pago · Anúncios Instagram — abril</h3>
+          <p>R$ 955,10 · vencimento 15/04/2026</p>
+          <div class="grid-4" style="grid-template-columns:1fr 1fr"><div class="field"><label>Data do pagamento <span style="color:var(--red-600)">*</span></label><input type="date" value="2026-04-07"></div><div class="field"><label>Forma <span style="color:var(--red-600)">*</span></label><select><option>Cartão</option><option>PIX</option><option>Boleto</option><option>Transferência</option><option>Dinheiro</option></select></div></div>
+          <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Confirmar pagamento</button></div>
         </div>
       </div>
     </section>
