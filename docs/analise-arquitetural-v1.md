@@ -1,6 +1,8 @@
 # Análise arquitetural — regras-e-escopo-v1 + schema-agencia-v1
 
 Data: 2026-09-07. Base: `regras-e-escopo-v1.md` e `schema-agencia-v1.sql`.
+
+> **Documento histórico.** As decisões desta análise foram respondidas pelo usuário e incorporadas em `regras-e-escopo-v2.md` (§12, decisões 1–50) e `schema-agencia-v2.sql`. A-05 foi decidido como **Dapper**, não EF Core. Consultar a v2 antes deste arquivo; ele serve para entender o porquê.
 Premissa fixa: API em C#/.NET. Todo o resto foi questionado.
 
 Legenda de severidade: **CRÍTICO** (corrigir antes de implementar) · **IMPORTANTE** (corrigir agora, evita retrabalho) · **MELHORIA** (pode ficar para depois) · **OPCIONAL** (depende da estratégia do produto).

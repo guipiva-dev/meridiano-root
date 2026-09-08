@@ -308,6 +308,7 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 35 | Navegação | Sidebar global (módulos) + subnav do módulo (≤ 6 itens) + tabs do registro (cada aba só com seu conteúdo). Acima de 6 itens no módulo: sub-sidebar interna por seções. Sem scroll horizontal de navegação |
 
 ### Pendências
+- **Estado do projeto** e pendências de implementação: `docs/BACKLOG.md`.
 - **Contador**: base e regime da receita bruta do MEI (4.9).
 - **Decisão 17**: "vencimento à operadora" é a data-limite que a operadora dá para pagar/emitir uma reserva antes de cancelá-la automaticamente (ex.: "opção de hotel até 15/03"). Custa uma coluna `vencimento_fornecedor date` nula e um alerta na agenda. Fica fora até você dizer que quer.
 - **Piloto**: validar as fórmulas de 4.2 com três viagens reais da planilha antes da Fase 3.

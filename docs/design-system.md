@@ -2,6 +2,8 @@
 
 Tema e padrão visual do software. Tokens em `frontend/src/styles/tokens.css` (fonte da verdade para código). Mock em `docs/design/design-system-v3.html` (+ `.pdf`, `.png`). Regras de implementação (componentes, escalas, estado, a11y) em `design-system-contrato.md`.
 
+> **Congelado em 2026-09-08** (contrato §4.5, decisão 50 da spec, tag `design-v1-freeze`). Este arquivo registra a evolução v1→v3; o que vale para implementar é o contrato + o protótipo `design/prototipo-v1.html` (22 telas) + `frontend/src/styles/tokens.css`.
+
 ## 0. v3 — refinamentos após a segunda avaliação (2026-09-07)
 
 Estrutura mantida. Polimento de estados e microinterações.

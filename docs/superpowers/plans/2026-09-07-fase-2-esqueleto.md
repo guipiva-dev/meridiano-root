@@ -1,5 +1,7 @@
 # Meridiano — Fase 2 — Esqueleto da Solution: Plano de Implementação
 
+> **Status: CONCLUÍDO em 2026-09-07.** 12 tasks em 6 ondas, revisão final + onda de correção (F1–F11). Resultado no repo `meridiano-api` (commit final da fase `8c22e8f`; migrations 0005–0011 vieram depois, com o design). Pendências deferidas listadas em `docs/BACKLOG.md`. Ledger em `.superpowers/sdd/2026-09-07-fase-2-esqueleto/` (git-ignored).
+
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 >
 > **Execução em ondas:** este plano segue `.claude/rules/parallel-subagent-driven-development.md`. Cada task traz `Files:` e `Depends-on:`. Tasks da mesma onda têm arquivos disjuntos e não dependem uma da outra. **Implementadores não commitam** — deixam as mudanças na árvore de trabalho e reportam os arquivos tocados; o controlador commita uma task por vez, na ordem da onda, capturando o HEAD na hora.

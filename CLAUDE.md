@@ -4,7 +4,9 @@
 
 Backoffice de vendas, comissões e operação para agências de viagem de lazer. Multiempresa desde o início. Piloto: uma agência (MEI).
 
-**Especificações (fonte de verdade, nesta ordem):** `regras-e-escopo-v2.md` · `schema-agencia-v2.sql` · `docs/analise-arquitetural-v1.md`. Planos de execução em `docs/superpowers/plans/`.
+**Especificações (fonte de verdade, nesta ordem):** `regras-e-escopo-v2.md` · `schema-agencia-v2.sql` · `docs/analise-arquitetural-v1.md`. Design congelado (2026-09-08): `docs/design-system-contrato.md` (regras) · `docs/design/prototipo-v1.html` (22 telas) · `frontend/src/styles/tokens.css` (tokens). Planos em `docs/superpowers/plans/`; estado e pendências em `docs/BACKLOG.md`.
+
+**Estado (2026-09-08):** Fase 1 (spec v2) ✓ · Fase 2 (esqueleto .NET, migrations 0001–0011, 39 testes) ✓ · Design v1 congelado (tag `design-v1-freeze`) ✓ · **Fase 3 (front + módulos) = próxima**, plano ainda não escrito.
 
 ## Behavioral guidelines
 
@@ -31,9 +33,11 @@ Always use the exact commands here — don't guess.
 - **Install:** `cd backend && dotnet restore`
 - **Lint:** `cd backend && dotnet format --verify-no-changes`
 - **Typecheck:** `cd backend && dotnet build -c Release` (`TreatWarningsAsErrors=true`)
-- **Test:** `cd backend && dotnet test` (Docker precisa estar rodando)
+- **Test:** `cd backend && dotnet test` (Docker precisa estar rodando; se o engine pausou, reabrir Docker Desktop e aguardar `docker info`)
 - **Build:** `cd backend && dotnet publish src/Meridiano.Api -c Release -o out`
 - **Run/Dev:** `cd backend && docker compose up -d && dotnet run --project src/Meridiano.Api`
+- **Front (Fase 3, após scaffold):** `cd frontend && npm install` · `npm run dev` · `npm run lint` · `npm run build`
+- **Smoke do schema:** copiar `docs/schema-v2-smoke.mjs` para uma pasta com `@electric-sql/pglite` e rodar `node test.mjs` (imprime `ALL OK`)
 - **Job:** `cd backend && dotnet run --project src/Meridiano.Api -- job <nome>`
 
 ## Repositórios
@@ -81,7 +85,7 @@ When work is delegable, dispatch the specialist that matches the task instead of
 | `test-engineer` | Testes de integração com Testcontainers, cobertura de tenant/permissão/concorrência. |
 | `security-reviewer` | Qualquer diff em `Auth/`, RLS, tokens, cookies, log de acesso a documento (LGPD). |
 | `code-reviewer` | Revisão de toda task antes do commit pelo controlador. |
-| `frontend-specialist` | `web/` (React) — Fase 3 em diante. Tela de lançamento é o risco número um: teclado, pré-preenchimento, tempo medido. |
+| `frontend-specialist` | `frontend/` (React) — Fase 3 em diante. Tela de lançamento é o risco número um: teclado, pré-preenchimento, tempo medido. |
 
 ## Rules
 
