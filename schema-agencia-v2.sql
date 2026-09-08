@@ -331,7 +331,7 @@ create table reserva (
   valor_taxas               numeric(12,2) not null default 0 check (valor_taxas >= 0),    -- parte do total que é taxa
   valor_comissao            numeric(12,2) not null default 0 check (valor_comissao >= 0),
   rav_operadora             numeric(12,2) not null default 0 check (rav_operadora >= 0),
-  valor_cliente             numeric(12,2) not null default 0 check (valor_cliente >= 0),  -- o que o cliente paga no total
+  valor_cliente             numeric(12,2) not null default 0 check (valor_cliente >= 0),  -- VENDA AO CLIENTE (contratado); caixa real fica em movimento_financeiro
   taxa_servico              numeric(12,2) not null default 0 check (taxa_servico >= 0),
   rav_cliente_modo          text not null default 'retido_agencia' check (rav_cliente_modo in ('retido_agencia','via_operadora')),
   moeda                     char(3) not null default 'BRL',
@@ -604,6 +604,9 @@ create table despesa (
   pago_em        date,
   recorrente     boolean not null default false,
   forma_pagamento text check (forma_pagamento in ('pix','boleto','cartao','transferencia','dinheiro')),
+  -- recorrência mensal: ao pagar (ou no dia 1) cria a próxima com vencimento +1 mês; 'até' opcional
+  recorrencia_ate date,
+  recorrencia_origem_id uuid references despesa(id),
   viagem_id      uuid references viagem(id) on delete restrict,
   fornecedor_id  uuid references fornecedor(id),
   observacao     text,
@@ -616,6 +619,7 @@ create table despesa (
 );
 create index ix_despesa_agencia_venc on despesa (agencia_id, vencimento) where excluido_em is null;
 create index ix_despesa_viagem on despesa (viagem_id) where viagem_id is not null;
+create index ix_despesa_recorrencia on despesa (recorrencia_origem_id) where recorrencia_origem_id is not null;
 
 -- =============================================================================
 -- 13. JOBS
@@ -754,21 +758,24 @@ create view vw_resultado_viagem as
 select
   v.id as viagem_id, v.agencia_id, v.codigo, v.destino, v.data_ida, v.data_volta, v.cancelada,
   c.nome as cliente, u.nome as vendedor,
-  count(f.reserva_id)                                     as qtd_reservas,
-  coalesce(sum(r.valor_cliente) filter (where r.status <> 'cancelada'), 0) as volume_vendido,
-  coalesce(sum(f.receita_prevista), 0)                    as receita_prevista,
-  coalesce(sum(f.receita_recebida), 0)                    as receita_recebida,
-  rp.valor                                                as repasse_valor,
-  rp.status                                               as repasse_status,
-  coalesce(sum(f.receita_recebida), 0) - coalesce(rp.valor, 0) as resultado_agencia
+  count(f.reserva_id)                                                        as qtd_reservas,
+  coalesce(sum(r.valor_cliente) filter (where r.status <> 'cancelada'), 0)  as venda_total,
+  coalesce(sum(r.valor_total)   filter (where r.status <> 'cancelada'), 0)  as custo_fornecedores,
+  coalesce(sum(f.receita_prevista), 0)                                       as receita_prevista,
+  coalesce(sum(f.receita_recebida), 0)                                       as receita_recebida,
+  rp.valor                                                                   as repasse_valor,
+  rp.status                                                                  as repasse_status,
+  coalesce(d.total, 0)                                                       as despesas_viagem,
+  coalesce(sum(f.receita_prevista), 0) - coalesce(rp.valor, 0) - coalesce(d.total, 0) as resultado_viagem
 from viagem v
 left join vw_viagem_titular c on c.viagem_id = v.id
 join usuario u on u.id = v.vendedor_id
 left join reserva r on r.viagem_id = v.id and r.excluido_em is null
 left join vw_reserva_financeiro f on f.reserva_id = r.id
 left join repasse rp on rp.viagem_id = v.id and rp.excluido_em is null
+left join lateral (select sum(valor) as total from despesa x where x.viagem_id = v.id and x.excluido_em is null) d on true
 where v.excluido_em is null
-group by v.id, c.nome, u.nome, rp.valor, rp.status;
+group by v.id, c.nome, u.nome, rp.valor, rp.status, d.total;
 
 create view vw_comissao_pendente as
 select r.agencia_id, r.id as reserva_id, v.codigo, c.nome as cliente, fo.nome as fornecedor,

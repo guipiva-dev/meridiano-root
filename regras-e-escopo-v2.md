@@ -33,7 +33,7 @@ agência, pasta por agência no storage.
 | **Serviço** | Item entregue ao viajante dentro de uma reserva: aéreo, hotel, seguro, passeio. |
 | **Fornecedor** | Quem a agência compra: operadora, consolidadora, cia aérea, hotel, seguradora, receptivo. Sempre existe, mesmo em venda direta. |
 | **Valor total** | O que o fornecedor cobra pela reserva, com taxas. Em BRL. |
-| **Valor cliente** | O que o cliente paga no total pela reserva. Em BRL. |
+| **Venda ao cliente** (`valor_cliente`) | Quanto o cliente contratou pagar pela reserva. Em BRL. **Não** é caixa: o que entrou fica em `movimento_financeiro`. |
 | **RAV da operadora** | Incentivo pago pela operadora à agência, somado à comissão. Digitado. |
 | **RAV do cliente** | `valor_cliente − valor_total`. Calculado. Negativo = desconto concedido. |
 | **Modo do RAV do cliente** | Como esse valor vira caixa: **retido pela agência** (cliente pagou a diferença à agência no ato) ou **via operadora** (a operadora cobra o total e devolve o RAV junto com a comissão). |
@@ -43,6 +43,8 @@ agência, pasta por agência no storage.
 | **Receita recebida** | Soma dos movimentos da reserva (entradas positivas, saídas negativas). Caixa. |
 | **Conciliação** | Comparar o recebido da operadora com o valor esperado. Fecha quando iguala, ou manualmente com motivo de divergência. |
 | **Repasse** | Valor pago ao vendedor externo por uma viagem. **Digitado pelo dono**, não calculado. |
+| **Despesa** | Gasto da agência (fixo, imposto, operacional, marketing, outro) com vencimento, pago/pago em, forma; opcionalmente vinculada a uma viagem. |
+| **Resultado da viagem** | `receita prevista das reservas − repasse − despesas vinculadas à viagem`. "Receita da agência" é só a parte das reservas. |
 | **Competência** | Mês de referência. Comercial: mês da `data_compra` da reserva. Financeira: mês da `data_movimento`. |
 | **Período fechado** | Mês cujas reservas e movimentos só podem ser editados com permissão específica e motivo. |
 
@@ -154,6 +156,9 @@ Enumerações do domínio; a interface apresenta por um único mapa, nunca inven
 | Reserva | `pendente` Em emissão · `emitida` Emitida · `cancelada` Cancelada |
 | Repasse | `bloqueado` Bloqueado · `a_pagar` Liberado · `pago` Pago; `valor` nulo → "Informar valor" |
 | Período | aberto · pendências (aberto com comissões em atraso) · fechado |
+| Despesa | `a_pagar` A pagar · `vencida` (a pagar com vencimento < hoje, derivado) · `paga` Paga |
+| Pendência | `aberta` · `urgente` (prioridade) · `atrasada` (aberta com data < hoje, derivado) · `concluida` · `cancelada` |
+| Acesso do colaborador | `acesso_ativo` · `sem_acesso` · `convite_pendente` · `inativo` (derivados de senha_hash, convite_token, ativo) |
 
 "Sem receita" não existe: viagem sem comissão esperada é **não prevista**; com comissão esperada e nada recebido é **a receber**.
 
@@ -189,7 +194,7 @@ As permissões que importam: `reserva.ver_valores`, `viagem.ver_resultado`, `rep
 - **Timeline legível** na tela da viagem: consulta em `auditoria` por viagem + suas reservas/serviços/movimentos, com frases.
 - **Soft delete** (`excluido_em`, `excluido_por`) em tudo que tem valor financeiro ou histórico. FKs financeiras são `restrict`; exclusão propaga pela API.
 - **Motivo obrigatório** ao cancelar, excluir, editar reserva conciliada ou de período fechado.
-- **Período fechado** (`fechamento_periodo`): mês fechado pelo Financeiro/Dono. Reserva com `data_compra` no mês, ou movimento com `data_movimento` no mês, só edita com `financeiro.editar_periodo_fechado` + motivo. Verificação na API.
+- **Período fechado** (`fechamento_periodo`): mês fechado pelo Financeiro/Dono. Congela **tudo com competência no mês**: reserva (`data_compra`), movimento (`data_movimento`), despesa (`vencimento`, e `pago_em` se pago), repasse (`pago_em`). Lançar, editar ou excluir qualquer um deles só com `financeiro.editar_periodo_fechado` + motivo, gravado na auditoria. Verificação na API.
 - **Concorrência**: `xmin` enviado ao cliente e conferido no UPDATE; conflito devolve 409.
 - **LGPD**: `log_acesso_documento` grava quem viu qual documento/anexo sensível e quando. Anexos em bucket privado com URL assinada e `data_descarte`; job apaga arquivo e linha.
 - **Retenção** da auditoria: job mensal expurga acima de `agencia.config.retencao_auditoria_meses` (padrão 24), preservando `DELETE`.
@@ -290,6 +295,14 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 38 | Filtros de viagens | data de emissão (compra), NFSe (enum), fornecedor (multi) além de fase, vendedor, tipo |
 | 39 | Pendência para vários passageiros | Na viagem, "Nova pendência" permite selecionar N passageiros: cria uma `pendencia` por passageiro (mesma data/responsável); sem seleção, fica na viagem |
 | 40 | Pagamentos com data e forma | Marcar custo pago, comissão recebida (inclusive em lote) e repasse pago abrem diálogo exigindo **data** (e forma quando aplicável). `despesa.forma_pagamento` obrigatório quando `pago` |
+| 41 | Venda × caixa | `valor_cliente` chama-se **Venda ao cliente** (contratado). "Cliente pagou" só existe como movimento de caixa |
+| 42 | Resultado da viagem | Inclui despesas vinculadas: `receita prevista − repasse − despesas`. `vw_resultado_viagem` expõe `venda_total`, `custo_fornecedores`, `despesas_viagem`, `resultado_viagem` |
+| 43 | Fechamento | Congela reservas, movimentos, despesas e repasses com competência no mês (§8) |
+| 44 | Despesa recorrente | Mensal: ao marcar paga (ou no dia 1 via job) cria a próxima com vencimento +1 mês, mesmo valor/categoria/forma, `recorrencia_origem_id`; `recorrencia_ate` opcional; editar afeta só a atual |
+| 45 | Equipe e acessos | Módulo "Usuários" vira **Equipe e acessos**: colaborador (`usuario`) com acesso opcional (`senha_hash` nulo = sem acesso). Estados: acesso ativo · sem acesso · convite pendente · inativo |
+| 46 | Despesas, não custos | Módulo chama-se **Despesas** (evita confusão com custo do fornecedor na reserva) |
+| 47 | Formas de pagamento | Chips multi; com mais de uma marcada, "Detalhar valores" (forma × valor) opcional |
+| 48 | Lote de recebimento | "Marcar recebidas" em lote só quando recebido = esperado; parcial/divergência é individual |
 | 35 | Navegação | Sidebar global (módulos) + subnav do módulo (≤ 6 itens) + tabs do registro (cada aba só com seu conteúdo). Acima de 6 itens no módulo: sub-sidebar interna por seções. Sem scroll horizontal de navegação |
 
 ### Pendências

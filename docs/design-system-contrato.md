@@ -83,6 +83,18 @@ Não construir 40 componentes antes das telas. Não paralelizar tudo: Nova viage
 
 Pendência é **derivada** (calculada a partir de viagens, documentos e cadastro), não gravada. Um job diário avalia as regras por pessoa e faz upsert de `tarefa` com `chave_unica = 'pendencia:<cliente_id>:<regra>'`, responsável = agente da viagem relacionada (ou dono), e cancela a tarefa quando a pendência some. Mesmo mecanismo já usado para validade de passaporte (`<documento_id>:validade`). Só pendências **com prazo ou viagem** viram tarefa (passaporte, visto, seguro, documento faltante para embarque); pendências de cadastro (contato de emergência, CPF) ficam só na aba Pendências, com selo "só aqui". Na aba, cada pendência mostra "na agenda" com link para a tarefa.
 
+## 4.4 Ajustes da quarta revisão (2026-09-08)
+
+- **Título antes do subnav**: `PageHeader` primeiro, subnav do módulo logo abaixo, separado por linha. Nunca subnav acima do título.
+- **Filtros**: sempre visíveis só busca + 2 filtros principais; o resto em "Filtros ● N" (painel recolhível). Inputs de filtro também têm 40px.
+- **Linha de pendência**: uma ação visível (`✓ Concluir`) + menu `⋯` (Adiar · Editar · Excluir); a linha inteira abre o contexto.
+- **Laranja em cards repetidos**: proibido. Ações repetidas por item (Pagar R$ X em cada vendedor) são `primary`.
+- **Sem cronômetro** ao lado de "Alterações não salvas". Só `● Alterações não salvas` → `✓ Salvo às 10:32`.
+- **Campo pré-preenchido editável** (valor recebido = esperado) é input branco com helper "Esperado: R$ X" — mesmo caso da comissão sugerida.
+- **Textarea** para observações/preferências (3–5 linhas).
+- **Auditoria**: evento complexo tem "Ver detalhes" com diff campo a campo; a timeline fica curta.
+- **Barra do protótipo** (links de teste) não é produto; no app, navegação é sidebar + subnav + tabs.
+
 ## 5. Proibido (lint / code review)
 
 hex em componente · margin arbitrária · `font-size` solto · botão com cor custom · modal fora do componente padrão · badge de status fora do mapa · cálculo financeiro duplicado em tela · toast para confirmação simples · `window.alert` · tooltip para informação obrigatória · ícone de outra biblioteca · `@media` com valor fora dos breakpoints.
