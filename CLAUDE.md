@@ -6,7 +6,7 @@ Backoffice de vendas, comissões e operação para agências de viagem de lazer.
 
 **Especificações (fonte de verdade, nesta ordem):** `regras-e-escopo-v2.md` · `schema-agencia-v2.sql` · `docs/analise-arquitetural-v1.md`. Design congelado (2026-09-08): `docs/design-system-contrato.md` (regras) · `docs/design/prototipo-v1.html` (22 telas) · `frontend/src/styles/tokens.css` (tokens). Planos em `docs/superpowers/plans/`; estado e pendências em `docs/BACKLOG.md`.
 
-**Estado (2026-09-08):** Fase 1 (spec v2) ✓ · Fase 2 (esqueleto .NET, migrations 0001–0011, 39 testes) ✓ · Design v1 congelado (tag `design-v1-freeze`) ✓ · **Fase 3 (front + módulos) = próxima**, plano ainda não escrito.
+**Estado (2026-09-08):** Fase 1 (spec v2) ✓ · Fase 2 (esqueleto .NET, migrations 0001–0011, 39 testes) ✓ · Design v1 congelado (tag `design-v1-freeze`) ✓ · **Fase 3 (front + módulos) = próxima**: plano-mestre `docs/superpowers/plans/2026-09-08-fase-3-master.md`, subplano 3.1 pronto para executar.
 
 ## Behavioral guidelines
 

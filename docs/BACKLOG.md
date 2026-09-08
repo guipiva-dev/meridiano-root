@@ -9,12 +9,12 @@
 | 1 — Especificação | `regras-e-escopo-v2.md`, `schema-agencia-v2.sql`, análise arquitetural, 50 decisões registradas | Concluída (2026-09-07/08) | raiz, `docs/analise-arquitetural-v1.md` |
 | 2 — Esqueleto | Solution .NET 10, migrations DbUp 0001–0011, RLS, auth própria, perfis/permissões, ProblemDetails, jobs CLI, CI, endpoint vertical de usuários | Concluída (2026-09-07). 13 testes de domínio + 26 de API, verdes | `backend/` (repo `meridiano-api`), plano em `docs/superpowers/plans/2026-09-07-fase-2-esqueleto.md` |
 | Design | Design system v3, contrato de implementação, protótipo clicável v1 com 22 telas, tokens CSS | **Congelado** em 2026-09-08 após 5 revisões externas (tag `design-v1-freeze` no root) | `docs/design-system-contrato.md`, `docs/design/prototipo-v1.html` + `prototipo-v1/*.png`, `frontend/src/styles/tokens.css` |
-| 3 — Front + módulos | React/Vite/TS servido pela API; módulos viagem/reserva, pessoas, fornecedores, financeiro, pendências, despesas, repasses, fechamento, relatórios | **Próxima. Plano ainda não escrito** | `frontend/` (repo `meridiano-app`), `backend/src/Meridiano.Api/Modules/` |
+| 3 — Front + módulos | React/Vite/TS servido pela API; módulos viagem/reserva, pessoas, fornecedores, financeiro, pendências, despesas, repasses, fechamento, relatórios | **Próxima.** Plano-mestre `docs/superpowers/plans/2026-09-08-fase-3-master.md` (6 subplanos); 3.1 detalhado em `2026-09-08-fase-3-1-scaffold.md` (12 tasks, 7 ondas) | `frontend/` (repo `meridiano-app`), `backend/src/Meridiano.Api/Modules/` |
 | 4 — Piloto | Deploy Azure Container Apps + Supabase, importar planilha, medir tempo de lançamento | Não iniciada | — |
 
-## Fase 3 — escopo previsto (para o plano em ondas)
+## Fase 3 — subplanos (detalhe no plano-mestre)
 
-Ordem sugerida, cada onda com endpoints + tela:
+Cada item vira um plano próprio quando o anterior fecha:
 
 1. **Scaffold** — Vite + React + TS no `frontend/`, tokens já existentes, componentes obrigatórios do contrato (§3 de `design-system-contrato.md`: Button, Field/Input, Select, Chip, Tabs, Subnav, Sidebar, Table, Dialog, Toast, EmptyState, Skeleton), roteamento, cliente HTTP com ProblemDetails (422 no campo, 409, 403), sessão por cookie, build em `wwwroot/`. Mover `UsuarioService` de `AddAuth` para `AddModules` (pendência da Fase 2).
 2. **Nova viagem** (risco número um) — endpoint transacional viagem + reservas, pré-preenchimento, criação inline de pessoa/fornecedor, teclado, aviso de viagem semelhante, teste E2E cronometrado.
