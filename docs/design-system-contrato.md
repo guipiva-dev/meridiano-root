@@ -58,6 +58,19 @@ Não construir 40 componentes antes das telas. Não paralelizar tudo: Nova viage
 - Concorrência: `versao` (`xmin`) em todo PUT.
 - Modal destrutivo: título explícito, impacto, botão vermelho, cancelar como opção segura. Confirmação por digitação só para destruição séria.
 
+## 4.1 Ajustes da revisão do protótipo v1 (2026-09-08)
+
+- **Sugerido ≠ calculado.** Valor pré-preenchido por regra que o usuário pode editar (comissão pelo % do fornecedor) é um input normal com selo `Sugerido: 10 %`. O estado visual `calculated` fica só para valores derivados que a tela não edita (RAV do cliente, esperado, receita).
+- **Laranja, uma vez.** Header global "+ Nova viagem" é `secondary`. `business` (laranja) só na ação contextual da página: lista de viagens → "+ Nova viagem"; Nova viagem → "+ Adicionar reserva"; repasses → "Pagar"; conciliação → "Marcar recebidas".
+- **Estados de domínio** vêm de um mapa único (`regras-e-escopo-v2` §6.1). Não existe "sem receita"; é "não prevista" ou "a receber".
+- **Cadastros em página própria** (pessoa, fornecedor, grupo, usuário). Nada de painel lateral para edição; listas abrem a página ao clicar na linha. Ações da página: `Fechar` (tertiary) e `Salvar` (primary). "Cancelar" só existe como ação de negócio ("Cancelar reserva…", "Cancelar viagem…").
+- **Privacidade em listas.** CPF mascarado (`***.456.789-**`); passaporte e documentos nunca em listagem; completo só na página da pessoa com `cliente.ver_documento`, e o acesso vai para `log_acesso_documento`.
+- **Responsivo mínimo obrigatório.** Abaixo de `--bp-lg` (1024) a sidebar vira drawer aberto por ☰ no header; abaixo de 700 os formulários ficam em uma coluna. Sem isso, não há navegação em janela reduzida.
+- **Recuperar senha ≠ convite.** Fluxos separados: `esqueci-senha` (e-mail → link, resposta sempre neutra) e `redefinir-senha` (token de reset → nova senha); `definir-senha` só para convite.
+- **Pendências da pessoa.** Checklist derivado (passaporte/visto pela viagem futura, CPF, contato, emergência, seguro) com ação por item; nunca texto solto.
+- **Agenda age.** Toda tarefa tem Concluir · Adiar · Abrir (a viagem/pessoa) na própria linha.
+- **Pessoa usa tabs reais** (Dados · Documentos · Viagens · Atendimentos) com resumo lateral fixo; página única só no protótipo.
+
 ## 5. Proibido (lint / code review)
 
 hex em componente · margin arbitrária · `font-size` solto · botão com cor custom · modal fora do componente padrão · badge de status fora do mapa · cálculo financeiro duplicado em tela · toast para confirmação simples · `window.alert` · tooltip para informação obrigatória · ícone de outra biblioteca · `@media` com valor fora dos breakpoints.

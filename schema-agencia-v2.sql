@@ -225,6 +225,9 @@ create table regra_pagamento_fornecedor (
   dia_final       int not null check (dia_final between 1 and 31),
   dia_pagamento   int not null check (dia_pagamento between 1 and 31),
   meses_a_frente  int not null default 0 check (meses_a_frente between 0 and 3),
+  -- vigência: a API usa o conjunto de janelas vigente na data_compra da reserva.
+  -- Alterar a regra = inserir nova versão com outra vigente_desde; reservas antigas mantêm a previsão gravada.
+  vigente_desde   date not null default current_date,
   constraint regra_pagamento_faixa check (dia_inicial <= dia_final)
 );
 create index ix_regra_pagamento_fornecedor on regra_pagamento_fornecedor (fornecedor_id);
@@ -700,8 +703,8 @@ select v.id as viagem_id, v.agencia_id,
     when exists (select 1 from reserva r where r.viagem_id = v.id and r.excluido_em is null and r.status <> 'cancelada') then 'confirmada'
     else 'sem_reserva' end as fase_operacional,
   case
-    when not exists (select 1 from vw_reserva_financeiro f where f.viagem_id = v.id and f.valor_esperado_operadora > 0) then 'sem_receita'
-    when not exists (select 1 from vw_reserva_financeiro f where f.viagem_id = v.id and f.aguardando_operadora) then 'quitada'
+    when not exists (select 1 from vw_reserva_financeiro f where f.viagem_id = v.id and f.valor_esperado_operadora > 0) then 'nao_prevista'
+    when not exists (select 1 from vw_reserva_financeiro f where f.viagem_id = v.id and f.aguardando_operadora) then 'recebida'
     when exists (select 1 from vw_reserva_financeiro f where f.viagem_id = v.id and f.aguardando_operadora
                    and f.data_prevista_comissao < current_date) then 'atrasada'
     when exists (select 1 from vw_reserva_financeiro f where f.viagem_id = v.id and f.valor_esperado_operadora > 0 and f.conciliada) then 'parcial'

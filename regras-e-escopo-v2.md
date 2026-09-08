@@ -108,6 +108,8 @@ Reserva está **conciliada** quando `Σ (recebimento_operadora + estorno_operado
 ### 4.5 Previsão de pagamento da comissão
 Por fornecedor, em janelas (`regra_pagamento_fornecedor`: vendas de 1 a 14 pagam dia 20; de 15 a 31 pagam dia 5 do mês seguinte) ou prazo em dias. A API calcula `data_prevista_comissao` ao criar a reserva, **grava** e mantém editável. Dia inexistente no mês → último dia do mês.
 
+As janelas têm **vigência** (`vigente_desde`): a API usa o conjunto vigente na `data_compra`. Alterar a regra de um fornecedor cria uma nova versão a partir de uma data; reservas já lançadas mantêm a previsão gravada.
+
 ### 4.6 Alterações e multa
 Remarcação/alteração vira linha em `reserva_alteracao` (data, descrição, valor anterior/novo, multa informativa, quem). Multa é **informativa**: paga pelo cliente à operadora, não afeta receita nem repasse.
 
@@ -138,7 +140,22 @@ MEI: DAS é despesa fixa (v1.1). Dashboard monitora receita recebida acumulada n
 `cancelada` (manual) → senão `concluida` se `data_volta < hoje` → `em_viagem` se `data_ida ≤ hoje` → `em_emissao` se alguma reserva ativa `pendente` → `confirmada` se há reserva ativa → `sem_reserva`.
 
 **Financeiro** (`fase_financeira`), sobre reservas ativas com esperado > 0:
-`sem_receita` se não há nenhuma → `quitada` se todas conciliadas → `atrasada` se alguma não conciliada com `data_prevista_comissao < hoje` → `parcial` se alguma conciliada → `a_receber`.
+`nao_prevista` se não há nenhuma → `recebida` se todas conciliadas → `atrasada` se alguma não conciliada com `data_prevista_comissao < hoje` → `parcial` se alguma conciliada → `a_receber`.
+
+### 6.1 Estados de domínio (nomenclatura única)
+
+Enumerações do domínio; a interface apresenta por um único mapa, nunca inventa texto.
+
+| Entidade | Estados (valor da API → texto na tela) |
+|---|---|
+| Fase operacional da viagem | `sem_reserva` Rascunho · `em_emissao` Em emissão · `confirmada` Confirmada · `em_viagem` Em viagem · `concluida` Concluída · `cancelada` Cancelada |
+| Situação da comissão (viagem) | `nao_prevista` Não prevista · `a_receber` A receber · `parcial` Parcial · `atrasada` Atrasada · `recebida` Recebida |
+| Situação da comissão (reserva) | `nao_prevista` · `a_receber` · `parcial` · `atrasada` · `recebida` · `divergente` (encerrada com diferença) |
+| Reserva | `pendente` Em emissão · `emitida` Emitida · `cancelada` Cancelada |
+| Repasse | `bloqueado` Bloqueado · `a_pagar` Liberado · `pago` Pago; `valor` nulo → "Informar valor" |
+| Período | aberto · pendências (aberto com comissões em atraso) · fechado |
+
+"Sem receita" não existe: viagem sem comissão esperada é **não prevista**; com comissão esperada e nada recebido é **a receber**.
 
 ## 7. Pessoas, perfis e permissões
 
@@ -258,6 +275,12 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 25 | Comissão do vendedor externo e NFSe | Na tela de lançamento: `repasse.valor` (quando o vendedor gera repasse) e `nfse_status` |
 | 26 | Cartão de quem | Removido |
 | 27 | Grupo/empresa de clientes | `grupo_cliente` (família, empresa, outro), opcional em `cliente` |
+| 28 | Fase financeira | `sem_receita` → `nao_prevista`, `quitada` → `recebida` (§6.1) |
+| 29 | Vigência da regra de comissão | `regra_pagamento_fornecedor.vigente_desde`; reserva mantém previsão gravada |
+| 30 | CPF em listas | Mascarado (`***.456.789-**`); completo só no detalhe com `cliente.ver_documento` |
+| 31 | Comissão sugerida | Pré-preenchida pelo % do fornecedor é **sugerida** (input normal + selo "Sugerido: 10 %"), não "calculada" |
+| 32 | Cadastros | Fornecedor, grupo e usuário abrem em página própria, como pessoa; sem painel lateral |
+| 33 | Pendências da pessoa | Checklist na tela da pessoa: passaporte/visto, CPF, contato, emergência, seguro — derivado das viagens e documentos |
 
 ### Pendências
 - **Contador**: base e regime da receita bruta do MEI (4.9).
