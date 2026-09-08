@@ -3,6 +3,8 @@
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
 >
 > **Execução em ondas:** segue `.claude/rules/parallel-subagent-driven-development.md`. Cada task traz `Files:` e `Depends-on:`. Implementadores **não commitam**; reportam os arquivos tocados. O controlador commita uma task por vez, no repo certo (`frontend/` = `meridiano-app`, `backend/` = `meridiano-api`). Task 1 instala **todas** as dependências e scripts do `package.json` para que nenhuma task posterior toque esse arquivo.
+>
+> **Revisão 2026-09-08:** este subplano depende de **3.0 (hardening, só backend)** — T06 toca os mesmos arquivos de `Auth/` e só começa depois de 3.0 fechado. A migration criada aqui passa a ser **0013** (0012 é de 3.0). Pontos marcados `DECISÃO D2`/`DECISÃO D4` seguem o plano-mestre e ficam bloqueados até a decisão.
 
 **Goal:** SPA React buildada e servida pela API, com login real por cookie, sidebar por permissão, telas de acesso (login, definir senha, esqueci senha, redefinir senha), componentes-base do contrato até `Section`, styleguide em `/styleguide`, lint/typecheck/test/CI verdes e regressão visual mínima — a base sobre a qual 3.2 (Nova viagem) é construída.
 
@@ -16,7 +18,7 @@
 
 - Node 24, npm 12. `package-lock.json` commitado. Versões: instalar com `npm install <pkg>` sem pin manual; o lock fixa.
 - TS `strict: true`, `noUncheckedIndexedAccess: true`, `verbatimModuleSyntax: true`. Zero `any`.
-- CSS: só CSS Modules (`*.module.css`) + `src/styles/tokens.css` + `src/styles/global.css`. Proibido em qualquer arquivo que não seja `tokens.css`: cor hex (`#[0-9a-f]{3,8}`), `font-size:`, `@media` com largura fora de `1024px`/`1280px`/`1440px`. `scripts/check-tokens.mjs` falha o lint se achar.
+- CSS: só CSS Modules (`*.module.css`) + `src/styles/tokens.css` + `src/styles/global.css`. Proibido em qualquer arquivo que não seja `tokens.css`: cor hex (`#[0-9a-f]{3,8}`), `font-size:`, `@media` com largura fora da lista permitida (`DECISÃO D2` no plano-mestre; até decidir, o lint usa `700, 1024, 1280, 1366, 1440` porque o próprio contrato §4.1 e §4.3 exigem 700 e 1366). `scripts/check-tokens.mjs` falha o lint se achar.
 - Ícones só de `lucide-react`. Tamanhos via `--icon-inline` 16 · `--icon-nav` 18 · `--icon-button` 20.
 - Textos de interface em português; nomes de arquivo, componentes e props em inglês (`Button`, `Field`), nomes de domínio em português (`apresentacaoStatus`, `permissoes`).
 - Componentes recebem intenção: `variant` (`business` `primary` `secondary` `tertiary` `danger`), `tone` (`info` `success` `warning` `danger` `neutral`), `calculated`, `readOnly`, `disabled`. Nenhuma prop de cor, tamanho em px ou margem.
@@ -131,7 +133,7 @@ export default defineConfig({
       "/health": "http://localhost:5000",
     },
   },
-  build: { outDir: "dist", sourcemap: true },
+  build: { outDir: "../backend/src/Meridiano.Api/wwwroot", emptyOutDir: true, sourcemap: true },
   css: { modules: { localsConvention: "camelCaseOnly" } },
   test: {
     environment: "jsdom",
@@ -142,6 +144,8 @@ export default defineConfig({
   },
 });
 ```
+
+`npm run build` grava direto em `wwwroot/` do backend (irmão), como exige o plano-mestre; `backend/.gitignore` ignora a pasta (T06). No Docker o layout é o mesmo (`/repo/frontend` e `/repo/backend`).
 
 - [ ] **Step 6: `tsconfig.json` / `tsconfig.node.json`**
 
@@ -408,8 +412,8 @@ test("font-size solto é violação; font: var(--type-*) não é", () => {
   assert.equal(violacoes("src/a.module.css", ".a{font:var(--type-label)}").length, 0);
 });
 
-test("@media só com 1024, 1280 ou 1440", () => {
-  assert.equal(violacoes("src/a.module.css", "@media (max-width:1366px){.a{display:none}}").length, 1);
+test("@media só com breakpoints da lista (DECISÃO D2)", () => {
+  assert.equal(violacoes("src/a.module.css", "@media (max-width:1200px){.a{display:none}}").length, 1);
   assert.equal(violacoes("src/a.module.css", "@media (max-width:1279px){.a{display:none}}").length, 1);
   assert.equal(violacoes("src/a.module.css", "@media (max-width:1280px){.a{display:none}}").length, 0);
 });
@@ -436,7 +440,7 @@ const ISENTO = /styles[\\/]tokens\.css$/;
 const HEX = /#[0-9a-fA-F]{3,8}\b/g;
 const FONT_SIZE = /font-size\s*:/g;
 const MEDIA = /@media[^{]*?(\d+)px/g;
-const BREAKPOINTS = new Set(["1024", "1280", "1440"]);
+const BREAKPOINTS = new Set(["700", "1024", "1280", "1366", "1440"]); // DECISÃO D2
 
 export function violacoes(caminho, conteudo) {
   if (ISENTO.test(caminho)) return [];
@@ -445,7 +449,7 @@ export function violacoes(caminho, conteudo) {
   if (/\.css$/.test(caminho)) {
     for (const _ of conteudo.matchAll(FONT_SIZE)) achados.push(`${caminho}: font-size solto — use font: var(--type-*)`);
     for (const m of conteudo.matchAll(MEDIA)) {
-      if (!BREAKPOINTS.has(m[1])) achados.push(`${caminho}: @media ${m[1]}px — só 1024, 1280 ou 1440`);
+      if (!BREAKPOINTS.has(m[1])) achados.push(`${caminho}: @media ${m[1]}px — só ${[...BREAKPOINTS].join(", ")}`);
     }
   }
   return achados;
@@ -476,6 +480,8 @@ Run: `cd frontend && node --test scripts/ && npm run lint && npm run typecheck`
 Expected: 5 testes passam; `eslint .` sem erro; `biome check .` sem erro (rodar `npm run format` antes se reclamar de formatação dos arquivos da T01); `tokens ok`.
 
 - [ ] **Step 7: CI**
+
+`DECISÃO D4` (plano-mestre): a imagem Docker integrada é construída na CI do backend com dois checkouts; a CI do front fica só com lint/typecheck/test/build.
 
 `.github/workflows/ci.yml`:
 ```yaml
@@ -1531,12 +1537,12 @@ Commit sugerido: `feat(ui): chip, badge, status map, tooltip, alert`
 ### Task 6 (backend): `/auth/me` com permissões, `GET /auth/tokens/{token}`, `AddModules`, SPA estática, Dockerfile com Node
 
 **Files:**
-- Modify: `backend/src/Meridiano.Api/Auth/AuthEndpoints.cs` (MeResponse), `backend/src/Meridiano.Api/Auth/ConviteEndpoints.cs` (+ GET tokens), `backend/src/Meridiano.Api/Auth/ConviteService.cs` (+ `ConsultarTokenAsync`), `backend/src/Meridiano.Api/Auth/AuthExtensions.cs` (remover registro de `UsuarioService`), `backend/src/Meridiano.Api/Modules/Endpoints.cs` (+ `AddModules`), `backend/src/Meridiano.Api/Infra/InfraExtensions.cs` (static files + fallback), `backend/Dockerfile`, `backend/.dockerignore`, `backend/.gitignore` (+ `src/Meridiano.Api/wwwroot/`)
-- Create: `backend/src/Meridiano.Data/Migrations/0012_localizar_usuario_por_token_dados.sql`
+- Modify: `backend/src/Meridiano.Api/Auth/AuthEndpoints.cs` (MeResponse), `backend/src/Meridiano.Api/Auth/ConviteEndpoints.cs` (+ GET tokens), `backend/src/Meridiano.Api/Auth/ConviteService.cs` (+ `ConsultarTokenAsync`), `backend/src/Meridiano.Api/Auth/AuthExtensions.cs` (remover registro de `UsuarioService`), `backend/src/Meridiano.Api/Modules/Endpoints.cs` (+ `AddModules`), `backend/src/Meridiano.Api/Infra/InfraExtensions.cs` (static files + fallback), `backend/Dockerfile`, `backend/.dockerignore`, `backend/.gitignore` (+ `src/Meridiano.Api/wwwroot/`), `backend/.github/workflows/ci.yml` (job `docker`, `DECISÃO D4`)
+- Create: `backend/src/Meridiano.Data/Migrations/0013_localizar_usuario_por_token_dados.sql`
 - Test: `backend/tests/Meridiano.Api.Tests/AuthTests.cs` (+1), `ConviteTests.cs` (+2), `InfraTests.cs` (+2)
 - **Não tocar:** `Program.cs`. `AddModules` é chamado de dentro de `AddAuth`? Não — `Program.cs` não muda, então `AddModules(this WebApplicationBuilder)` é chamado por `AddSessao`? Também não. **Decisão:** `MapEndpoints` já é chamado no `Program.cs`; registrar os serviços de módulo em `Endpoints.MapEndpoints` não é possível (é pós-build). Solução sem tocar `Program.cs`: `AddAuth` chama `builder.AddModules()` na última linha, e `AddModules` (em `Modules/Endpoints.cs`) registra `UsuarioService` e, nas fases seguintes, os demais. A pendência "mover para fora de AddAuth" fica assim resolvida em espírito: um único ponto de registro por módulo, fora do arquivo de auth.
 
-**Depends-on:** none (repo backend)
+**Depends-on:** subplano 3.0 fechado (mesmos arquivos de Auth); dentro deste subplano, none
 
 **Interfaces:**
 - Produces:
@@ -1544,7 +1550,7 @@ Commit sugerido: `feat(ui): chip, badge, status map, tooltip, alert`
   - `GET /api/v1/auth/tokens/{token}` (anônimo, rate-limited pela política `login`) → `200 { nome, email, tipo: "convite" | "reset" }` ou `404` ProblemDetails `codigo: token_invalido`
   - `Endpoints.AddModules(this WebApplicationBuilder)` — ponto único de registro de serviços de módulo
   - API serve `wwwroot/` e devolve `index.html` para rotas que não começam com `/api` nem `/health`; `/api/v1/nao-existe` → 404 sem HTML
-  - Dockerfile: estágio `node:24` builda `frontend/` (contexto = pasta pai, ver step 9) e copia `dist/` para `wwwroot/`
+  - Dockerfile: estágio `node:24` builda `frontend/` (contexto = pasta pai, ver step 9); o build do front já grava em `wwwroot/`
 
 - [ ] **Step 1: Testes (falham antes)**
 
@@ -1612,9 +1618,9 @@ public async Task Rota_de_pagina_sem_wwwroot_e_404_sem_erro()
 Run: `cd backend && dotnet test --filter "FullyQualifiedName~AuthTests|FullyQualifiedName~ConviteTests|FullyQualifiedName~InfraTests"`
 Expected: os 5 novos falham (compilação em Auth por `Permissoes` ausente no record; 404 em `/auth/tokens/…` já passa por acaso — o teste de 200 falha).
 
-- [ ] **Step 3: Migration 0012 — função devolve nome, e-mail e tipo**
+- [ ] **Step 3: Migration 0013 — função devolve nome, e-mail e tipo**
 
-`0012_localizar_usuario_por_token_dados.sql`:
+`0013_localizar_usuario_por_token_dados.sql`:
 ```sql
 -- Tela "Definir senha"/"Redefinir senha" mostra nome e e-mail antes do login. Mesma função, mais colunas.
 drop function if exists localizar_usuario_por_token(text);
@@ -1730,16 +1736,16 @@ Expected: 0 falhas; total 13 domínio + 31 API.
 
 - [ ] **Step 9: Dockerfile com estágio Node e `.dockerignore`**
 
-O front é outro repo, irmão de `backend/`. O build de imagem roda com contexto na **pasta pai** (`viva-erp/`): `docker build -f backend/Dockerfile -t meridiano .`. CI de deploy (Fase 4) clona os dois repos lado a lado.
+O front é outro repo, irmão de `backend/`. O build de imagem roda com contexto na **pasta pai** (`viva-erp/`): `docker build -f backend/Dockerfile -t meridiano .`. A CI do backend (`DECISÃO D4`) faz checkout dos dois repos lado a lado (`path: backend`, `path: frontend`) e builda com `context: .`; atualizar `backend/.github/workflows/ci.yml` **nesta task** (job `docker`), senão o job quebra.
 
 `backend/Dockerfile`:
 ```dockerfile
 FROM node:24-alpine AS web
-WORKDIR /web
+WORKDIR /repo/frontend
 COPY frontend/package.json frontend/package-lock.json ./
 RUN npm ci
 COPY frontend/ ./
-RUN npm run build
+RUN mkdir -p /repo/backend/src/Meridiano.Api && npm run build
 
 FROM mcr.microsoft.com/dotnet/sdk:10.0 AS build
 WORKDIR /src
@@ -1749,7 +1755,7 @@ COPY backend/src/Meridiano.Data/Meridiano.Data.csproj src/Meridiano.Data/
 COPY backend/src/Meridiano.Api/Meridiano.Api.csproj src/Meridiano.Api/
 RUN dotnet restore src/Meridiano.Api/Meridiano.Api.csproj
 COPY backend/src/ src/
-COPY --from=web /web/dist src/Meridiano.Api/wwwroot
+COPY --from=web /repo/backend/src/Meridiano.Api/wwwroot src/Meridiano.Api/wwwroot
 RUN dotnet publish src/Meridiano.Api/Meridiano.Api.csproj -c Release -o /app --no-restore
 
 FROM mcr.microsoft.com/dotnet/aspnet:10.0 AS runtime
@@ -1768,6 +1774,7 @@ ENTRYPOINT ["dotnet", "Meridiano.Api.dll"]
 **/node_modules
 **/dist
 **/.git
+backend/src/Meridiano.Api/wwwroot
 ```
 `backend/.gitignore`: acrescentar `src/Meridiano.Api/wwwroot/` (build local do front copia para lá; nunca commitar).
 
@@ -1782,13 +1789,14 @@ Commits sugeridos (repo `backend/`): `feat(auth): me returns permissoes; token l
 ### Task 7: Sessão, salvamento e atalhos — hooks sem UI
 
 **Files:**
-- Create: `frontend/src/lib/useSalvamento.ts`, `frontend/src/lib/useSalvamento.test.ts`, `frontend/src/lib/atalhos.ts`, `frontend/src/lib/atalhos.test.ts`, `frontend/src/lib/useAtalho.ts`
+- Create: `frontend/src/lib/useSalvamento.ts`, `frontend/src/lib/useSalvamento.test.ts`, `frontend/src/lib/useBloqueioSaida.ts`, `frontend/src/lib/useBloqueioSaida.test.tsx`, `frontend/src/lib/atalhos.ts`, `frontend/src/lib/atalhos.test.ts`, `frontend/src/lib/useAtalho.ts`
 
 **Depends-on:** T01, T03 (tipos de erro)
 
 **Interfaces:**
 - Produces:
-  - `useSalvamento<T>(salvar: (dados: T) => Promise<unknown>)` → `{ estado: "idle" | "dirty" | "saving" | "saved" | "error"; erro: unknown; marcarSujo(): void; executar(dados: T): Promise<boolean>; salvoEm: Date | null }` — `saved` volta a `idle` após 2 s (contrato: "✓ Salvo" por 2 s).
+  - `useSalvamento<T>(salvar: (dados: T) => Promise<unknown>)` → `{ estado: "idle" | "dirty" | "saving" | "saved" | "error"; erro: unknown; marcarSujo(): void; executar(dados: T): Promise<boolean>; salvoEm: Date | null }` — `saved` volta a `idle` após 2 s (contrato: "✓ Salvo" por 2 s). Edição durante `saving` (chamada a `marcarSujo`) é lembrada: ao terminar com sucesso o estado vai para `dirty`, não `saved`. Após `error` o estado fica `error` e o formulário continua sujo.
+  - `useBloqueioSaida(ativo: boolean)` → `{ bloqueado: boolean; confirmar(): void; cancelar(): void }` — com `ativo`, registra `beforeunload` (fechar aba) e `useBlocker` do react-router (rota interna); a UI de "Sair sem salvar?" (Modal) é ligada em T10 no `Page`. **Exige data router** (`createBrowserRouter`) — ver nota em T09.
   - `registrarAtalho(combo: "ctrl+s" | "ctrl+enter" | "ctrl+k" | "escape", handler: () => void): () => void` (registry central; último registrado vence; devolve desregistro) · `useAtalho(combo, handler)` hook.
 
 - [ ] **Step 1: Testes**
@@ -1821,6 +1829,41 @@ test("falha vai para error e mantém dirty ao marcar de novo", async () => {
   await act(async () => { await result.current.executar({}); });
   expect(result.current.estado).toBe("error");
   expect(result.current.erro).toBeInstanceOf(Error);
+});
+
+test("marcarSujo durante saving termina em dirty, não saved", async () => {
+  let resolver!: () => void;
+  const salvar = vi.fn(() => new Promise<void>((r) => { resolver = r; }));
+  const { result } = renderHook(() => useSalvamento(salvar));
+  let promessa!: Promise<boolean>;
+  act(() => { promessa = result.current.executar({}); });
+  expect(result.current.estado).toBe("saving");
+  act(() => result.current.marcarSujo());
+  await act(async () => { resolver(); await promessa; });
+  expect(result.current.estado).toBe("dirty");
+});
+```
+
+`useBloqueioSaida.test.tsx`:
+```tsx
+import { act, render } from "@testing-library/react";
+import { createMemoryRouter, RouterProvider, useNavigate } from "react-router";
+import { useBloqueioSaida } from "./useBloqueioSaida";
+
+test("navegar com ativo bloqueia; cancelar reseta", async () => {
+  let api!: ReturnType<typeof useBloqueioSaida> & { navigate: ReturnType<typeof useNavigate> };
+  function A() {
+    const bloqueio = useBloqueioSaida(true);
+    api = { ...bloqueio, navigate: useNavigate() };
+    return <p>A</p>;
+  }
+  const router = createMemoryRouter([{ path: "/a", element: <A /> }, { path: "/b", element: <p>B</p> }], { initialEntries: ["/a"] });
+  render(<RouterProvider router={router} />);
+  await act(async () => { await api.navigate("/b"); });
+  expect(api.bloqueado).toBe(true);
+  expect(router.state.location.pathname).toBe("/a");
+  act(() => api.cancelar());
+  expect(api.bloqueado).toBe(false);
 });
 ```
 
@@ -1864,18 +1907,34 @@ export function useSalvamento<T>(salvar: (dados: T) => Promise<unknown>) {
   const [erro, setErro] = useState<unknown>(null);
   const [salvoEm, setSalvoEm] = useState<Date | null>(null);
   const timer = useRef<ReturnType<typeof setTimeout>>(undefined);
+  const sujoDuranteSave = useRef(false);
 
   useEffect(() => () => clearTimeout(timer.current), []);
 
-  const marcarSujo = useCallback(() => setEstado((e) => (e === "saving" ? e : "dirty")), []);
+  const marcarSujo = useCallback(
+    () =>
+      setEstado((e) => {
+        if (e === "saving") {
+          sujoDuranteSave.current = true;
+          return e;
+        }
+        return "dirty";
+      }),
+    [],
+  );
 
   const executar = useCallback(
     async (dados: T) => {
       setEstado("saving");
       setErro(null);
+      sujoDuranteSave.current = false;
       try {
         await salvar(dados);
         setSalvoEm(new Date());
+        if (sujoDuranteSave.current) {
+          setEstado("dirty");
+          return true;
+        }
         setEstado("saved");
         clearTimeout(timer.current);
         timer.current = setTimeout(() => setEstado((e) => (e === "saved" ? "idle" : e)), 2000);
@@ -1946,11 +2005,34 @@ export function useAtalho(combo: Combo, handler: () => void) {
 }
 ```
 
-- [ ] **Step 4: Rodar** — `npm run test && npm run lint` → verde.
+- [ ] **Step 4: `useBloqueioSaida.ts`**
 
-- [ ] **Step 5: Reportar arquivos tocados**
+```ts
+import { useEffect } from "react";
+import { useBlocker } from "react-router";
 
-Commit sugerido: `feat(lib): save state machine hook and central shortcut registry`
+export function useBloqueioSaida(ativo: boolean) {
+  useEffect(() => {
+    if (!ativo) return;
+    const h = (e: BeforeUnloadEvent) => e.preventDefault();
+    window.addEventListener("beforeunload", h);
+    return () => window.removeEventListener("beforeunload", h);
+  }, [ativo]);
+  const blocker = useBlocker(ativo);
+  return {
+    bloqueado: blocker.state === "blocked",
+    confirmar: () => blocker.proceed?.(),
+    cancelar: () => blocker.reset?.(),
+  };
+}
+```
+`useBlocker` só funciona em data router (`createBrowserRouter`/`createMemoryRouter` + `RouterProvider`); T09 monta o router assim.
+
+- [ ] **Step 5: Rodar** — `npm run test && npm run lint` → verde.
+
+- [ ] **Step 6: Reportar arquivos tocados**
+
+Commit sugerido: `feat(lib): save state machine hook, exit guard and central shortcut registry`
 
 ---
 
@@ -2701,9 +2783,9 @@ export function EsqueciSenhaPage() {
 
 - [ ] **Step 5: Router e App**
 
-`router.tsx`:
+`router.tsx` (**data router obrigatório**: `useBloqueioSaida` de T07 usa `useBlocker`, que só funciona com `createBrowserRouter` + `RouterProvider`; os elementos `<Route>` continuam iguais):
 ```tsx
-import { BrowserRouter, Route, Routes } from "react-router";
+import { createBrowserRouter, createRoutesFromElements, Route, RouterProvider } from "react-router";
 import { RequireAuth } from "@/auth/RequireAuth";
 import { LoginPage } from "@/pages/acesso/LoginPage";
 import { DefinirSenhaPage } from "@/pages/acesso/DefinirSenhaPage";
@@ -2711,18 +2793,20 @@ import { RedefinirSenhaPage } from "@/pages/acesso/RedefinirSenhaPage";
 import { EsqueciSenhaPage } from "@/pages/acesso/EsqueciSenhaPage";
 import { RotasApp } from "@/shell/rotasModulos";
 
+const router = createBrowserRouter(
+  createRoutesFromElements(
+    <>
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/definir-senha" element={<DefinirSenhaPage />} />
+      <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
+      <Route path="/esqueci-senha" element={<EsqueciSenhaPage />} />
+      <Route element={<RequireAuth />}>{RotasApp()}</Route>
+    </>,
+  ),
+);
+
 export function AppRoutes() {
-  return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/definir-senha" element={<DefinirSenhaPage />} />
-        <Route path="/redefinir-senha" element={<RedefinirSenhaPage />} />
-        <Route path="/esqueci-senha" element={<EsqueciSenhaPage />} />
-        <Route element={<RequireAuth />}>{RotasApp()}</Route>
-      </Routes>
-    </BrowserRouter>
-  );
+  return <RouterProvider router={router} />;
 }
 ```
 
@@ -2781,7 +2865,7 @@ Commit sugerido: `feat(auth): auth provider, route guard and access pages (login
 **Files:**
 - Create: `frontend/src/shell/AppShell.tsx`, `AppShell.module.css`, `Sidebar.tsx`, `Sidebar.module.css`, `Sidebar.test.tsx`, `GlobalHeader.tsx`, `GlobalHeader.module.css`, `navegacao.ts`, `EmConstrucao.tsx`
 - Modify: `frontend/src/shell/rotasModulos.tsx`
-- Create: `frontend/src/components/Page/Page.tsx`, `PageHeader.tsx`, `Section.tsx`, `Page.module.css`, `frontend/src/components/Subnav/Subnav.tsx`, `Subnav.module.css`, `frontend/src/components/Tabs/Tabs.tsx`, `Tabs.module.css`, `Tabs.test.tsx`, `frontend/src/components/shell.ts` (barrel)
+- Create: `frontend/src/components/Page/Page.tsx`, `Page.test.tsx`, `PageHeader.tsx`, `Section.tsx`, `Page.module.css`, `frontend/src/components/Subnav/Subnav.tsx`, `Subnav.module.css`, `frontend/src/components/Tabs/Tabs.tsx`, `Tabs.module.css`, `Tabs.test.tsx`, `frontend/src/components/shell.ts` (barrel)
 
 **Depends-on:** T09 (useAuth), T04, T05, T07 (atalho Ctrl+K), T08
 
@@ -2789,7 +2873,8 @@ Commit sugerido: `feat(auth): auth provider, route guard and access pages (login
 - Produces:
   - `navegacao.ts`: `itensSidebar: { label; icon: LucideIcon; path; section: "Operação" | "Administração"; permission: string }[]` — Viagens (`viagem.ver` ou `viagem.ver_proprias`), Clientes (`cliente.ver` ou `cliente.ver_proprios`), Fornecedores (`viagem.ver`), Financeiro (`financeiro.movimentar` ou `financeiro.conciliar`), Agenda (`viagem.ver` ou `viagem.ver_proprias`), Relatórios (`relatorio.ver`), Equipe (`usuario.gerenciar`), Auditoria (`auditoria.ver`). `permission` aceita `string | string[]` (qualquer uma). Badges ficam para os subplanos.
   - `subnavs: Record<string, {label; path}[]>` — Financeiro: Conciliação `/financeiro` · Repasses `/financeiro/repasses` · Despesas `/financeiro/despesas` · Fechamento `/financeiro/fechamento`; Clientes: Pessoas `/clientes` · Grupos `/clientes/grupos`.
-  - `<AppShell />` (Outlet) · `<Page>` · `<PageHeader title meta? status? dirty? actions? subtitle? />` · `<Section title? description?>` · `<Subnav items />` · `<Tabs tabs: {id; label; count?}[] active onChange>` + `<Tabs.Panel id active>`; máximo 6 tabs (`console.warn` acima disso em dev).
+  - `Page` recebe `dirty?: boolean` e, via `useBloqueioSaida(dirty)`, mostra `Modal` "Sair sem salvar?" (Continuar editando · Sair sem salvar) nomeando o registro (`titulo`). Salvar e sair fica para 3.2 (precisa do submit da tela).
+  - `<AppShell />` (Outlet) · `<Page dirty? titulo?>` · `<PageHeader title meta? status? dirty? actions? subtitle? />` · `<Section title? description?>` · `<Subnav items />` · `<Tabs tabs: {id; label; count?}[] active onChange>` + `<Tabs.Panel id active>`; máximo 6 tabs (`console.warn` acima disso em dev).
   - Sidebar colapsa em ícones abaixo de 1280 e vira gaveta abaixo de 1024 (botão ☰ no header).
 
 - [ ] **Step 1: Testes**
@@ -2840,6 +2925,8 @@ test("tab acessível com setas e painel único", async () => {
   expect(screen.getByRole("tabpanel")).toHaveTextContent("F");
 });
 ```
+
+`Page.test.tsx`: navegar com `dirty` abre o Modal; Continuar editando fecha sem navegar (montar com `createMemoryRouter` como em `useBloqueioSaida.test.tsx`).
 
 - [ ] **Step 2: Rodar para ver falhar** — FAIL.
 
@@ -3031,11 +3118,24 @@ export function AppShell() {
 `Page.tsx`:
 ```tsx
 import type { ReactNode } from "react";
+import { Button } from "@/components";
+import { Modal } from "@/components/feedback";
+import { useBloqueioSaida } from "@/lib/useBloqueioSaida";
 import s from "./Page.module.css";
-export function Page({ children }: { children: ReactNode }) {
-  return <main className={s.page}>{children}</main>;
+export function Page({ children, dirty = false, titulo }: { children: ReactNode; dirty?: boolean; titulo?: string }) {
+  const saida = useBloqueioSaida(dirty);
+  return (
+    <main className={s.page}>
+      {children}
+      <Modal open={saida.bloqueado} title="Sair sem salvar?" onClose={saida.cancelar}
+        footer={<><Button variant="secondary" onClick={saida.cancelar}>Continuar editando</Button><Button variant="danger" onClick={saida.confirmar}>Sair sem salvar</Button></>}>
+        {titulo ? `As alterações em "${titulo}" serão perdidas.` : "As alterações serão perdidas."}
+      </Modal>
+    </main>
+  );
 }
 ```
+(Assinatura de `Modal` conforme T08; ajustar nomes de props se divergirem.)
 
 `PageHeader.tsx`:
 ```tsx
@@ -3364,6 +3464,7 @@ Commit sugerido: `test(e2e): styleguide visual regression at 1280/1440 and login
 - [ ] **Step 1:** `frontend/README.md` — estrutura de pastas (`api/ auth/ components/ dominio/ lib/ pages/ shell/ styles/`), scripts, regra dos barrels (`components/index.ts` primitivos · `display.ts` · `feedback.ts` · `shell.ts`), como rodar E2E.
 - [ ] **Step 2:** `docs/BACKLOG.md` — linha 3.1 concluída com data; remover as duas pendências resolvidas; anotar snapshot Playwright como baseline.
 - [ ] **Step 3:** `.claude/SETUP-BACKLOG.md` — marcar 1, 2, 3 como concluídos.
+- [ ] **Step 3b:** Registrar em `docs/BACKLOG.md` as decisões D2/D4 tomadas e a migration 0013.
 - [ ] **Step 4:** Controlador commita nos três repos e faz `develop` → `main` (ff) + push.
 
 ---
@@ -3373,3 +3474,4 @@ Commit sugerido: `test(e2e): styleguide visual regression at 1280/1440 and login
 - **Cobertura:** contrato §3 até `Section` ✓ (ReservationCard/TripSummary/DataTable/KpiCard ficam em 3.2/3.3 como o contrato manda); §4 erros/estado ✓ (T03, T07); §5 proibições ✓ (T02 lint); §6 a11y ✓ (Field/Modal/Tabs/Chip); §7 styleguide + regressão visual ✓ (T11); telas 01–04 ✓ (T09); shell com sidebar/subnav/tabs ✓ (T10); pendências Fase 2 `AddModules` ✓ (T06). Fora: teste de UX §7 (fim da Fase 3), badges da sidebar (subplanos).
 - **Placeholders:** nenhum "TBD"; onde há decisão condicional (versão do Biome) o passo diz exatamente o que verificar e o que fazer.
 - **Tipos:** `Me.permissoes: string[]` = `MeResponse.Permissoes` ✓; `TokenInfo {nome,email,tipo}` = `ConviteService.TokenInfo` serializado camelCase ✓; `apresentacaoStatus(entidade, valor)` usado por `StatusBadge` ✓; `useAtalho("escape")` em `Modal` e `"ctrl+k"` em `GlobalHeader` ✓; barrels: `@/components` (T04), `@/components/display` (T05), `@/components/feedback` (T08), `@/components/shell` (T10) ✓; `AuthContext`/`AuthValue` exportados por `AuthProvider.tsx` e usados em `Sidebar.test.tsx` ✓.
+- **Revisão externa 2026-09-08:** useSalvamento corrigido (edição durante saving), guarda de saída adicionada, build → wwwroot, Dockerfile em layout irmão, CI Docker movida para D4, migration renumerada 0013, dependência de 3.0.
