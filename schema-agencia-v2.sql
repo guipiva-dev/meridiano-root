@@ -560,10 +560,12 @@ alter table log_acesso_documento
   add constraint log_acesso_documento_anexo_fk foreign key (anexo_id) references anexo(id);
 
 -- =============================================================================
--- 12. TAREFAS / AGENDA
+-- 12. PENDÊNCIAS / AGENDA
+-- Uma entidade só (antes "tarefa"): agenda, viagem e pessoa leem daqui. Sempre com data.
+-- Pendência da viagem aparece para todos os passageiros; automáticas via job (chave_unica).
 -- =============================================================================
 
-create table tarefa (
+create table pendencia (
   id             uuid primary key default gen_random_uuid(),
   agencia_id     uuid not null references agencia(id),
   titulo         text not null,
@@ -574,16 +576,45 @@ create table tarefa (
   viagem_id      uuid references viagem(id)  on delete restrict,
   status         text not null default 'aberta' check (status in ('aberta','concluida','cancelada')),
   origem         text not null default 'manual' check (origem in ('manual','automatica')),
-  chave_unica    text,      -- automáticas: '<viagem_id>:checkin', '<documento_id>:validade'
+  prioridade     text not null default 'normal' check (prioridade in ('normal','urgente')),
+  adiada_de      date,      -- data original, quando adiada
+  chave_unica    text,      -- automáticas: '<viagem_id>:checkin', '<documento_id>:validade', 'pendencia:<cliente_id>:<regra>'
   concluida_em   timestamptz,
   criado_em      timestamptz not null default now(),
   atualizado_em  timestamptz not null default now(),
-  constraint tarefa_chave_unica unique (agencia_id, chave_unica)
+  constraint pendencia_chave_unica unique (agencia_id, chave_unica)
 );
-create index ix_tarefa_agencia_data      on tarefa (agencia_id, data_prevista, status);
-create index ix_tarefa_responsavel       on tarefa (responsavel_id, status, data_prevista);
-create index ix_tarefa_viagem            on tarefa (viagem_id);
-create index ix_tarefa_cliente           on tarefa (cliente_id);
+create index ix_pendencia_agencia_data   on pendencia (agencia_id, data_prevista, status);
+create index ix_pendencia_responsavel    on pendencia (responsavel_id, status, data_prevista);
+create index ix_pendencia_viagem         on pendencia (viagem_id);
+create index ix_pendencia_cliente        on pendencia (cliente_id);
+
+-- =============================================================================
+-- 12b. CUSTOS (despesa) — só o essencial; DRE na v1.1
+-- =============================================================================
+
+create table despesa (
+  id             uuid primary key default gen_random_uuid(),
+  agencia_id     uuid not null references agencia(id),
+  descricao      text not null,
+  categoria      text not null check (categoria in ('fixo','imposto','operacional','marketing','outro')),
+  valor          numeric(12,2) not null check (valor > 0),
+  vencimento     date not null,
+  pago           boolean not null default false,
+  pago_em        date,
+  recorrente     boolean not null default false,
+  viagem_id      uuid references viagem(id) on delete restrict,
+  fornecedor_id  uuid references fornecedor(id),
+  observacao     text,
+  excluido_em    timestamptz,
+  excluido_por   uuid references usuario(id),
+  criado_por     uuid references usuario(id),
+  criado_em      timestamptz not null default now(),
+  atualizado_em  timestamptz not null default now(),
+  constraint despesa_pago_coerente check (not pago or pago_em is not null)
+);
+create index ix_despesa_agencia_venc on despesa (agencia_id, vencimento) where excluido_em is null;
+create index ix_despesa_viagem on despesa (viagem_id) where viagem_id is not null;
 
 -- =============================================================================
 -- 13. JOBS
@@ -653,6 +684,7 @@ create trigger aud_movimento  after insert or update or delete on movimento_fina
 create trigger aud_repasse    after insert or update or delete on repasse              for each row execute function fn_auditoria();
 create trigger aud_usuario    after insert or update or delete on usuario              for each row execute function fn_auditoria();
 create trigger aud_cliente    after insert or update or delete on cliente              for each row execute function fn_auditoria();
+create trigger aud_despesa    after insert or update or delete on despesa              for each row execute function fn_auditoria();
 
 -- atualizado_em
 create or replace function set_atualizado_em() returns trigger as $$
@@ -668,7 +700,7 @@ create trigger upd_viagem       before update on viagem       for each row execu
 create trigger upd_reserva      before update on reserva      for each row execute function set_atualizado_em();
 create trigger upd_servico      before update on servico      for each row execute function set_atualizado_em();
 create trigger upd_repasse      before update on repasse      for each row execute function set_atualizado_em();
-create trigger upd_tarefa       before update on tarefa       for each row execute function set_atualizado_em();
+create trigger upd_pendencia    before update on pendencia    for each row execute function set_atualizado_em();
 
 -- =============================================================================
 -- 15. VIEWS — read-models. A API filtra agencia_id; RLS garante.
@@ -852,7 +884,7 @@ begin
     'usuario','grupo_cliente','cliente','documento_cliente','log_acesso_documento','interacao','oportunidade',
     'fornecedor','regra_pagamento_fornecedor','contador_viagem','viagem','viagem_passageiro',
     'reserva','reserva_alteracao','movimento_financeiro','credito','repasse','fechamento_periodo',
-    'servico','anexo','tarefa','auditoria'
+    'servico','anexo','pendencia','despesa','auditoria'
   ] loop
     execute format('alter table %I enable row level security', t);
     execute format('alter table %I force row level security', t);
@@ -876,5 +908,5 @@ returns table (id uuid, agencia_id uuid, senha_hash text, perfil text, ativo boo
 $$ language sql stable security definer;
 
 -- =============================================================================
--- FIM. v1.1 (migration futura): despesa, dre, metas, checklist_destino.
+-- FIM. v1.1 (migration futura): dre, metas, checklist_destino.
 -- =============================================================================

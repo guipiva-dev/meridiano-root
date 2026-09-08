@@ -165,7 +165,7 @@ Enumerações do domínio; a interface apresenta por um único mapa, nunca inven
 |---|---|---|
 | **Dono** | Tudo | Tudo |
 | **Financeiro** | Viagens, valores, resultado, relatórios | Movimentos, conciliação, repasses, fechamento, NFSe |
-| **Agente** | Viagens, valores de reserva (custo/comissão), clientes, documentos | Lança viagens/reservas/serviços, clientes, fornecedores, anexos, tarefas. Não vê resultado da agência nem repasse. |
+| **Agente** | Viagens, valores de reserva (custo/comissão), clientes, documentos | Lança viagens/reservas/serviços, clientes, fornecedores, anexos, pendências. Não vê resultado da agência nem repasse. |
 | **Vendedor externo** | **Somente leitura.** Próprias viagens: código, destino, datas, cliente, valor vendido, status do repasse e **valor do repasse dele**. Clientes: só os que têm viagem dele. | Nada. Não lança. |
 | **Contador** | Relatórios financeiros, DRE (v1.1), auditoria. Somente leitura. | Nada. |
 
@@ -204,17 +204,20 @@ Descartado: aprovação em duas etapas, segregação de funções.
 - Vencimento de pagamento à operadora: **fora** (decisão mantida da v1; ver pendências).
 
 ### Automações (API, não trigger)
-- Ao criar/alterar datas da viagem: tarefas `checkin` (ida − 3), `posviagem` (volta + 3), `recompra` (volta + 330), responsável = agente. Remarcação reabre tarefa concluída se a data mudou. Cancelar viagem cancela as tarefas automáticas.
-- Job diário: tarefa de validade de passaporte (180 dias antes) para **toda pessoa** com documento; resumo por e-mail.
+- **Pendência** é a única entidade de "coisa a fazer" (antes "tarefa"): sempre com **data**, responsável, opcionalmente viagem e/ou pessoa, prioridade `normal|urgente`. A Agenda lista por data; a viagem mostra as suas; a pessoa mostra as suas **e as das viagens em que é passageira**. Pendência da viagem criada manualmente pode apontar um passageiro.
+- Ao criar/alterar datas da viagem: pendências `checkin` (ida − 3), `posviagem` (volta + 3), `recompra` (volta + 330), responsável = agente. Remarcação reabre pendência concluída se a data mudou. Cancelar viagem cancela as automáticas.
+- Job diário: pendências derivadas com data — validade de passaporte (180 dias antes; **urgente** se há viagem que exige), visto/ESTA por destino, seguro sem apólice confirmada, contato de emergência (30 dias) — por `chave_unica`; somem quando resolvidas. Resumo por e-mail.
+- Na pessoa, a aba Pendências mostra só as abertas por padrão ("Mostrar concluídas" para ver todas); "+ Nova pendência" exige data.
+- Atendimentos da pessoa agrupados por mês; anos anteriores recolhidos.
 - Jobs mensais: expurgo de auditoria; expurgo de anexos vencidos.
 
 ## 10. Escopo
 
 ### Versão 1 — a operação e o dinheiro
-Login, usuários, perfis fixos · clientes/pessoas e CRM básico · fornecedores com regra de pagamento e % padrão · viagem, passageiros, reserva, serviço · movimentos, conciliação, cancelamento com desfecho, crédito · repasse manual com status e lote · fechamento de período · NFSe por reserva · anexos com log de acesso · dashboard, fases, comissões pendentes, ranking, teto MEI · busca global · agenda e tarefas automáticas · resumo diário por e-mail · auditoria e timeline · exportação CSV.
+Login, usuários, perfis fixos · clientes/pessoas e CRM básico · fornecedores com regra de pagamento e % padrão · viagem, passageiros, reserva, serviço · movimentos, conciliação, cancelamento com desfecho, crédito · repasse manual com status e lote · fechamento de período · NFSe por reserva · anexos com log de acesso · dashboard, fases, comissões pendentes, ranking, teto MEI · busca global · agenda e pendências automáticas · **custos** (despesas simples: descrição, categoria, valor, vencimento, pago, recorrente, viagem opcional) · resumo diário por e-mail · auditoria e timeline · exportação CSV.
 
 ### Versão 1.1 — depois de um mês de uso real
-Despesas e DRE simplificada · reembolso com fluxo próprio · checklist de requisitos do destino · metas por vendedor · automações de recompra do CRM · importação da planilha · modelos de mensagem para WhatsApp.
+DRE simplificada sobre os custos · reembolso com fluxo próprio · checklist de requisitos do destino · metas por vendedor · automações de recompra do CRM · importação da planilha · modelos de mensagem para WhatsApp.
 
 ### Fora de escopo
 Orçamento e cotação · geração de voucher/contrato · integração com operadoras · gateway de pagamento · API do WhatsApp · emissão de bilhete · parcelamento próprio.
@@ -281,7 +284,10 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 31 | Comissão sugerida | Pré-preenchida pelo % do fornecedor é **sugerida** (input normal + selo "Sugerido: 10 %"), não "calculada" |
 | 32 | Cadastros | Fornecedor, grupo e usuário abrem em página própria, como pessoa; sem painel lateral |
 | 33 | Pendências da pessoa | Checklist na tela da pessoa: passaporte/visto, CPF, contato, emergência, seguro — derivado das viagens e documentos |
-| 34 | Pendências na agenda | Job diário: pendência com prazo/viagem vira `tarefa` (`chave_unica = 'pendencia:<cliente_id>:<regra>'`), responsável = agente da viagem; some quando resolvida. Pendências só de cadastro não viram tarefa. Badge de Clientes na sidebar = pessoas com pendência |
+| 34 | Pendências na agenda | Job diário cria `pendencia` (`chave_unica = 'pendencia:<cliente_id>:<regra>'`), responsável = agente da viagem; some quando resolvida. Todas com data. Badge de Clientes na sidebar = pessoas com pendência |
+| 36 | Pendência única | `tarefa` → `pendencia`, com data obrigatória, prioridade e `adiada_de`; viagem/pessoa/agenda leem a mesma tabela |
+| 37 | Custos na v1 | `despesa` simples (categoria fixo/imposto/operacional/marketing/outro, vencimento, pago, recorrente, viagem opcional). Subnav Financeiro: Conciliação · Repasses · Custos · Fechamento |
+| 38 | Filtros de viagens | data de emissão (compra), NFSe (enum), fornecedor (multi) além de fase, vendedor, tipo |
 | 35 | Navegação | Sidebar global (módulos) + subnav do módulo (≤ 6 itens) + tabs do registro (cada aba só com seu conteúdo). Acima de 6 itens no módulo: sub-sidebar interna por seções. Sem scroll horizontal de navegação |
 
 ### Pendências

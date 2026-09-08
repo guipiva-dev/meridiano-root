@@ -327,7 +327,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
 @media (max-width:700px){.grid-4,.grid-3,.tiles,.fin{grid-template-columns:1fr}.field[style*="grid-column"]{grid-column:1 / -1 !important}.summary-strip{flex-wrap:wrap}.page{padding:16px}.page-head{flex-direction:column}.page-head .actions{margin-left:0}}
 </style></head><body>
 <div class="proto-bar"><b>Protótipo Meridiano v1</b>
-<a href="#/login">Login</a><a href="#/definir-senha">Convite</a><a href="#/esqueci-senha">Esqueci senha</a><a href="#/redefinir-senha">Redefinir</a><a href="#/viagens">Viagens</a><a href="#/nova-viagem">Nova viagem</a><a href="#/viagem">Detalhe</a><a href="#/clientes">Clientes</a><a href="#/pessoa">Pessoa</a><a href="#/grupos">Grupos</a><a href="#/grupo">Grupo</a><a href="#/fornecedores">Fornecedores</a><a href="#/fornecedor">Fornecedor</a><a href="#/financeiro">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/fechamento">Fechamento</a><a href="#/agenda">Agenda</a><a href="#/dashboard">Dashboard</a><a href="#/usuarios">Usuários</a><a href="#/usuario">Usuário</a><a href="#/auditoria">Auditoria</a>
+<a href="#/login">Login</a><a href="#/definir-senha">Convite</a><a href="#/esqueci-senha">Esqueci senha</a><a href="#/redefinir-senha">Redefinir</a><a href="#/viagens">Viagens</a><a href="#/nova-viagem">Nova viagem</a><a href="#/viagem">Detalhe</a><a href="#/clientes">Clientes</a><a href="#/pessoa">Pessoa</a><a href="#/grupos">Grupos</a><a href="#/grupo">Grupo</a><a href="#/fornecedores">Fornecedores</a><a href="#/fornecedor">Fornecedor</a><a href="#/financeiro">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/custos">Custos</a><a href="#/fechamento">Fechamento</a><a href="#/agenda">Agenda</a><a href="#/dashboard">Dashboard</a><a href="#/usuarios">Usuários</a><a href="#/usuario">Usuário</a><a href="#/auditoria">Auditoria</a>
 </div>
 
 <!-- ===================== LOGIN ===================== -->
@@ -413,7 +413,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
       <a href="#/viagens" data-nav="viagens nova-viagem viagem"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>Viagens</a>
       <a href="#/clientes" data-nav="clientes pessoa grupos grupo"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clientes<span class="badge" title="6 pessoas com pendências">6</span></a>
       <a href="#/fornecedores" data-nav="fornecedores fornecedor"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Fornecedores</a>
-      <a href="#/financeiro" data-nav="financeiro repasses fechamento"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>Financeiro<span class="badge">3</span></a>
+      <a href="#/financeiro" data-nav="financeiro repasses custos fechamento"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>Financeiro<span class="badge">3</span></a>
       <a href="#/agenda" data-nav="agenda"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Agenda<span class="badge">5</span></a>
       <a href="#/dashboard" data-nav="dashboard"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M18 17V9M13 17V5M8 17v-3"/></svg>Relatórios</a>
       <div class="sep"></div>
@@ -448,6 +448,9 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
           <div class="field"><select><option>Vendedor: todos</option><option>Ana Paula</option><option>Guilherme</option></select></div>
           <div class="field"><select><option>Tipo: todos</option><option>Nacional</option><option>Internacional</option></select></div>
           <div class="field"><select><option>Ida: próximos 90 dias</option><option>Este mês</option><option>Qualquer</option></select></div>
+          <div class="field" style="min-width:230px"><div class="chips" style="min-height:40px;border:1px solid var(--border-strong);border-radius:var(--r-input);padding:0 8px;gap:6px"><span class="mini">Fornecedor:</span><span class="chip-t on" style="height:26px">CVC</span><span class="chip-t on" style="height:26px">Decolar</span><span class="more">+</span></div></div>
+          <div class="field"><select><option>NFSe: todas</option><option>Falta emitir</option><option>Emitida</option><option>Não precisa</option></select></div>
+          <div class="field" style="min-width:250px"><div class="chips" style="min-height:40px;gap:6px;flex-wrap:nowrap"><span class="mini">Emissão:</span><input type="date" value="2026-03-01" style="height:36px;flex:1;min-width:0"><input type="date" value="2026-04-30" style="height:36px;flex:1;min-width:0"></div></div>
           <span class="more">Limpar filtros</span>
         </div>
         <div class="tblwrap"><table>
@@ -457,7 +460,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
             <tr onclick="location.hash='#/viagem'"><td><div class="primary">Ana Beatriz Souza</div><div class="secondary">Cancún · Internacional · <span class="code">VG-2026-0041</span></div></td><td class="muted">04/04/2026</td><td class="muted">Guilherme</td><td><span class="pill p-primary">confirmada</span></td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 14.200,00</td><td class="r num"><b>R$ 1.610,00</b></td></tr>
             <tr onclick="location.hash='#/viagem'"><td><div class="primary">Marcos e Renata Lima</div><div class="secondary">Fernando de Noronha · Nacional · <span class="code">VG-2026-0040</span></div></td><td class="muted">29/03/2026</td><td class="muted">Guilherme</td><td><span class="pill p-primary">confirmada</span></td><td><span class="pill p-warn">parcial</span></td><td class="r num">R$ 9.800,00</td><td class="r num"><b>R$ 1.180,00</b></td></tr>
             <tr onclick="location.hash='#/viagem'"><td><div class="primary">Família Oliveira</div><div class="secondary">Gramado · Nacional · <span class="code">VG-2026-0038</span></div></td><td class="muted">22/03/2026</td><td class="muted">Ana Paula</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-err">atrasada</span></td><td class="r num">R$ 6.800,00</td><td class="r num"><b>R$ 740,00</b></td></tr>
-            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Juliana Prado</div><div class="secondary">Buenos Aires · Internacional · <span class="code">VG-2026-0035</span></div></td><td class="muted">10/03/2026</td><td class="muted">Guilherme</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-ok">quitada</span></td><td class="r num">R$ 4.300,00</td><td class="r num"><b>R$ 430,00</b></td></tr>
+            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Juliana Prado</div><div class="secondary">Buenos Aires · Internacional · <span class="code">VG-2026-0035</span></div></td><td class="muted">10/03/2026</td><td class="muted">Guilherme</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-ok">recebida</span></td><td class="r num">R$ 4.300,00</td><td class="r num"><b>R$ 430,00</b></td></tr>
             <tr onclick="location.hash='#/viagem'"><td><div class="primary">Roberto Tanaka</div><div class="secondary">Orlando · Internacional · <span class="code">VG-2026-0033</span></div></td><td class="muted">02/03/2026</td><td class="muted">Ana Paula</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-err">atrasada</span></td><td class="r num">R$ 21.400,00</td><td class="r num"><b>R$ 2.350,00</b></td></tr>
             <tr onclick="location.hash='#/viagem'"><td><div class="primary">Patrícia Nunes</div><div class="secondary">Porto de Galinhas · Nacional · <span class="code">VG-2026-0031</span></div></td><td class="muted">20/02/2026</td><td class="muted">Guilherme</td><td><span class="pill p-err">cancelada</span></td><td><span class="pill p-neutral">crédito</span></td><td class="r num">R$ 5.100,00</td><td class="r num"><b>R$ 0,00</b></td></tr>
           </tbody>
@@ -553,64 +556,103 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     </section>
 
     <!-- ===================== DETALHE DA VIAGEM ===================== -->
-    <section class="screen" id="s-viagem">
+        <section class="screen" id="s-viagem">
       <div class="page">
         <div class="page-head">
           <div class="t"><h2>Carlos Mendes · Lisboa <span class="code">VG-2026-0042</span></h2><div class="sub"><span>18–28/04/2026 · Internacional · 2 passageiros</span><span class="pill p-info">em emissão</span><span class="pill p-info">a receber</span><span>Vendedora: <b>Ana Paula</b> · Agente: <b>Guilherme</b></span></div></div>
           <div class="actions"><button class="btn btn-secondary">Transferir</button><button class="btn btn-danger">Cancelar viagem…</button><a href="#/nova-viagem" class="btn btn-primary" style="text-decoration:none">Editar</a></div>
         </div>
-        <div class="tabs"><a class="on">Resumo</a><a>Reservas<span class="cnt">2</span></a><a>Financeiro</a><a>Documentos<span class="cnt">3</span></a><a>Timeline</a></div>
-        <div class="two">
-          <div style="display:flex;flex-direction:column;gap:20px">
-            <div class="summary-strip">
-              <div><small>Venda total</small><b>R$ 13.700,00</b></div><span class="sep"></span>
-              <div><small>Custo total</small><b>R$ 13.000,00</b></div><span class="sep"></span>
-              <div><small>Comissão da vendedora</small><b>R$ 300,00</b></div><span class="sep"></span>
-              <div class="res"><small>Resultado da agência</small><b>R$ 1.820,00</b></div>
-              <div style="margin-left:auto;text-align:right"><small style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700">Recebido</small><br><b class="num" style="font-size:18px;color:var(--n-700)">R$ 0,00</b></div>
-            </div>
-            <div class="block reserva collapsed">
-              <div class="bh"><span class="num-id">Reserva 1</span><span class="forn">CVC Operadora</span><span class="loc">K7X2PQ</span><span class="pill p-info">em emissão</span><span class="svc">Aéreo · Hospedagem · Passeio</span><span class="total">R$ 10.500,00 <small>receita R$ 1.600,00</small></span><span class="tog">Expandir</span></div><div class="bb"></div>
-            </div>
-            <div class="block reserva collapsed">
-              <div class="bh"><span class="num-id">Reserva 2</span><span class="forn">Decolar</span><span class="loc">DCL-88213</span><span class="pill p-primary">emitida</span><span class="svc">Seguro · Traslado</span><span class="total">R$ 3.200,00 <small>receita R$ 520,00</small></span><span class="tog">Expandir</span></div><div class="bb"></div>
-            </div>
-            <div class="block">
-              <div class="bh"><h3>Comissões desta viagem</h3><span class="meta">O que a agência espera receber das operadoras</span></div>
-              <div class="list">
-                <div class="it"><div class="t"><b>CVC · K7X2PQ</b><span>previsto para 20/03/2026</span></div><span class="pill p-info">a receber</span><div class="r">R$ 1.600,00</div><button class="btn btn-secondary btn-sm">Marcar recebida</button></div>
-                <div class="it"><div class="t"><b>Decolar · DCL-88213</b><span>previsto para 05/04/2026</span></div><span class="pill p-info">a receber</span><div class="r">R$ 320,00</div><button class="btn btn-secondary btn-sm">Marcar recebida</button></div>
-              </div>
-            </div>
-            <div class="block">
-              <div class="bh"><h3>Passageiros e documentos</h3><span class="meta">Passaporte válido até 6 meses após a volta</span></div>
-              <div class="list">
-                <div class="it"><div class="t"><b>Carlos Mendes <span class="pill p-neutral" style="height:20px">titular</span></b><span>Passaporte FX123456 · válido até 12/2031</span></div><span class="pill p-ok">ok</span></div>
-                <div class="it"><div class="t"><b>Lúcia Mendes</b><span>Passaporte GB998877 · vence 30/05/2026</span></div><span class="pill p-warn">vence em 32 dias</span><button class="btn btn-tertiary btn-sm btn-ghost">Abrir pessoa</button></div>
-              </div>
-            </div>
+        <div class="tabs" data-tabs="viagem"><a class="on" data-tab="resumo">Resumo</a><a data-tab="reservas">Reservas<span class="cnt">2</span></a><a data-tab="financeiro">Financeiro</a><a data-tab="pendencias">Pendências<span class="cnt" style="background:var(--yellow-50);color:var(--orange-700)">2</span></a><a data-tab="documentos">Documentos<span class="cnt">3</span></a><a data-tab="timeline">Timeline</a></div>
+
+        <div data-panel="resumo" style="display:flex;flex-direction:column;gap:20px">
+          <div class="summary-strip">
+            <div><small>Venda total</small><b>R$ 13.700,00</b></div><span class="sep"></span>
+            <div><small>Custo total</small><b>R$ 13.000,00</b></div><span class="sep"></span>
+            <div><small>Comissão da vendedora</small><b>R$ 300,00</b></div><span class="sep"></span>
+            <div class="res"><small>Resultado da agência</small><b>R$ 1.820,00</b></div>
+            <div style="margin-left:auto;text-align:right"><small style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700">Recebido</small><br><b class="num" style="font-size:18px;color:var(--n-700)">R$ 0,00</b></div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:20px">
-            <div class="block"><div class="bh"><h3>Timeline</h3></div><div style="padding:8px 20px 16px">
-              <div class="timeline">
-                <div class="ev"><div class="w"><b>Reserva 2 emitida</b><em>Decolar · DCL-88213</em><span>hoje 10:12 · Guilherme</span></div></div>
-                <div class="ev warn"><div class="w"><b>Comissão da reserva 1 alterada</b><em>R$ 1.000,00 → R$ 1.100,00 · motivo: "operadora revisou %"</em><span>ontem 16:40 · Guilherme</span></div></div>
-                <div class="ev"><div class="w"><b>Reserva 1 lançada</b><em>CVC · K7X2PQ · R$ 10.500,00</em><span>12/03 14:32 · Ana Paula</span></div></div>
-                <div class="ev"><div class="w"><b>Viagem criada</b><em>Lisboa · 18–28/04</em><span>12/03 14:20 · Ana Paula</span></div></div>
-              </div></div></div>
-            <div class="block"><div class="bh"><h3>Anexos</h3><span class="meta">3</span></div>
-              <div class="list">
-                <div class="it"><div class="t"><b>voucher-cvc-K7X2PQ.pdf</b><span>reserva 1 · 212 KB</span></div><span class="more">Abrir</span></div>
-                <div class="it"><div class="t"><b>passaporte-lucia.jpg</b><span>pessoa · sensível · descarte 28/10/2026</span></div><span class="more">Abrir</span></div>
-                <div class="it"><div class="t"><b>comprovante-pix.png</b><span>reserva 2 · 88 KB</span></div><span class="more">Abrir</span></div>
-                <div class="it"><button class="btn btn-secondary btn-sm">+ Anexar</button></div>
-              </div></div>
-            <div class="block"><div class="bh"><h3>Tarefas</h3></div>
-              <div class="list">
-                <div class="it"><span class="check"></span><div class="t"><b>Check-in e envio de documentos</b><span>15/04 · automática</span></div></div>
-                <div class="it"><span class="check on">✓</span><div class="t"><b>Confirmar seguro com Decolar</b><span>concluída ontem</span></div></div>
-              </div></div>
+          <div class="split">
+            <div class="block"><div class="bh"><h3>Reservas</h3><span class="meta">2 · clique para abrir</span></div><div class="list">
+              <div class="it" style="cursor:pointer"><span class="num-id" style="font-size:12px;font-weight:800;color:#fff;background:var(--navy-800);border-radius:var(--r-pill);padding:2px 9px">1</span><div class="t"><b>CVC Operadora · <span class="mono">K7X2PQ</span></b><span>Aéreo · Hospedagem · Passeio</span></div><span class="pill p-info">em emissão</span><div class="r">R$ 10.500,00</div></div>
+              <div class="it" style="cursor:pointer"><span class="num-id" style="font-size:12px;font-weight:800;color:#fff;background:var(--navy-800);border-radius:var(--r-pill);padding:2px 9px">2</span><div class="t"><b>Decolar · <span class="mono">DCL-88213</span></b><span>Seguro · Traslado</span></div><span class="pill p-primary">emitida</span><div class="r">R$ 3.200,00</div></div>
+            </div></div>
+            <div class="block"><div class="bh"><h3>Passageiros</h3></div><div class="list">
+              <div class="it"><div class="t"><b>Carlos Mendes <span class="pill p-neutral" style="height:20px">titular</span></b><span>Passaporte válido até 12/2031</span></div><span class="pill p-ok">ok</span></div>
+              <div class="it"><div class="t"><b>Lúcia Mendes</b><span>Passaporte vence 30/05/2026</span></div><span class="pill p-warn">1 pendência</span><a href="#/pessoa" class="more">Abrir</a></div>
+            </div></div>
           </div>
+          <div class="block"><div class="bh"><h3>Próximas pendências</h3><span class="meta">as 2 mais próximas · ver todas na aba Pendências</span></div><div class="list">
+            <div class="it"><span class="check"></span><div class="t"><b>Renovar passaporte — Lúcia Mendes</b><span>até 15/04 · automática · Ana Paula</span></div><span class="pill p-warn">urgente</span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Check-in e envio de documentos</b><span>15/04 · automática · Guilherme</span></div></div>
+          </div></div>
+        </div>
+
+        <div data-panel="reservas" style="display:none;flex-direction:column;gap:16px">
+          <div class="block reserva collapsed"><div class="bh"><span class="num-id">Reserva 1</span><span class="forn">CVC Operadora</span><span class="loc">K7X2PQ</span><span class="pill p-info">em emissão</span><span class="svc">Aéreo · Hospedagem · Passeio</span><span class="total">R$ 10.500,00 <small>receita R$ 1.600,00</small></span><span class="tog">Expandir</span></div><div class="bb"></div></div>
+          <div class="block reserva collapsed"><div class="bh"><span class="num-id">Reserva 2</span><span class="forn">Decolar</span><span class="loc">DCL-88213</span><span class="pill p-primary">emitida</span><span class="svc">Seguro · Traslado</span><span class="total">R$ 3.200,00 <small>receita R$ 520,00</small></span><span class="tog">Expandir</span></div><div class="bb"></div></div>
+          <div><a href="#/nova-viagem" class="btn btn-accent" style="text-decoration:none">+ Adicionar reserva</a></div>
+        </div>
+
+        <div data-panel="financeiro" style="display:none;flex-direction:column;gap:20px">
+          <div class="summary-strip">
+            <div><small>Receita prevista</small><b>R$ 2.120,00</b></div><span class="sep"></span>
+            <div><small>Recebido</small><b>R$ 0,00</b></div><span class="sep"></span>
+            <div><small>Comissão da vendedora</small><b>R$ 300,00</b> <span class="pill p-neutral">bloqueado</span></div><span class="sep"></span>
+            <div class="res"><small>Resultado da agência</small><b>R$ 1.820,00</b></div>
+          </div>
+          <div class="block"><div class="bh"><h3>Comissões a receber</h3><span class="meta">o que a agência espera das operadoras</span></div><div class="list">
+            <div class="it"><div class="t"><b>CVC · K7X2PQ</b><span>previsto para 05/04/2026</span></div><span class="pill p-info">a receber</span><div class="r">R$ 1.600,00</div><button class="btn btn-secondary btn-sm">Marcar recebida</button></div>
+            <div class="it"><div class="t"><b>Decolar · DCL-88213</b><span>previsto para 05/04/2026</span></div><span class="pill p-info">a receber</span><div class="r">R$ 320,00</div><button class="btn btn-secondary btn-sm">Marcar recebida</button></div>
+          </div></div>
+          <div class="block"><div class="bh"><h3>Movimentos</h3><span class="meta">caixa desta viagem</span><button class="btn btn-secondary btn-sm" style="margin-left:auto">+ Movimento</button></div><div class="list">
+            <div class="it"><div class="t"><b>Recebimento do cliente · PIX</b><span>14/03/2026 · reserva 2 · Guilherme</span></div><div class="r" style="color:var(--green-700)">+ R$ 3.200,00</div></div>
+            <div class="it"><div class="t"><b>Pagamento ao fornecedor · Decolar</b><span>14/03/2026 · reserva 2 · transferência</span></div><div class="r" style="color:var(--red-700)">− R$ 3.000,00</div></div>
+          </div></div>
+          <div class="block"><div class="bh"><h3>Custos da viagem</h3><span class="meta">despesas lançadas nesta viagem</span><a href="#/custos" class="btn btn-secondary btn-sm" style="margin-left:auto;text-decoration:none">+ Custo</a></div><div class="list">
+            <div class="it"><div class="t"><b>Motorista para aeroporto</b><span>12/04/2026 · operacional · pago</span></div><div class="r" style="color:var(--red-700)">− R$ 180,00</div></div>
+          </div></div>
+        </div>
+
+        <div data-panel="pendencias" style="display:none;flex-direction:column;gap:16px">
+          <div class="row"><button class="btn btn-primary">+ Nova pendência</button><span class="mini">Toda pendência tem data. Aparece aqui, na Agenda e na aba Pendências de cada passageiro.</span><label class="mini" style="margin-left:auto;display:flex;gap:6px;align-items:center"><span class="check"></span> Mostrar concluídas</label></div>
+          <div class="block"><div class="list">
+            <div class="it"><span class="check"></span><div class="t"><b>Renovar passaporte — Lúcia Mendes</b><span>até 15/04/2026 · automática (viagem exige 6 meses) · Ana Paula</span></div><span class="pill p-warn">urgente</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/pessoa" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir pessoa</a></span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Check-in e envio de documentos</b><span>15/04/2026 · automática · Guilherme</span></div><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button></span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Confirmar apólice do seguro em nome de Lúcia</b><span>10/04/2026 · manual · Guilherme</span></div><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button></span></div>
+          </div></div>
+          <div class="modal" style="max-width:520px">
+            <h3>Nova pendência</h3>
+            <div class="grid-4" style="grid-template-columns:1fr 1fr">
+              <div class="field" style="grid-column:span 2"><label>O que precisa ser feito <span style="color:var(--red-600)">*</span></label><input placeholder="Ex.: enviar voucher do hotel"></div>
+              <div class="field"><label>Data <span style="color:var(--red-600)">*</span></label><input type="date" value="2026-04-10"></div>
+              <div class="field"><label>Responsável</label><select><option>Guilherme</option><option>Ana Paula</option></select></div>
+              <div class="field" style="grid-column:span 2"><label>Passageiro relacionado <span style="font-weight:400;color:var(--text-muted)">(opcional — aparece na aba Pendências dele)</span></label><select><option>— viagem inteira —</option><option>Carlos Mendes</option><option>Lúcia Mendes</option></select></div>
+            </div>
+            <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Criar pendência</button></div>
+          </div>
+        </div>
+
+        <div data-panel="documentos" style="display:none;flex-direction:column;gap:16px">
+          <div class="block"><div class="bh"><h3>Documentos dos passageiros</h3><span class="meta">Passaporte válido até 6 meses após a volta</span></div><div class="list">
+            <div class="it"><div class="t"><b>Carlos Mendes</b><span>Passaporte FX123456 · válido até 12/2031</span></div><span class="pill p-ok">ok</span></div>
+            <div class="it"><div class="t"><b>Lúcia Mendes</b><span>Passaporte GB998877 · vence 30/05/2026</span></div><span class="pill p-warn">vence em 32 dias</span><a href="#/pessoa" class="more">Abrir pessoa</a></div>
+          </div></div>
+          <div class="block"><div class="bh"><h3>Anexos</h3><span class="meta">3</span><button class="btn btn-secondary btn-sm" style="margin-left:auto">+ Anexar</button></div><div class="list">
+            <div class="it"><div class="t"><b>voucher-cvc-K7X2PQ.pdf</b><span>reserva 1 · 212 KB · Guilherme</span></div><span class="more">Abrir</span></div>
+            <div class="it"><div class="t"><b>passaporte-lucia.jpg</b><span>pessoa · sensível · descarte 28/10/2026</span></div><span class="more">Abrir</span></div>
+            <div class="it"><div class="t"><b>comprovante-pix.png</b><span>reserva 2 · 88 KB</span></div><span class="more">Abrir</span></div>
+          </div></div>
+        </div>
+
+        <div data-panel="timeline" style="display:none">
+          <div class="block"><div style="padding:8px 24px 16px"><div class="timeline">
+            <div class="ev"><div class="w"><b>Reserva 2 emitida</b><em>Decolar · DCL-88213</em><span>hoje 10:12 · Guilherme</span></div></div>
+            <div class="ev warn"><div class="w"><b>Comissão da reserva 1 alterada</b><em>R$ 1.000,00 → R$ 1.100,00 · motivo: "operadora revisou %"</em><span>ontem 16:40 · Guilherme</span></div></div>
+            <div class="ev money"><div class="w"><b>Recebimento do cliente R$ 3.200,00 · PIX</b><em>reserva 2</em><span>14/03 11:20 · Guilherme</span></div></div>
+            <div class="ev"><div class="w"><b>Reserva 1 lançada</b><em>CVC · K7X2PQ · R$ 10.500,00</em><span>12/03 14:32 · Ana Paula</span></div></div>
+            <div class="ev"><div class="w"><b>Viagem criada</b><em>Lisboa · 18–28/04</em><span>12/03 14:20 · Ana Paula</span></div></div>
+          </div></div></div>
         </div>
       </div>
     </section>
@@ -684,15 +726,22 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
         </div>
 
         <div data-panel="pendencias" style="display:none;max-width:1100px">
-          <div class="block"><div class="bh"><h3>Pendências</h3><span class="meta">Derivadas das viagens e documentos. As com prazo entram na Agenda automaticamente.</span></div>
-            <div class="list">
-              <div class="it"><span class="check"></span><div class="t"><b>Renovar passaporte</b><span>vence em 30/05/2026 — 32 dias; viagem para Lisboa em 18/04 exige 6 meses de validade</span></div><span class="pill p-warn">urgente</span><span class="pill p-info">na agenda</span><button class="btn btn-secondary btn-sm">Abrir tarefa</button></div>
-              <div class="it"><span class="check"></span><div class="t"><b>Seguro viagem para Lisboa</b><span>reserva 2 (Decolar) cobre seguro · confirmar apólice em nome dela</span></div><span class="pill p-info">na agenda</span><button class="btn btn-ghost btn-sm">Abrir reserva</button></div>
-              <div class="it"><span class="check"></span><div class="t"><b>Contato de emergência</b><span>nenhum informado</span></div><span class="pill p-neutral">só aqui</span><button class="btn btn-ghost btn-sm">Preencher</button></div>
-              <div class="it"><span class="check"></span><div class="t"><b>Informar visto / ESTA quando aplicável</b><span>destino Portugal: não exige visto para brasileiros até 90 dias</span></div><span class="pill p-neutral">não se aplica</span></div>
-              <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">CPF cadastrado</b><span>ok</span></div></div>
-              <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">WhatsApp cadastrado</b><span>ok</span></div></div>
-            </div></div>
+          <div class="row" style="margin-bottom:12px"><button class="btn btn-primary">+ Nova pendência</button><span class="mini">Toda pendência tem data e aparece na Agenda. As da viagem aparecem aqui automaticamente.</span><label class="mini" style="margin-left:auto;display:flex;gap:6px;align-items:center;cursor:pointer"><span class="check"></span> Mostrar concluídas (4)</label></div>
+          <div class="block"><div class="list">
+            <div class="it"><span class="check"></span><div class="t"><b>Renovar passaporte</b><span>até 15/04/2026 · automática · viagem Lisboa (VG-2026-0042) exige 6 meses de validade · Ana Paula</span></div><span class="pill p-warn">urgente</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/viagem" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir viagem</a></span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Confirmar apólice do seguro em nome dela</b><span>10/04/2026 · da viagem Lisboa · Guilherme</span></div><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/viagem" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir viagem</a></span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Informar contato de emergência</b><span>30/04/2026 · automática (cadastro) · Ana Paula</span></div><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button></span></div>
+          </div></div>
+          <div class="modal" style="max-width:520px">
+            <h3>Nova pendência — Lúcia Mendes</h3>
+            <div class="grid-4" style="grid-template-columns:1fr 1fr">
+              <div class="field" style="grid-column:span 2"><label>O que precisa ser feito <span style="color:var(--red-600)">*</span></label><input placeholder="Ex.: pedir foto do passaporte novo"></div>
+              <div class="field"><label>Data <span style="color:var(--red-600)">*</span></label><input type="date" value="2026-04-10"></div>
+              <div class="field"><label>Responsável</label><select><option>Ana Paula</option><option>Guilherme</option></select></div>
+              <div class="field" style="grid-column:span 2"><label>Viagem relacionada <span style="font-weight:400;color:var(--text-muted)">(opcional)</span></label><select><option>—</option><option>VG-2026-0042 · Lisboa</option></select></div>
+            </div>
+            <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Criar pendência</button></div>
+          </div>
         </div>
 
         <div data-panel="viagens" style="display:none;max-width:1100px">
@@ -706,14 +755,19 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
         </div>
 
         <div data-panel="atendimentos" style="display:none;max-width:1100px">
-          <div class="block"><div class="bh"><h3>Atendimentos</h3><span class="meta">histórico de contato</span><button class="btn btn-primary btn-sm" style="margin-left:auto">+ Registrar</button></div><div style="padding:8px 24px 16px"><div class="timeline">
-            <div class="ev"><div class="w"><b>WhatsApp</b><em>Pediu orçamento de Portugal para abril; prefere hotel no centro.</em><span>10/03/2026 · Ana Paula</span></div></div>
-            <div class="ev"><div class="w"><b>Ligação</b><em>Avisada sobre validade do passaporte.</em><span>02/03/2026 · Guilherme</span></div></div>
+          <div class="row" style="margin-bottom:12px"><button class="btn btn-primary">+ Registrar atendimento</button><div class="field" style="min-width:160px"><select><option>Canal: todos</option><option>WhatsApp</option><option>Ligação</option><option>Presencial</option><option>E-mail</option></select></div><div class="field" style="min-width:160px"><select><option>Tipo: todos</option><option>Só atendimentos</option><option>Só automáticos</option></select></div><span class="mini" style="margin-left:auto">6 registros · agrupados por mês</span></div>
+          <div class="day"><div class="dh">Abril de 2026 <span>1 · viagem Lisboa</span></div><div style="padding:4px 20px 8px"><div class="timeline">
+            <div class="ev"><div class="w"><b>WhatsApp</b><em>Confirmou os passageiros e pediu para incluir seguro.</em><span>02/04 · Ana Paula</span></div></div>
+          </div></div></div>
+          <div class="day"><div class="dh">Março de 2026 <span>2</span></div><div style="padding:4px 20px 8px"><div class="timeline">
+            <div class="ev"><div class="w"><b>WhatsApp</b><em>Pediu orçamento de Portugal para abril; prefere hotel no centro.</em><span>10/03 · Ana Paula</span></div></div>
+            <div class="ev"><div class="w"><b>Ligação</b><em>Avisada sobre validade do passaporte.</em><span>02/03 · Guilherme</span></div></div>
+          </div></div></div>
+          <div class="day"><div class="dh">2025 <span>2 · viagem Gramado</span><span class="more" style="margin-left:auto">Recolher</span></div><div style="padding:4px 20px 8px"><div class="timeline">
             <div class="ev"><div class="w"><b>WhatsApp</b><em>Enviou fotos de Gramado; elogiou o hotel.</em><span>20/06/2025 · Ana Paula</span></div></div>
             <div class="ev"><div class="w"><b>Presencial</b><em>Fechou Gramado; pagou por pix.</em><span>28/04/2025 · Guilherme</span></div></div>
-            <div class="ev"><div class="w"><b>Tarefa automática</b><em>Pós-viagem: avaliação e fotos — Cancún</em><span>13/09/2023 · concluída</span></div></div>
-            <div class="ev"><div class="w"><b>Tarefa automática</b><em>Retomar contato (11 meses da última viagem)</em><span>15/05/2026 · aberta</span></div></div>
           </div></div></div>
+          <div class="day"><div class="dh">2023 <span>1 · viagem Cancún</span><span class="more" style="margin-left:auto">Expandir</span></div></div>
         </div>
       </div>
     </section>
@@ -764,7 +818,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <!-- ===================== FINANCEIRO · CONCILIAÇÃO ===================== -->
     <section class="screen" id="s-financeiro">
       <div class="page">
-        <div class="subnav"><a href="#/financeiro" class="on">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/fechamento">Fechamento</a></div>
+        <div class="subnav"><a href="#/financeiro" class="on">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/custos">Custos</a><a href="#/fechamento">Fechamento</a></div>
         <div class="page-head">
           <div class="t"><h2>Comissões a receber</h2><div class="sub"><span>O que as operadoras ainda devem à agência</span></div></div>
           <div class="actions"><button class="btn btn-secondary">Exportar CSV</button></div>
@@ -808,7 +862,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <!-- ===================== REPASSES ===================== -->
     <section class="screen" id="s-repasses">
       <div class="page">
-        <div class="subnav"><a href="#/financeiro">Conciliação</a><a href="#/repasses" class="on">Repasses</a><a href="#/fechamento">Fechamento</a></div>
+        <div class="subnav"><a href="#/financeiro">Conciliação</a><a href="#/repasses" class="on">Repasses</a><a href="#/custos">Custos</a><a href="#/fechamento">Fechamento</a></div>
         <div class="page-head">
           <div class="t"><h2>Repasses a vendedores</h2><div class="sub"><span>Liberado quando toda comissão da viagem entra · valor definido por você</span></div></div>
           <div class="actions"><button class="btn btn-secondary">Histórico</button></div>
@@ -852,7 +906,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <!-- ===================== FECHAMENTO DE PERÍODO ===================== -->
     <section class="screen" id="s-fechamento">
       <div class="page">
-        <div class="subnav"><a href="#/financeiro">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/fechamento" class="on">Fechamento</a></div>
+        <div class="subnav"><a href="#/financeiro">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/custos">Custos</a><a href="#/fechamento" class="on">Fechamento</a></div>
         <div class="page-head">
           <div class="t"><h2>Fechamento de período</h2><div class="sub"><span>Mês fechado: reservas e recebimentos só mudam com permissão e motivo</span></div></div>
         </div>
@@ -878,39 +932,104 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
         </div>
       </div>
     </section>
+
+    <!-- ===================== CUSTOS ===================== -->
+    <section class="screen" id="s-custos">
+      <div class="page">
+        <div class="subnav"><a href="#/financeiro">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/custos" class="on">Custos</a><a href="#/fechamento">Fechamento</a></div>
+        <div class="page-head">
+          <div class="t"><h2>Custos</h2><div class="sub"><span>Despesas da agência · abril de 2026 · <b>R$ 2.640,00</b> lançados · 3 a pagar</span></div></div>
+          <div class="actions"><div class="field" style="min-width:150px"><select><option>Abril 2026</option><option>Março 2026</option></select></div><button class="btn btn-secondary">Exportar CSV</button><button class="btn btn-accent">+ Novo custo</button></div>
+        </div>
+        <div class="tiles" style="grid-template-columns:repeat(4,1fr)">
+          <div class="tile"><small>Lançado no mês</small><b>R$ 2.640,00</b><span>9 custos</span></div>
+          <div class="tile"><small>A pagar</small><b style="color:var(--orange-700)">R$ 1.180,00</b><a class="warn" href="#">3 vencem até 15/04 →</a></div>
+          <div class="tile"><small>Fixos</small><b>R$ 1.460,00</b><span>DAS, sistema, telefone</span></div>
+          <div class="tile"><small>Ligados a viagens</small><b>R$ 180,00</b><span>1 custo</span></div>
+        </div>
+        <div class="filters">
+          <div class="field"><select><option>Categoria: todas</option><option>Fixo</option><option>Imposto</option><option>Operacional</option><option>Marketing</option><option>Outro</option></select></div>
+          <div class="field"><select><option>Situação: todas</option><option>A pagar</option><option>Pago</option></select></div>
+          <div class="field"><select><option>Viagem: qualquer</option><option>Só ligados a viagem</option></select></div>
+        </div>
+        <div class="tblwrap"><table>
+          <thead><tr><th>Custo</th><th>Categoria</th><th>Vencimento</th><th>Situação</th><th>Viagem</th><th class="r">Valor</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><div class="primary">DAS — MEI abril</div><div class="secondary">recorrente · todo dia 20</div></td><td><span class="pill p-neutral">imposto</span></td><td class="muted">20/04/2026</td><td><span class="pill p-warn">a pagar</span></td><td class="muted">—</td><td class="r num">R$ 75,90</td><td class="r"><button class="btn btn-secondary btn-sm">Marcar pago</button></td></tr>
+            <tr><td><div class="primary">Sistema Meridiano</div><div class="secondary">recorrente · mensal</div></td><td><span class="pill p-neutral">fixo</span></td><td class="muted">10/04/2026</td><td><span class="pill p-warn">a pagar</span></td><td class="muted">—</td><td class="r num">R$ 149,00</td><td class="r"><button class="btn btn-secondary btn-sm">Marcar pago</button></td></tr>
+            <tr><td><div class="primary">Anúncios Instagram — abril</div><div class="secondary">Meta Ads</div></td><td><span class="pill p-neutral">marketing</span></td><td class="muted">15/04/2026</td><td><span class="pill p-warn">a pagar</span></td><td class="muted">—</td><td class="r num">R$ 955,10</td><td class="r"><button class="btn btn-secondary btn-sm">Marcar pago</button></td></tr>
+            <tr><td><div class="primary">Motorista para aeroporto</div><div class="secondary">Carlos Mendes · Lisboa</div></td><td><span class="pill p-neutral">operacional</span></td><td class="muted">12/04/2026</td><td><span class="pill p-ok">pago 05/04</span></td><td><a href="#/viagem" class="more"><span class="code">VG-2026-0042</span></a></td><td class="r num">R$ 180,00</td><td class="r"><span class="more">Editar</span></td></tr>
+            <tr><td><div class="primary">Telefone e internet</div><div class="secondary">recorrente · mensal</div></td><td><span class="pill p-neutral">fixo</span></td><td class="muted">05/04/2026</td><td><span class="pill p-ok">pago 05/04</span></td><td class="muted">—</td><td class="r num">R$ 230,00</td><td class="r"><span class="more">Editar</span></td></tr>
+            <tr><td><div class="primary">Pró-labore — Guilherme</div><div class="secondary">recorrente · mensal</div></td><td><span class="pill p-neutral">fixo</span></td><td class="muted">01/04/2026</td><td><span class="pill p-ok">pago 01/04</span></td><td class="muted">—</td><td class="r num">R$ 1.050,00</td><td class="r"><span class="more">Editar</span></td></tr>
+          </tbody></table><div class="pager">1–6 de 9</div></div>
+        <div class="modal" style="max-width:560px">
+          <h3>Novo custo</h3>
+          <div class="grid-4" style="grid-template-columns:1fr 1fr">
+            <div class="field" style="grid-column:span 2"><label>Descrição <span style="color:var(--red-600)">*</span></label><input placeholder="Ex.: Anúncios Instagram — abril"></div>
+            <div class="field"><label>Valor <span style="color:var(--red-600)">*</span></label><div class="money"><span>R$</span><input placeholder="0,00"></div></div>
+            <div class="field"><label>Categoria <span style="color:var(--red-600)">*</span></label><select><option>Fixo</option><option>Imposto</option><option>Operacional</option><option>Marketing</option><option>Outro</option></select></div>
+            <div class="field"><label>Vencimento <span style="color:var(--red-600)">*</span></label><input type="date" value="2026-04-15"></div>
+            <div class="field"><label>Situação</label><select><option>A pagar</option><option>Pago</option></select></div>
+            <div class="field"><label>Repete todo mês</label><select><option>Não</option><option>Sim</option></select></div>
+            <div class="field"><label>Viagem <span style="font-weight:400;color:var(--text-muted)">(opcional)</span></label><select><option>—</option><option>VG-2026-0042 · Carlos Mendes · Lisboa</option></select></div>
+          </div>
+          <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Salvar custo</button></div>
+        </div>
+      </div>
+    </section>
     <!-- ===================== AGENDA ===================== -->
-    <section class="screen" id="s-agenda">
+        <section class="screen" id="s-agenda">
       <div class="page">
         <div class="page-head">
-          <div class="t"><h2>Agenda</h2><div class="sub"><span>Hoje, terça 7 de abril · <b>5 tarefas</b> · 2 embarques esta semana</span></div></div>
-          <div class="actions"><div class="field" style="min-width:180px"><select><option>Responsável: todos</option><option>Guilherme</option><option>Ana Paula</option></select></div><button class="btn btn-primary">+ Tarefa</button></div>
+          <div class="t"><h2>Agenda</h2><div class="sub"><span>Terça, 7 de abril · <b>5 pendências</b> hoje · 2 atrasadas · 2 embarques esta semana</span></div></div>
+          <div class="actions"><div class="field" style="min-width:180px"><select><option>Responsável: todos</option><option>Guilherme</option><option>Ana Paula</option></select></div><button class="btn btn-primary">+ Nova pendência</button></div>
         </div>
-        <div class="tabs"><a class="on">Tarefas</a><a>Embarques e retornos</a><a>Documentos vencendo<span class="cnt">6</span></a><a>Créditos vencendo<span class="cnt">1</span></a></div>
-        <div class="two">
-          <div style="display:flex;flex-direction:column;gap:16px">
-            <div class="day"><div class="dh">Atrasadas <span>2</span></div><div class="list">
-              <div class="it"><span class="check"></span><div class="t"><b>Retomar contato — Roberto Tanaka</b><span>recompra · 11 meses da última viagem · venceu há 3 dias</span></div><span class="pill p-err">atrasada</span><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><button class="btn btn-secondary btn-sm">Abrir</button></span></div>
-              <div class="it"><span class="check"></span><div class="t"><b>Cobrar comissão CVC-77A2Q</b><span>Família Oliveira · manual</span></div><span class="pill p-err">atrasada</span><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><button class="btn btn-secondary btn-sm">Abrir</button></span></div>
-            </div></div>
-            <div class="day"><div class="dh">Hoje <span>3</span></div><div class="list">
-              <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">Confirmar seguro com Decolar</b><span>Carlos Mendes · Lisboa</span></div><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><button class="btn btn-secondary btn-sm">Abrir</button></span></div>
-              <div class="it"><span class="check"></span><div class="t"><b>Passaporte vence em 30/05 — Lúcia Mendes</b><span>automática · 180 dias antes</span></div><span class="pill p-warn">documento</span><span class="mini">Ana Paula</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><button class="btn btn-secondary btn-sm">Abrir</button></span></div>
-              <div class="it"><span class="check"></span><div class="t"><b>Enviar voucher do hotel</b><span>Ana Beatriz Souza · Cancún</span></div><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><button class="btn btn-secondary btn-sm">Abrir</button></span></div>
-            </div></div>
-            <div class="day"><div class="dh">Esta semana</div><div class="list">
-              <div class="it"><span class="check"></span><div class="t"><b>Check-in e envio de documentos — Cancún</b><span>quinta 09/04 · automática · ida 12/04</span></div><span class="pill p-info">embarque</span><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><button class="btn btn-secondary btn-sm">Abrir</button></span></div>
-              <div class="it"><span class="check"></span><div class="t"><b>Pós-viagem: avaliação e fotos — Gramado</b><span>sexta 10/04 · automática</span></div><span class="mini">Ana Paula</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><button class="btn btn-secondary btn-sm">Abrir</button></span></div>
-            </div></div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:16px">
+        <div class="tabs" data-tabs="agenda"><a class="on" data-tab="pendencias">Pendências<span class="cnt">7</span></a><a data-tab="embarques">Embarques e retornos<span class="cnt">3</span></a><a data-tab="documentos">Documentos vencendo<span class="cnt">6</span></a><a data-tab="creditos">Créditos vencendo<span class="cnt">1</span></a></div>
+
+        <div data-panel="pendencias" style="display:flex;flex-direction:column;gap:16px;max-width:1100px">
+          <div class="day"><div class="dh">Atrasadas <span>2</span></div><div class="list">
+            <div class="it"><span class="check"></span><div class="t"><b>Retomar contato — Roberto Tanaka</b><span>recompra · 11 meses da última viagem · venceu há 3 dias</span></div><span class="pill p-err">atrasada</span><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/pessoa" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir</a></span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Cobrar comissão CVC-77A2Q</b><span>Família Oliveira · Gramado · manual</span></div><span class="pill p-err">atrasada</span><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/viagem" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir</a></span></div>
+          </div></div>
+          <div class="day"><div class="dh">Hoje <span>3</span></div><div class="list">
+            <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">Confirmar seguro com Decolar</b><span>Carlos Mendes · Lisboa</span></div><span class="mini">Guilherme</span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Renovar passaporte — Lúcia Mendes</b><span>viagem Lisboa exige 6 meses · automática</span></div><span class="pill p-warn">urgente</span><span class="mini">Ana Paula</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/pessoa" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir</a></span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Enviar voucher do hotel</b><span>Ana Beatriz Souza · Cancún</span></div><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/viagem" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir</a></span></div>
+          </div></div>
+          <div class="day"><div class="dh">Esta semana</div><div class="list">
+            <div class="it"><span class="check"></span><div class="t"><b>Check-in e envio de documentos — Cancún</b><span>quinta 09/04 · automática · ida 12/04</span></div><span class="pill p-info">embarque</span><span class="mini">Guilherme</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/viagem" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir</a></span></div>
+            <div class="it"><span class="check"></span><div class="t"><b>Pós-viagem: avaliação e fotos — Gramado</b><span>sexta 10/04 · automática</span></div><span class="mini">Ana Paula</span><span class="acts"><button class="btn btn-ghost btn-sm">Concluir</button><button class="btn btn-ghost btn-sm">Adiar</button><a href="#/viagem" class="btn btn-secondary btn-sm" style="text-decoration:none">Abrir</a></span></div>
+          </div></div>
+        </div>
+
+        <div data-panel="embarques" style="display:none;max-width:1100px">
+          <div class="split">
             <div class="block"><div class="bh"><h3>Embarques</h3><span class="meta">próximos 14 dias</span></div><div class="list">
-              <div class="it"><div class="t"><b>Ana Beatriz Souza</b><span>Cancún · dom 12/04 · 2 pax</span></div><span class="pill p-primary">confirmada</span></div>
-              <div class="it"><div class="t"><b>Carlos e Lúcia Mendes</b><span>Lisboa · sáb 18/04 · 2 pax</span></div><span class="pill p-info">em emissão</span></div>
+              <div class="it"><div class="t"><b>Ana Beatriz Souza</b><span>Cancún · dom 12/04 · 2 pax · GRU 07:35</span></div><span class="pill p-primary">confirmada</span><a href="#/viagem" class="more">Abrir</a></div>
+              <div class="it"><div class="t"><b>Carlos e Lúcia Mendes</b><span>Lisboa · sáb 18/04 · 2 pax</span></div><span class="pill p-info">em emissão</span><a href="#/viagem" class="more">Abrir</a></div>
             </div></div>
             <div class="block"><div class="bh"><h3>Retornos</h3></div><div class="list">
-              <div class="it"><div class="t"><b>Marcos e Renata Lima</b><span>Noronha · qua 08/04</span></div><span class="mini">pós-viagem em 11/04</span></div>
+              <div class="it"><div class="t"><b>Marcos e Renata Lima</b><span>Noronha · qua 08/04</span></div><span class="mini">pós-viagem em 11/04</span><a href="#/viagem" class="more">Abrir</a></div>
             </div></div>
           </div>
+        </div>
+
+        <div data-panel="documentos" style="display:none;max-width:1100px">
+          <div class="tblwrap"><table>
+            <thead><tr><th>Pessoa</th><th>Documento</th><th>Validade</th><th>Próxima viagem</th><th>Pendência</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="primary">Lúcia Mendes</td><td>Passaporte <span class="code">GB998877</span></td><td><span class="pill p-warn">30/05/2026 · 32 dias</span></td><td class="muted">Lisboa · 18/04</td><td><span class="pill p-info">na agenda</span></td><td class="r"><a href="#/pessoa" class="more">Abrir</a></td></tr>
+              <tr><td class="primary">Pedro Mendes</td><td>Passaporte <span class="code">GB998901</span></td><td><span class="pill p-warn">02/08/2026 · 117 dias</span></td><td class="muted">—</td><td><span class="pill p-info">na agenda</span></td><td class="r"><a href="#/pessoa" class="more">Abrir</a></td></tr>
+              <tr><td class="primary">Roberto Tanaka</td><td>Passaporte</td><td><span class="pill p-neutral">não cadastrado</span></td><td class="muted">—</td><td><span class="pill p-neutral">só no cadastro</span></td><td class="r"><a href="#/pessoa" class="more">Abrir</a></td></tr>
+            </tbody></table><div class="pager">1–3 de 6</div></div>
+        </div>
+
+        <div data-panel="creditos" style="display:none;max-width:1100px">
+          <div class="tblwrap"><table>
+            <thead><tr><th>Pessoa</th><th>Operadora</th><th>Origem</th><th>Validade</th><th class="r">Valor</th><th></th></tr></thead>
+            <tbody>
+              <tr><td class="primary">Patrícia Nunes</td><td class="muted">Porto Seguro Viagens</td><td class="muted">cancelamento · <span class="code">PG-5521</span></td><td><span class="pill p-warn">02/2027 · 10 meses</span></td><td class="r num">R$ 5.100,00</td><td class="r"><a href="#/pessoa" class="more">Abrir</a></td></tr>
+            </tbody></table></div>
         </div>
       </div>
     </section>
@@ -1108,7 +1227,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
 
 <script>
 (function(){
-  var screens=['login','definir-senha','esqueci-senha','redefinir-senha','grupo','fornecedor','usuario','viagens','nova-viagem','viagem','clientes','pessoa','grupos','fornecedores','financeiro','repasses','fechamento','agenda','dashboard','usuarios','auditoria'];
+  var screens=['login','definir-senha','esqueci-senha','redefinir-senha','grupo','fornecedor','usuario','viagens','nova-viagem','viagem','clientes','pessoa','grupos','fornecedores','financeiro','repasses','custos','fechamento','agenda','dashboard','usuarios','auditoria'];
   var auth={'login':1,'definir-senha':1,'esqueci-senha':1,'redefinir-senha':1};
   function show(){
     var id=(location.hash||'#/viagens').replace('#/','');
@@ -1120,7 +1239,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     window.scrollTo(0,0);document.getElementById('shell').classList.remove('menu-open');
   }
   window.addEventListener('hashchange',show);show();
-  document.querySelectorAll('[data-tabs]').forEach(function(t){t.querySelectorAll('a[data-tab]').forEach(function(a){a.addEventListener('click',function(){var k=a.getAttribute('data-tab');t.querySelectorAll('a[data-tab]').forEach(function(x){x.classList.toggle('on',x===a);});var pg=t.parentElement;pg.querySelectorAll('[data-panel]').forEach(function(p){p.style.display=p.getAttribute('data-panel')===k?'':'none';});});});});
+  document.querySelectorAll('[data-tabs]').forEach(function(t){t.querySelectorAll('a[data-tab]').forEach(function(a){a.addEventListener('click',function(){var k=a.getAttribute('data-tab');t.querySelectorAll('a[data-tab]').forEach(function(x){x.classList.toggle('on',x===a);});var pg=t.parentElement;pg.querySelectorAll('[data-panel]').forEach(function(p){var on=p.getAttribute('data-panel')===k;p.style.display=on?(p.getAttribute('data-display')||(p.getAttribute('style')||'').indexOf('flex-direction')>=0?'flex':''):'none';});});});});
 })();
 </script>
 </body></html>
