@@ -1,6 +1,35 @@
-# Meridiano — Design System v1
+# Meridiano — Design System v2
 
-Tema e padrão visual do software. Tokens em `frontend/src/styles/tokens.css` (fonte da verdade para código). Este documento explica as decisões e as regras de uso.
+Tema e padrão visual do software. Tokens em `frontend/src/styles/tokens.css` (fonte da verdade para código). Mock aprovado em `docs/design/design-system-v2.html` (+ `.pdf`, `.png`).
+
+## 0. v2 — o que mudou depois da avaliação de UX (2026-09-07)
+
+A v1 era um design system organizado; o produto sofria de **hierarquia de informação**: tudo com o mesmo peso. A v2 corrige isso, mantendo identidade (navy + laranja, sidebar, pills, tabela).
+
+| Tema | v1 | v2 |
+|---|---|---|
+| Amarelo | destaque de contexto + atenção | **só atenção** (barra lateral, badge, contador) |
+| Campo calculado | fundo amarelo-claro | fundo azul-claro `--calc` + selo "calculado" |
+| Linha selecionada | amarelo-claro | azul-claro `--selected` + barra azul à esquerda |
+| Input / botão | 36px, rótulo 12px | **40px**, rótulo 13px, texto 14px |
+| Raio | 4 / 8 / 12 | input/botão 6 · card 8 · pill/chip 999 |
+| Neutros | `#f6f7fb` `#e3e6ef` `#6b6f8a` | `#f5f6fa` `#e4e7ec` `#5f637f` (muted 5,6:1) |
+| Escala tipográfica | 12–26 | página 24 · seção 17 · corpo 14 · rótulo 13 · apoio 12 · KPI 28 |
+| Chips | selecionado azul-claro | selecionado **navy** com ✓; não selecionado neutro |
+| Tela de lançamento | uma grade contínua | **blocos de decisão**: Dados da viagem · Reserva · Financeiro · Resultado |
+| Reserva | cabeçalho de formulário | **card-entidade**: número, fornecedor, localizador, status, total |
+| Resultado | três derivados no rodapé | **painel financeiro por reserva** (venda · custo · comissão+RAV op · RAV cliente · receita) + faixa de resultado da viagem |
+| Texto de regra | hints sob os campos | tooltip `?` no rótulo |
+| Aviso de viagem duplicada | bloco amarelo, 3 botões iguais | card neutro com barra amarela; ação recomendada em primário |
+| Header | busca + usuário | busca · **+ Nova viagem** · notificações · ajuda · perfil |
+| Título da página | 20px + código solto | 24px + código em badge + linha "Titular · status · vendedor" |
+| Tabela | colunas com mesmo peso | cliente em destaque, destino embaixo, código mono pequeno, datas discretas, linha clicável |
+| KPI | número solto | número + **próxima ação** ("Ver as 3 atrasadas →") |
+| Sidebar | 232px, linha 38 | 220px, linha 42, ícone 18, grupos Operação/Administração |
+| Largura | conteúdo ~1180 | conteúdo até **1400px**, padding 24–32 |
+| Campo "cartão de quem" | existia | **removido** (tela e modelo) |
+
+Mantido de propósito: dinheiro em Manrope tabular (mono só em códigos); nada de wizard; sombra só em flutuantes.
 
 Direção: **moderno, limpo, agradável; backoffice denso operado o dia todo, com teclado.** Laranja e azul-escuro da marca; neutros puxados para o navy para o cinza parecer escolhido, não herdado.
 
@@ -66,9 +95,9 @@ Dinheiro sempre com `font-variant-numeric: tabular-nums`, alinhado à direita, f
 ## 3. Espaço, forma, sombra
 
 - Grid de **8px** (`--sp-*`), meio passo de 4px para dentro de componentes.
-- Raio: 4px em inputs e badges, 8px em botões e menus, 12px em cards. Nada de "arredondado em tudo".
+- Raio: 6px em inputs e botões, 8px em cards e menus, pílula (999px) em pills e chips. Nada de "arredondado em tudo".
 - Sombra só em elementos flutuantes (menu, popover, modal, toast). Cards e tabelas usam **borda** `--border`, não sombra.
-- Densidade: linha de tabela 36px, input 36px, botão 36px (30px na variante pequena). Padding de card 20px.
+- Densidade: linha de tabela 52px (duas linhas: principal + secundária), input 40px, botão 40px (34px na variante pequena). Padding de card 20px.
 - Ícones: Lucide, 16px em linha, 20px em navegação, traço 1,75.
 
 ## 4. Layout da aplicação
@@ -108,7 +137,7 @@ Foco: anel 2px `--focus-ring` com offset 2px. Desabilitado: opacidade 0,5, sem h
 
 ### Inputs
 
-Altura 36px, borda `--border-strong`, raio 4px, rótulo 12px acima em `--text-muted`. Foco: borda `--focus-ring` + anel. Erro: borda `--danger` + mensagem 12px abaixo. **Pré-preenchido pela regra** (comissão sugerida pelo % do fornecedor): fundo `--highlight-soft` até o usuário confirmar ou editar — sinaliza "calculado, confira". Dinheiro: prefixo `R$` fixo, digitação em centavos, `inputmode="decimal"`. Datas: `<input type="date">` nativo. Autocomplete de cliente/fornecedor com criação inline ("+ Criar 'Maria Silva'").
+Altura 40px, borda `--border-strong`, raio 6px, rótulo 13px acima em `--n-700`. Foco: borda `--focus-ring` + anel. Erro: borda `--danger` + mensagem 12px abaixo. **Pré-preenchido pela regra** (comissão sugerida pelo % do fornecedor): fundo `--calc` (azul-claro) e selo "calculado" no rótulo até o usuário editar. Totais e derivados nunca parecem input: texto em painel. Dinheiro: prefixo `R$` fixo, digitação em centavos, `inputmode="decimal"`. Datas: `<input type="date">` nativo. Autocomplete de cliente/fornecedor com criação inline ("+ Criar 'Maria Silva'").
 
 ### Tabelas
 

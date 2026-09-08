@@ -1,0 +1,436 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meridiano Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --navy-900:#1b1740;--navy-800:#29235c;--navy-700:#3b3478;--navy-600:#4a4390;
+  --blue-700:#055c95;--blue-600:#0672b9;--blue-500:#5396d1;--blue-100:#e3effa;--blue-50:#f1f7fd;
+  --orange-700:#b8631f;--orange-600:#e18334;--orange-100:#fbe7d5;
+  --yellow-500:#f9b233;--yellow-100:#fbf297;--yellow-50:#fefbe4;
+  --n-0:#fff;--n-50:#f5f6fa;--n-100:#eceef4;--n-200:#e4e7ec;--n-300:#cdd1dc;--n-400:#9ea3ba;--n-500:#5f637f;--n-700:#3a3d58;--n-900:#1e1b3a;
+  --green-600:#1f9d63;--green-100:#dcf5e8;--red-600:#d64545;--red-100:#fbe2e2;
+  --bg:var(--n-50);--surface:var(--n-0);--surface-2:var(--n-100);--border:var(--n-200);--border-strong:var(--n-300);
+  --text:var(--n-900);--text-muted:var(--n-500);--heading:var(--navy-800);
+  --primary:var(--blue-600);--primary-hover:var(--blue-700);--accent:var(--orange-600);--accent-hover:var(--orange-700);
+  --calc:var(--blue-50);--selected:var(--blue-50);--attention:var(--yellow-500);--attention-soft:var(--yellow-50);
+  --focus:var(--blue-500);
+  --font-ui:"Manrope","Segoe UI",system-ui,sans-serif;--font-mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+  --r-card:8px;--r-input:6px;--r-btn:6px;--r-pill:999px;
+  --input-h:40px;--row-h:40px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:14px;line-height:1.5}
+h1,h2,h3{color:var(--heading);margin:0;text-wrap:balance}
+h1{font-size:28px;font-weight:800;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:700}
+h3{font-size:16px;font-weight:700}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.mono{font-family:var(--font-mono);font-size:13px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1400px;margin:0 auto;padding:40px 32px 80px;display:flex;flex-direction:column;gap:56px}
+.intro{display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:end;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.intro p{max-width:62ch;color:var(--n-700);margin:12px 0 0;font-size:15px}
+.lockup{display:flex;align-items:center;gap:12px}
+.mark{width:40px;height:40px;border-radius:10px;background:var(--navy-800);position:relative;overflow:hidden}
+.mark::after{content:"";position:absolute;left:8px;right:8px;top:19px;height:3px;background:var(--orange-600);border-radius:2px;transform:rotate(-20deg)}
+.mark::before{content:"";position:absolute;left:12px;top:9px;width:16px;height:16px;border-radius:50%;background:var(--yellow-500)}
+.lockup strong{font-size:20px;font-weight:800;color:var(--navy-800)}
+section{display:flex;flex-direction:column;gap:16px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.sec-head p{margin:0;color:var(--text-muted);max-width:64ch}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:20px}
+/* palette */
+.swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.sw{border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;background:var(--surface)}
+.sw .chip{height:80px;display:flex;align-items:flex-end;padding:10px}
+.sw .chip span{font-size:12px;font-weight:700;letter-spacing:.04em}
+.sw .meta{padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.sw .meta b{font-size:13px;color:var(--heading)}
+.sw .meta small{color:var(--text-muted);font-size:12px}
+.roles{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.roles .card{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.roles .dot{width:14px;height:14px;border-radius:4px;margin-bottom:6px}
+.roles b{font-size:14px;color:var(--heading)}
+.roles span{font-size:13px;color:var(--text-muted)}
+.states{display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--r-pill);font-size:12px;font-weight:700}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.p-ok{background:var(--green-100);color:#167a4c}
+.p-err{background:var(--red-100);color:#b73737}
+.p-warn{background:var(--yellow-50);color:var(--orange-700)}
+.p-info{background:var(--blue-50);color:var(--blue-700)}
+.p-neutral{background:var(--n-100);color:var(--n-500)}
+.p-primary{background:var(--blue-100);color:var(--blue-700)}
+/* type */
+.type{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.type .card{display:flex;flex-direction:column;gap:14px}
+.tline{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:baseline}
+.tline small{color:var(--text-muted);font-size:12px}
+/* buttons */
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{height:40px;padding:0 16px;border-radius:var(--r-btn);border:1px solid transparent;font:inherit;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;background:var(--surface);color:var(--heading)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
+.btn-accent{background:var(--accent);color:#fff;font-weight:700}.btn-accent:hover{background:var(--accent-hover)}
+.btn-secondary{border-color:var(--border-strong)}.btn-secondary:hover{background:var(--surface-2)}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn-danger{border-color:var(--red-600);color:var(--red-600)}.btn-danger:hover{background:var(--red-100)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn-sm{height:34px;padding:0 12px;font-size:13px}
+.btn-icon{width:40px;padding:0;justify-content:center;border-color:var(--border-strong)}
+/* inputs */
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label{font-size:13px;font-weight:600;color:var(--n-700);display:flex;align-items:center;gap:6px}
+.field label .help{width:15px;height:15px;border-radius:50%;border:1px solid var(--n-400);color:var(--n-500);font-size:10px;display:inline-grid;place-items:center;font-weight:700;cursor:help}
+.field input,.field select{height:var(--input-h);border:1px solid var(--border-strong);border-radius:var(--r-input);padding:0 12px;font:inherit;font-size:14px;background:var(--surface);color:var(--text);width:100%}
+.field input:focus,.field select:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px rgba(83,150,209,.3)}
+.field .money{display:flex;align-items:center;border:1px solid var(--border-strong);border-radius:var(--r-input);background:var(--surface);height:var(--input-h)}
+.field .money span{padding:0 10px;color:var(--text-muted);font-size:13px;border-right:1px solid var(--border);height:100%;display:flex;align-items:center}
+.field .money input{border:0;height:38px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.field .money input:focus{box-shadow:none}
+.field .money:focus-within{border-color:var(--focus);box-shadow:0 0 0 3px rgba(83,150,209,.3)}
+.field.calc .money,.field.calc input{background:var(--calc);border-color:var(--blue-100)}
+.field.calc label::after{content:"calculado";font-size:11px;font-weight:600;color:var(--blue-700);background:var(--blue-100);border-radius:var(--r-pill);padding:1px 7px;margin-left:auto}
+.field.err input{border-color:var(--red-600)}
+.field .hint{font-size:12px;color:var(--text-muted)}
+.field.err .hint{color:var(--red-600)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;min-height:var(--input-h);align-items:center}
+.chip-t{height:32px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--border-strong);background:var(--surface);font-size:13px;font-weight:600;color:var(--n-700);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.chip-t:hover{border-color:var(--n-400)}
+.chip-t.on{background:var(--navy-800);border-color:var(--navy-800);color:#fff}
+.chip-t.on::before{content:"✓";font-size:12px}
+.chip-t.titular{outline:2px solid var(--orange-600);outline-offset:1px}
+.more{font-size:13px;color:var(--primary);font-weight:600;cursor:pointer}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);background:var(--surface-2);padding:0 14px;height:38px;font-weight:700;border-bottom:1px solid var(--border)}
+td{padding:8px 14px;height:52px;border-bottom:1px solid var(--border);white-space:nowrap;vertical-align:middle}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--blue-50)}
+tr.sel td{background:var(--selected);box-shadow:inset 3px 0 0 var(--primary)}
+td.r,th.r{text-align:right}
+td .primary{font-weight:700;color:var(--heading)}
+td .secondary{font-size:13px;color:var(--text-muted);margin-top:2px}
+td.muted{color:var(--text-muted);font-size:13px}
+td .code{font-family:var(--font-mono);font-size:12px;color:var(--text-muted)}
+.tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r-card);background:var(--surface)}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.tile small{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+.tile b{font-size:28px;color:var(--heading);font-variant-numeric:tabular-nums;font-weight:800;letter-spacing:-.01em;line-height:1.1}
+.tile a{font-size:13px;font-weight:600;color:var(--primary);text-decoration:none;margin-top:4px}
+.tile a.warn{color:var(--orange-700)}
+.tile span{font-size:13px;color:var(--text-muted)}
+/* app mock */
+.app{border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;background:var(--bg);display:grid;grid-template-columns:220px 1fr;min-height:720px;box-shadow:0 16px 40px rgba(41,35,92,.14)}
+.side{background:var(--navy-800);color:#d5d6ea;display:flex;flex-direction:column;padding:14px 0}
+.side .brand{display:flex;align-items:center;gap:10px;padding:6px 18px 20px;color:#fff;font-weight:800;font-size:17px}
+.side .brand .mark{width:28px;height:28px;border-radius:7px;background:var(--navy-700)}
+.side .brand .mark::before{width:11px;height:11px;left:8px;top:6px}
+.side .brand .mark::after{left:5px;right:5px;top:14px;height:2px}
+.nav .grp{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9a9bc4;padding:8px 20px 6px;font-weight:700}
+.nav a{display:flex;align-items:center;gap:12px;padding:0 17px;height:42px;color:inherit;text-decoration:none;font-weight:500;font-size:14px;border-left:3px solid transparent}
+.nav a:hover{background:var(--navy-700);color:#fff}
+.nav a.on{color:#fff;border-left-color:var(--orange-600);background:rgba(255,255,255,.07);font-weight:700}
+.nav a .badge{margin-left:auto;background:var(--yellow-500);color:var(--navy-900);font-size:11px;font-weight:800;border-radius:var(--r-pill);padding:2px 8px}
+.ico{width:18px;height:18px;border-radius:4px;border:2px solid currentColor;opacity:.85;flex:none}
+.nav a.on .ico{background:var(--orange-600);border-color:var(--orange-600);opacity:1}
+.nav .sep{height:1px;background:rgba(255,255,255,.14);margin:12px 18px}
+.main{display:flex;flex-direction:column;min-width:0}
+.top{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 24px}
+.search{flex:1;max-width:460px;height:38px;border:1px solid var(--border-strong);border-radius:var(--r-input);display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--text-muted);font-size:14px}
+.search kbd{margin-left:auto;font:11px var(--font-mono);border:1px solid var(--border);border-radius:4px;padding:1px 6px;background:var(--surface-2);color:var(--text-muted)}
+.top .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.top .av{width:34px;height:34px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);display:grid;place-items:center;font-weight:800;font-size:12px;margin-left:6px}
+.top .who{font-size:13px;color:var(--n-700);display:flex;flex-direction:column;line-height:1.2;align-items:flex-end;margin-left:8px}
+.top .who b{color:var(--heading)}
+.page{padding:24px 28px 32px;display:flex;flex-direction:column;gap:20px;max-width:1400px}
+.page-head{display:flex;align-items:flex-start;gap:16px}
+.page-head .t{display:flex;flex-direction:column;gap:6px}
+.page-head h2{font-size:24px;font-weight:800;display:flex;align-items:center;gap:12px}
+.page-head .code{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--navy-700);background:var(--blue-100);padding:3px 10px;border-radius:var(--r-pill)}
+.page-head .sub{font-size:14px;color:var(--text-muted);display:flex;gap:14px;align-items:center}
+.page-head .sub b{color:var(--n-700);font-weight:600}
+.page-head .actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.page-head .timer{font:13px var(--font-mono);color:var(--text-muted);margin-right:8px}
+.notice{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--attention);border-radius:var(--r-card);padding:14px 18px;display:flex;gap:16px;align-items:center}
+.notice .txt{display:flex;flex-direction:column;gap:2px}
+.notice .txt b{color:var(--heading)}
+.notice .txt span{font-size:13px;color:var(--text-muted)}
+.notice .row{margin-left:auto}
+.block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden}
+.block > .bh{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border)}
+.block > .bh h3{font-size:16px}
+.block > .bh .meta{color:var(--text-muted);font-size:13px}
+.block > .bb{padding:20px;display:flex;flex-direction:column;gap:20px}
+.sub-eyebrow{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);display:flex;align-items:center;gap:10px}
+.sub-eyebrow::after{content:"";flex:1;height:1px;background:var(--border)}
+.reserva > .bh{background:var(--surface-2)}
+.reserva > .bh .num-id{font-size:12px;font-weight:800;color:#fff;background:var(--navy-800);border-radius:var(--r-pill);padding:2px 9px}
+.reserva > .bh .forn{font-weight:700;color:var(--heading);font-size:15px}
+.reserva > .bh .loc{font-family:var(--font-mono);font-size:13px;color:var(--n-700)}
+.reserva > .bh .total{margin-left:auto;font-weight:800;color:var(--heading);font-size:16px;font-variant-numeric:tabular-nums}
+.reserva > .bh .tog{font-size:13px;color:var(--primary);font-weight:600;margin-left:14px}
+.fin{display:grid;grid-template-columns:repeat(5,1fr);border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;background:var(--surface)}
+.fin div{padding:12px 16px;display:flex;flex-direction:column;gap:3px;border-right:1px solid var(--border)}
+.fin div:last-child{border-right:0;background:var(--navy-800)}
+.fin small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+.fin b{font-size:18px;color:var(--heading);font-variant-numeric:tabular-nums;font-weight:800}
+.fin div:last-child small{color:#c9cbe6}.fin div:last-child b{color:#fff}
+.fin .sub{font-size:12px;color:var(--text-muted)}
+.reserva.collapsed .bb{display:none}
+.summary-strip{display:flex;gap:28px;align-items:center;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card)}
+.summary-strip div{display:flex;flex-direction:column;gap:2px}
+.summary-strip small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+.summary-strip b{font-size:20px;color:var(--heading);font-variant-numeric:tabular-nums;font-weight:800}
+.summary-strip .res b{color:var(--green-600)}
+.summary-strip .sep{width:1px;height:36px;background:var(--border)}
+.footer-actions{display:flex;gap:10px;align-items:center;padding-top:4px}
+.footer-actions .hint{margin-left:auto;font-size:12px;color:var(--text-muted)}
+kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--surface);color:var(--n-700)}
+.dont{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dont ul{margin:0;padding-left:18px;color:var(--n-700)}
+.dont li{margin:6px 0}
+.changes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px;font-size:14px;color:var(--n-700)}
+.changes div::before{content:"→";color:var(--orange-600);font-weight:800;margin-right:8px}
+@media (max-width:1000px){.swatches,.roles{grid-template-columns:repeat(3,1fr)}.type,.intro,.dont,.changes{grid-template-columns:1fr}.app{grid-template-columns:1fr}.side{display:none}.grid-4,.grid-3,.tiles{grid-template-columns:1fr 1fr}.fin{grid-template-columns:repeat(2,1fr)}}
+@media (prefers-reduced-motion:no-preference){.btn,.chip-t{transition:background .12s,border-color .12s}}
+</style></head><body>
+
+<div class="wrap">
+  <div class="intro">
+    <div>
+      <div class="lockup"><div class="mark"></div><strong>Meridiano</strong></div>
+      <h1 style="margin-top:22px">Design System v2</h1>
+      <p>Revisão após avaliação de UX: hierarquia de informação antes de estética. Amarelo só para atenção; campos de 40px; editável, calculado e total com aparências distintas; painel financeiro por reserva; tela de lançamento em blocos de decisão — sem virar wizard.</p>
+    </div>
+    <div class="card">
+      <span class="eyebrow">O que mudou da v1</span>
+      <div class="changes" style="margin-top:10px">
+        <div>Amarelo só para atenção</div><div>Inputs 40px, rótulo 13px</div>
+        <div>Calculado ≠ editável ≠ total</div><div>Painel financeiro por reserva</div>
+        <div>Blocos: viagem · reserva · financeiro · resultado</div><div>Reserva como entidade (card)</div>
+        <div>Header com "Nova viagem"</div><div>Raio 8 / 6 / 6 / pílula</div>
+        <div>Tabela: cliente em destaque, datas discretas</div><div>KPIs com ação</div>
+        <div>Texto de regra vira tooltip</div><div>Conteúdo até 1400px, sidebar 220px</div>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head"><h2>1 · Paleta: seis cores, seis trabalhos</h2><p>Na aplicação, no máximo três cores fortes na mesma tela: navy (estrutura), azul (ação), uma de estado. Laranja é a única exceção — o botão que a agência veio apertar.</p></div>
+    <div class="roles">
+      <div class="card"><div class="dot" style="background:#29235c"></div><b>Navy</b><span>Marca, navegação, títulos, chips selecionados</span></div>
+      <div class="card"><div class="dot" style="background:#0672b9"></div><b>Azul</b><span>Ações normais, links, informação</span></div>
+      <div class="card"><div class="dot" style="background:#e18334"></div><b>Laranja</b><span>Só a ação de negócio principal</span></div>
+      <div class="card"><div class="dot" style="background:#1f9d63"></div><b>Verde</b><span>Conclusão, quitado, conciliado</span></div>
+      <div class="card"><div class="dot" style="background:#d64545"></div><b>Vermelho</b><span>Erro, cancelado, atrasado, perda</span></div>
+      <div class="card"><div class="dot" style="background:#f9b233"></div><b>Amarelo</b><span>Atenção — e só atenção</span></div>
+    </div>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#29235c;color:#fff"><span>NAVY</span></div><div class="meta"><b>#29235c</b><small>sidebar, títulos, chip selecionado</small></div></div>
+      <div class="sw"><div class="chip" style="background:#0672b9;color:#fff"><span>AZUL</span></div><div class="meta"><b>#0672b9</b><small>botão primário, link, linha selecionada (tint)</small></div></div>
+      <div class="sw"><div class="chip" style="background:#5396d1;color:#fff"><span>AZUL CLARO</span></div><div class="meta"><b>#5396d1</b><small>foco, gráficos; nunca texto</small></div></div>
+      <div class="sw"><div class="chip" style="background:#e18334;color:#fff"><span>LARANJA</span></div><div class="meta"><b>#e18334</b><small>um botão por tela, item ativo</small></div></div>
+      <div class="sw"><div class="chip" style="background:#f9b233;color:#29235c"><span>AMARELO</span></div><div class="meta"><b>#f9b233</b><small>barra/badge de atenção, contador na sidebar</small></div></div>
+      <div class="sw"><div class="chip" style="background:#f5f6fa;color:#29235c;border-bottom:1px solid #e4e7ec"><span>FUNDO</span></div><div class="meta"><b>#f5f6fa / #fff / #e4e7ec</b><small>fundo · superfície · borda</small></div></div>
+    </div>
+    <div class="states">
+      <span class="pill p-ok">quitada</span><span class="pill p-ok">conciliada</span><span class="pill p-primary">confirmada</span><span class="pill p-info">em emissão</span><span class="pill p-info">a receber</span><span class="pill p-warn">parcial</span><span class="pill p-warn">vence em 3 dias</span><span class="pill p-err">atrasada</span><span class="pill p-err">cancelada</span><span class="pill p-neutral">rascunho</span><span class="pill p-neutral">bloqueado</span>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>2 · Tipografia com degraus visíveis</h2><p>Manrope na interface, inclusive dinheiro (tabular). JetBrains Mono só em códigos de portal e CPF.</p></div>
+    <div class="type">
+      <div class="card">
+        <div class="tline"><small>página · 24 / 800</small><span style="font-size:24px;font-weight:800;color:var(--heading)">Nova viagem</span></div>
+        <div class="tline"><small>seção · 16–18 / 700</small><span style="font-size:17px;font-weight:700;color:var(--heading)">Dados da viagem</span></div>
+        <div class="tline"><small>corpo · 14</small><span>Uma viagem que usou 4 portais é 1 viagem, 4 reservas.</span></div>
+        <div class="tline"><small>rótulo · 13 / 600</small><span style="font-size:13px;font-weight:600;color:var(--n-700)">Total da reserva</span></div>
+        <div class="tline"><small>apoio · 12</small><span style="font-size:12px;color:var(--text-muted)">Vence em 3 dias · última alteração por Ana</span></div>
+        <div class="tline"><small>KPI · 28 / 800</small><span class="num" style="font-size:28px;font-weight:800;color:var(--heading)">R$ 18.420,00</span></div>
+      </div>
+      <div class="card">
+        <div class="tline"><small>dinheiro</small><span class="num" style="display:grid;grid-template-columns:1fr auto;gap:6px 24px;font-size:14px"><span>Venda</span><b style="text-align:right">R$ 10.500,00</b><span>Custo</span><b style="text-align:right">R$ 10.000,00</b><span>RAV do cliente</span><b style="text-align:right;color:var(--green-600)">R$ 500,00</b><span>Desconto concedido</span><b style="text-align:right;color:var(--red-600)">− R$ 120,00</b></span></div>
+        <div class="tline"><small>códigos · mono</small><span class="mono">VG-2026-0042 · K7X2PQ · DCL-88213 · 123.456.789-01</span></div>
+        <div class="tline"><small>teclas</small><span><kbd class="k">Ctrl</kbd> + <kbd class="k">Enter</kbd> salva a reserva e abre a próxima</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>3 · Botões e campos</h2><p>Botão 40px. Input 40px, rótulo 13px, texto 14px. Editável em branco; calculado em azul-claro com selo; total nunca parece input.</p></div>
+    <div class="card row">
+      <button class="btn btn-accent">+ Nova viagem</button>
+      <button class="btn btn-primary">Salvar</button>
+      <button class="btn btn-secondary">Exportar CSV</button>
+      <button class="btn btn-ghost">Cancelar</button>
+      <button class="btn btn-danger">Cancelar reserva…</button>
+      <button class="btn btn-primary" disabled>Salvando…</button>
+      <span style="width:16px"></span>
+      <button class="btn btn-secondary btn-sm">Ver timeline</button>
+      <button class="btn btn-icon" title="Notificações">🔔</button>
+    </div>
+    <div class="card grid-4">
+      <div class="field"><label>Fornecedor</label><select><option>CVC Operadora</option><option>Decolar</option><option>Azul Viagens</option></select></div>
+      <div class="field"><label>Localizador</label><input class="mono" value="K7X2PQ"></div>
+      <div class="field"><label>Total da reserva <i class="help" title="Valor cobrado pelo fornecedor, com taxas incluídas">?</i></label><div class="money"><span>R$</span><input value="10.000,00"></div></div>
+      <div class="field calc"><label>Comissão</label><div class="money"><span>R$</span><input value="1.000,00"></div></div>
+      <div class="field"><label>Formas de pagamento</label><div class="chips"><span class="chip-t on">PIX</span><span class="chip-t">Boleto</span><span class="chip-t on">Cartão</span></div></div>
+      <div class="field"><label>Data da compra</label><input type="date" value="2026-03-12"></div>
+      <div class="field err"><label>CPF</label><input class="mono" value="123.456.78"><span class="hint">CPF precisa de 11 dígitos</span></div>
+      <div class="field"><label>Serviços vendidos</label><div class="chips"><span class="chip-t on">Aéreo</span><span class="chip-t">Seguro</span><span class="chip-t">Passeio</span></div></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>4 · Tabela e KPIs</h2><p>Cliente em destaque, destino embaixo, código pequeno, datas discretas, linha inteira clicável. KPI responde "e agora?".</p></div>
+    <div class="tiles">
+      <div class="tile"><small>Comissões a receber</small><b>R$ 18.420,00</b><a class="warn" href="#">Ver as 3 atrasadas →</a></div>
+      <div class="tile"><small>Recebido no mês</small><b>R$ 9.150,00</b><span>▲ 12 % vs fevereiro</span></div>
+      <div class="tile"><small>Viagens em emissão</small><b>7</b><a href="#">2 embarcam esta semana →</a></div>
+      <div class="tile"><small>Teto MEI 2026</small><b>34 %</b><span>R$ 27,6 mil de R$ 81 mil</span></div>
+    </div>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Viagem</th><th>Ida</th><th>Fase</th><th>Financeiro</th><th class="r">Vendido</th><th class="r">Receita prevista</th></tr></thead>
+      <tbody>
+        <tr><td><div class="primary">Ana Beatriz Souza</div><div class="secondary">Cancún · <span class="code">VG-2026-0041</span></div></td><td class="muted">04/04/2026</td><td><span class="pill p-primary">confirmada</span></td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 14.200,00</td><td class="r num"><b>R$ 1.610,00</b></td></tr>
+        <tr class="sel"><td><div class="primary">Carlos Mendes</div><div class="secondary">Lisboa · <span class="code">VG-2026-0042</span></div></td><td class="muted">18/04/2026</td><td><span class="pill p-info">em emissão</span></td><td><span class="pill p-neutral">sem receita</span></td><td class="r num">R$ 10.500,00</td><td class="r num"><b>R$ 1.600,00</b></td></tr>
+        <tr><td><div class="primary">Família Oliveira</div><div class="secondary">Gramado · <span class="code">VG-2026-0038</span></div></td><td class="muted">22/03/2026</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-err">atrasada</span></td><td class="r num">R$ 6.800,00</td><td class="r num"><b>R$ 740,00</b></td></tr>
+        <tr><td><div class="primary">Juliana Prado</div><div class="secondary">Buenos Aires · <span class="code">VG-2026-0035</span></div></td><td class="muted">10/03/2026</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-ok">quitada</span></td><td class="r num">R$ 4.300,00</td><td class="r num"><b>R$ 430,00</b></td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>5 · Nova viagem — blocos de decisão</h2><p>Uma tela, quatro problemas pequenos: dados da viagem · a reserva · o dinheiro dela · o resultado. Campos raros ficam em "mais campos". A pergunta "quanto essa reserva deixa?" tem resposta antes de rolar.</p></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><div class="mark"></div>Meridiano</div>
+        <nav class="nav">
+          <div class="grp">Operação</div>
+          <a class="on" href="#"><i class="ico"></i>Viagens</a>
+          <a href="#"><i class="ico"></i>Clientes</a>
+          <a href="#"><i class="ico"></i>Fornecedores</a>
+          <a href="#"><i class="ico"></i>Financeiro<span class="badge">3</span></a>
+          <a href="#"><i class="ico"></i>Agenda<span class="badge">5</span></a>
+          <a href="#"><i class="ico"></i>Relatórios</a>
+          <div class="sep"></div>
+          <div class="grp">Administração</div>
+          <a href="#"><i class="ico"></i>Usuários</a>
+          <a href="#"><i class="ico"></i>Auditoria</a>
+        </nav>
+      </aside>
+      <div class="main">
+        <div class="top">
+          <div class="search">Buscar cliente, viagem, localizador… <kbd>Ctrl K</kbd></div>
+          <div class="right">
+            <button class="btn btn-accent btn-sm">+ Nova viagem</button>
+            <button class="btn btn-icon btn-sm" title="Notificações">🔔</button>
+            <button class="btn btn-icon btn-sm" title="Ajuda">?</button>
+            <div class="who"><b>Guilherme</b><span>Viva Turismo</span></div>
+            <div class="av">GP</div>
+          </div>
+        </div>
+        <div class="page">
+          <div class="page-head">
+            <div class="t">
+              <h2>Nova viagem <span class="code">VG-2026-0042</span></h2>
+              <div class="sub"><span>Titular: <b>Carlos Mendes</b></span><span class="pill p-neutral">rascunho</span><span>Vendedora: <b>Ana Paula</b></span></div>
+            </div>
+            <div class="actions"><span class="timer">02:14</span><button class="btn btn-ghost">Descartar</button><button class="btn btn-primary">Salvar viagem</button></div>
+          </div>
+
+          <div class="notice">
+            <div class="txt"><b>Encontramos uma viagem semelhante para Carlos Mendes</b><span><span class="mono">VG-2026-0039</span> · Porto · 15–22/04 · em emissão</span></div>
+            <div class="row"><button class="btn btn-primary btn-sm">Adicionar a esta viagem</button><button class="btn btn-secondary btn-sm">Abrir viagem</button><button class="btn btn-ghost btn-sm">Continuar criando nova</button></div>
+          </div>
+
+          <div class="block">
+            <div class="bh"><h3>Dados da viagem</h3><span class="meta">Quem viaja, para onde, quando, quem vendeu</span></div>
+            <div class="bb">
+              <div class="grid-4">
+                <div class="field" style="grid-column:span 2"><label>Passageiros <i class="help" title="O titular (contorno laranja) é o contato da viagem">?</i></label><div class="chips"><span class="chip-t on titular">Carlos Mendes</span><span class="chip-t on">Lúcia Mendes</span><span class="more">+ pessoa</span></div></div>
+                <div class="field"><label>Destino</label><input value="Lisboa"></div>
+                <div class="field"><label>Tipo</label><select><option>Internacional</option><option>Nacional</option></select></div>
+                <div class="field"><label>Ida</label><input type="date" value="2026-04-18"></div>
+                <div class="field"><label>Volta</label><input type="date" value="2026-04-28"></div>
+                <div class="field"><label>Vendedor</label><select><option>Ana Paula (externa)</option><option>Guilherme (você)</option></select></div>
+                <div class="field"><label>Comissão da vendedora <i class="help" title="Valor definido pelo dono. Só aparece para vendedor externo.">?</i></label><div class="money"><span>R$</span><input value="300,00"></div></div>
+              </div>
+              <span class="more">+ mais campos (ocasião, observações)</span>
+            </div>
+          </div>
+
+          <div class="block reserva">
+            <div class="bh"><span class="num-id">Reserva 1</span><span class="forn">CVC Operadora</span><span class="loc">K7X2PQ</span><span class="pill p-info">em emissão</span><span class="total">R$ 10.500,00</span><span class="tog">Recolher</span></div>
+            <div class="bb">
+              <div>
+                <div class="sub-eyebrow" style="margin-bottom:12px">Reserva</div>
+                <div class="grid-4">
+                  <div class="field"><label>Fornecedor</label><select><option>CVC Operadora</option><option>Decolar</option><option>Azul Viagens</option></select></div>
+                  <div class="field"><label>Localizador</label><input class="mono" value="K7X2PQ"></div>
+                  <div class="field"><label>Data da compra</label><input type="date" value="2026-03-12"></div>
+                  <div class="field"><label>NFSe</label><select><option>Não precisa</option><option>Falta emitir</option><option>Emitida</option></select></div>
+                  <div class="field" style="grid-column:1 / -1"><label>Serviços vendidos</label><div class="chips"><span class="chip-t on">Aéreo</span><span class="chip-t on">Hospedagem</span><span class="chip-t">Seguro</span><span class="chip-t">Traslado</span><span class="chip-t on">Passeio</span><span class="chip-t">Ingresso</span><span class="chip-t">Aluguel de carro</span><span class="chip-t">Documentação</span><span class="chip-t">Outro</span></div></div>
+                </div>
+              </div>
+              <div>
+                <div class="sub-eyebrow" style="margin-bottom:12px">Financeiro</div>
+                <div class="grid-4">
+                  <div class="field"><label>Total da reserva <i class="help" title="O que o fornecedor cobrou, taxas incluídas">?</i></label><div class="money"><span>R$</span><input value="10.000,00"></div></div>
+                  <div class="field"><label>Do total, quanto é taxa</label><div class="money"><span>R$</span><input value="850,00"></div></div>
+                  <div class="field calc"><label>Comissão <i class="help" title="Sugerida pelo % do fornecedor (10 %). Edite se divergir.">?</i></label><div class="money"><span>R$</span><input value="1.000,00"></div></div>
+                  <div class="field"><label>RAV da operadora</label><div class="money"><span>R$</span><input value="100,00"></div></div>
+                  <div class="field"><label>Cliente pagou</label><div class="money"><span>R$</span><input value="10.500,00"></div></div>
+                  <div class="field"><label>RAV do cliente vem <i class="help" title="Via operadora: ela devolve junto com a comissão. Retido: o cliente pagou a diferença à agência.">?</i></label><select><option>Via operadora</option><option>Retido pela agência</option></select></div>
+                  <div class="field" style="grid-column:span 2"><label>Formas de pagamento</label><div class="chips"><span class="chip-t">PIX</span><span class="chip-t">Boleto</span><span class="chip-t on">Cartão</span></div></div>
+                </div>
+              </div>
+              <div>
+                <div class="sub-eyebrow" style="margin-bottom:12px">Resultado desta reserva</div>
+                <div class="fin">
+                  <div><small>Venda</small><b>R$ 10.500,00</b><span class="sub">cliente pagou</span></div>
+                  <div><small>Custo</small><b>R$ 10.000,00</b><span class="sub">total do fornecedor</span></div>
+                  <div><small>Comissão + RAV op.</small><b>R$ 1.100,00</b><span class="sub">esperado da operadora</span></div>
+                  <div><small>RAV do cliente</small><b>R$ 500,00</b><span class="sub">venda − custo</span></div>
+                  <div><small>Receita da agência</small><b>R$ 1.600,00</b><span class="sub" style="color:#c9cbe6">prevista</span></div>
+                </div>
+              </div>
+              <div class="row"><span class="more">+ mais campos (taxa de serviço, moeda e câmbio, observações)</span><span style="color:var(--border)">|</span><span class="more">+ detalhar serviços (voo, hotel, apólice)</span></div>
+            </div>
+          </div>
+
+          <div class="block reserva collapsed">
+            <div class="bh"><span class="num-id">Reserva 2</span><span class="forn">Decolar</span><span class="loc">DCL-88213</span><span class="pill p-primary">emitida</span><span style="font-size:13px;color:var(--text-muted)">Seguro · Traslado</span><span class="total">R$ 3.200,00</span><span class="tog">Expandir</span></div>
+            <div class="bb"></div>
+          </div>
+
+          <div class="summary-strip">
+            <div><small>Venda total</small><b>R$ 13.700,00</b></div><span class="sep"></span>
+            <div><small>Receita prevista</small><b>R$ 1.920,00</b></div><span class="sep"></span>
+            <div><small>Comissão da vendedora</small><b>R$ 300,00</b></div><span class="sep"></span>
+            <div class="res"><small>Resultado da agência</small><b>R$ 1.620,00</b></div>
+            <div style="margin-left:auto"><button class="btn btn-accent">+ Lançar reserva</button></div>
+          </div>
+          <div class="footer-actions"><span class="hint"><kbd class="k">Ctrl</kbd>+<kbd class="k">Enter</kbd> próxima reserva · <kbd class="k">Ctrl</kbd>+<kbd class="k">S</kbd> salvar · <kbd class="k">Esc</kbd> recolher</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>6 · Regras</h2></div>
+    <div class="dont">
+      <div class="card"><span class="eyebrow" style="color:var(--green-600)">Fazer</span><ul><li>No máximo três cores fortes por tela; laranja em <b>uma</b> ação.</li><li>Editável branco · calculado azul-claro com selo · total como texto.</li><li>Cada reserva responde "quanto deixa para a agência" sem rolar.</li><li>Regra de negócio em tooltip <b>?</b>, nunca em texto solto.</li><li>Dinheiro em Manrope tabular; mono só em códigos.</li><li>Linha de tabela inteira clicável; KPI com próxima ação.</li></ul></div>
+      <div class="card"><span class="eyebrow" style="color:var(--red-600)">Não fazer</span><ul><li>Amarelo para "contexto" — só atenção.</li><li>Input abaixo de 40px, rótulo abaixo de 13px.</li><li>Número calculado com cara de campo editável.</li><li>Wizard para lançar reserva.</li><li>Sombra em card comum; raio grande em input.</li><li>Cor em hex no componente — sempre <span class="mono">var(--token)</span>.</li></ul></div>
+    </div>
+  </section>
+</div>
+</body></html>
