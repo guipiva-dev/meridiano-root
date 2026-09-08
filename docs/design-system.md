@@ -128,10 +128,10 @@ Toast no canto inferior direito, 4s, sem sombra pesada. Erros de regra (422) apa
 
 ## 6. Tela de lançamento — princípios (o risco número um)
 
-- **Uma tela**: viagem no topo (cliente, destino, datas, vendedor pré-preenchido), reservas como linhas expansíveis abaixo, serviços dentro da reserva. Nada de wizard.
-- **Teclado**: `Tab` percorre na ordem de digitação do portal (fornecedor → localizador → data → total → taxas → comissão → o que o cliente pagou → forma de pagamento). `Ctrl+Enter` salva a reserva e abre a próxima. `Ctrl+S` salva a viagem. `Esc` fecha o painel.
+- **Uma tela**: viagem no topo (passageiros com titular, destino, nacional/internacional, datas, vendedor pré-preenchido, comissão do vendedor externo quando houver), reservas como linhas expansíveis abaixo. Nada de wizard.
+- **Teclado**: `Tab` percorre na ordem de digitação do portal (fornecedor [select] → localizador → data → serviços vendidos [multi] → total → taxas → comissão → o que o cliente pagou → formas de pagamento [multi] → NFSe). `Ctrl+Enter` salva a reserva e abre a próxima. `Ctrl+S` salva a viagem. `Esc` fecha o painel.
 - **Pré-preenchimento visível**: campos calculados com fundo `--highlight-soft`. Derivados (`RAV cliente`, `esperado da operadora`, `receita prevista`) aparecem ao lado, somente leitura, atualizando ao digitar.
-- **Criação inline** de cliente e fornecedor no autocomplete.
+- **Criação inline** só de pessoa (passageiro). Fornecedor é select do cadastro.
 - **Cronômetro** discreto no canto durante o piloto (tempo desde "Nova viagem" até salvar) — vira métrica.
 - Aviso de viagem duplicada e de localizador duplicado como banner `--highlight`, com as três saídas da spec, nunca bloqueio.
 

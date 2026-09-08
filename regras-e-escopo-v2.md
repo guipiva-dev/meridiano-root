@@ -26,8 +26,8 @@ agência, pasta por agência no storage.
 
 | Termo | Definição |
 |---|---|
-| **Pessoa / cliente** | Registro em `cliente`. Serve tanto para quem contrata (responsável da viagem) quanto para quem viaja (passageiro). |
-| **Viagem** | O processo: um cliente responsável, um destino, um período. Agrupa reservas. |
+| **Pessoa / cliente** | Registro em `cliente`. Todo viajante é uma pessoa; a viagem não tem "cliente responsável" — o passageiro **titular** é o contato e o nome que identifica a viagem. |
+| **Viagem** | O processo: passageiros (um titular), um destino, um período, tipo **nacional** ou **internacional**. Agrupa reservas. |
 | **Reserva** | Uma compra num portal/fornecedor. Tem localizador, valores e conciliação própria. |
 | **Serviço** | Item entregue ao viajante dentro de uma reserva: aéreo, hotel, seguro, passeio. |
 | **Fornecedor** | Quem a agência compra: operadora, consolidadora, cia aérea, hotel, seguradora, receptivo. Sempre existe, mesmo em venda direta. |
@@ -49,27 +49,29 @@ agência, pasta por agência no storage.
 
 | Nível | O que é | Quem enxerga |
 |---|---|---|
-| **Viagem** | O processo | O cliente responsável |
+| **Viagem** | O processo | O passageiro titular |
 | **Reserva** | Uma por portal/compra | A operadora |
 | **Serviço** | Aéreo, hotel, seguro, passeio | O viajante |
 
 Uma viagem que usou 4 portais = 1 viagem, 4 reservas, N serviços.
 
 Regras estruturais:
-- Toda reserva tem `fornecedor_id`. "Venda direta" é ausência de intermediário, não de fornecedor. Fornecedor pode ser criado inline na tela.
-- Todo passageiro é um registro em `cliente` (pessoa). `viagem_passageiro` só liga pessoa à viagem e marca o titular. Documentos e alertas de validade valem para todos os viajantes, não só para o responsável.
+- Toda reserva tem `fornecedor_id`, escolhido num **select** do cadastro de fornecedores. "Venda direta" é ausência de intermediário, não de fornecedor. Fornecedor novo entra pelo cadastro, não inline.
+- Toda reserva marca **o que foi vendido** em `tipos_servico[]` (aéreo, hospedagem, seguro, traslado, passeio, ingresso, aluguel de carro, documentação, outro) — vários por reserva; é o corte dos relatórios. O detalhe operacional (voo, bilhete, quarto) fica em `servico`, opcional.
+- `viagem.tipo` é `nacional` ou `internacional` — corte principal dos relatórios.
+- Não existe "cliente responsável". Todo passageiro é um registro em `cliente` (pessoa); `viagem_passageiro` liga pessoa à viagem e marca o **titular** (contato, nome nas listas, aviso de viagem duplicada). Documentos e alertas de validade valem para todos os viajantes.
 - `viagem.vendedor_id` é obrigatório: quem vendeu. `viagem.agente_id`: quem opera (transferível).
 - Horários de serviço (voo, check-in) são **hora local do lugar**, sem fuso (`timestamp`). Carimbos de sistema são `timestamptz`.
 
 ## 4. Regras financeiras
 
 ### 4.1 Valores digitados por reserva
-`valor_total`, `valor_taxas` (parte do total), `valor_comissao`, `rav_operadora`, `valor_cliente`, `taxa_servico`, `rav_cliente_modo`. Tudo em **BRL**. Se a compra foi em outra moeda, `moeda`, `cambio` e `valor_total_original` são informativos.
+`valor_total` (o total cobrado pelo fornecedor — **as taxas já estão dentro dele**; `valor_taxas` é só quanto desse total é taxa, informativo), `valor_comissao`, `rav_operadora`, `valor_cliente` (o que o cliente pagou no total), `taxa_servico` (opcional, ver 4.2), `rav_cliente_modo`, `tipos_servico[]`, `formas_pagamento[]` (pix, boleto, cartão — pode marcar mais de uma) e `cartao_de` quando houver cartão. Tudo em **BRL**. Se a compra foi em outra moeda, `moeda`, `cambio` e `valor_total_original` são informativos.
 
 Pré-preenchimento (requisito de velocidade): `valor_comissao` sugerido por `fornecedor.percentual_comissao_padrao × valor_total`; `taxa_servico` sugerida pela configuração da agência. Usuário só corrige.
 
-### 4.2 Tipos de receita
-`comissao` (operadora paga), `markup` (diferença entre custo e venda: passeio direto, transfer), `taxa_servico` (valor fixo sem custo: passaporte, assessoria). É um **rótulo para relatório**; a fórmula é uma só:
+### 4.2 Como a receita é calculada
+Não existe campo "tipo de receita": a fórmula é uma só e o rótulo, quando um relatório precisar, é derivado (`valor_comissao > 0` → comissionada; senão → markup). **Taxa de serviço** é um campo opcional, normalmente zero: valor fixo que a agência cobra do cliente sem custo por trás (assessoria, emissão de passaporte, visto). Se a agência não cobra isso, fica escondido em "mais campos".
 
 ```
 rav_cliente               = valor_cliente − valor_total
@@ -77,12 +79,12 @@ valor_esperado_operadora  = valor_comissao + rav_operadora + (rav_cliente se rav
 receita_prevista          = valor_comissao + rav_operadora + rav_cliente + taxa_servico
 ```
 
-Markup: `valor_comissao = 0`, `rav_operadora = 0`, `valor_total` = custo → receita = markup + taxa. Taxa de serviço pura: `valor_total = valor_cliente = 0` → receita = taxa.
+Venda com markup (passeio direto, transfer): `valor_comissao = 0`, `rav_operadora = 0`, `valor_total` = custo → receita = o que o cliente pagou acima do custo. **O que o cliente pagou acima do total vira RAV do cliente automaticamente**, sem digitar nada.
 
 Reserva cancelada sem `comissao_mantida`: esperado e prevista valem 0.
 
 ### 4.3 Fluxo do dinheiro
-Padrão: **cliente paga direto à operadora** (`fluxo_pagamento = cliente_paga_operadora`). Exceção: pix/dinheiro, quando o cliente paga à agência e a agência paga o fornecedor (`cliente_paga_agencia`). O sistema não parcela; registra o que aconteceu.
+Padrão: **cliente paga direto à operadora** (`fluxo_pagamento = cliente_paga_operadora`). Exceção: pix/boleto para a agência, que então paga o fornecedor (`cliente_paga_agencia`). `formas_pagamento[]` registra com o que o cliente pagou (pix, boleto, cartão — multi). O sistema não parcela; registra o que aconteceu.
 
 Movimentos (`movimento_financeiro`), sempre por reserva, com data e valor:
 
@@ -245,6 +247,13 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 16 | Clientes visíveis ao vendedor externo | Só os com viagem dele |
 | 17 | Vencimento à operadora | Mantido fora (ver pendência) |
 | 18 | Infra | API na Azure; resto gratuito |
+| 19 | Cliente responsável | Não existe; passageiro titular identifica a viagem |
+| 20 | Fornecedor | Select do cadastro; sem criação inline |
+| 21 | Viagem nacional/internacional | `viagem.tipo`, obrigatório |
+| 22 | Serviços vendidos | `reserva.tipos_servico[]`, multi, para relatórios |
+| 23 | Tipo de receita | Removido; derivado |
+| 24 | Formas de pagamento | pix, boleto, cartão — multi |
+| 25 | Comissão do vendedor externo e NFSe | Na tela de lançamento: `repasse.valor` (quando o vendedor gera repasse) e `nfse_status` |
 
 ### Pendências
 - **Contador**: base e regime da receita bruta do MEI (4.9).
@@ -266,7 +275,7 @@ Igual a B, mas `rav_cliente_modo retido_agencia`.
 → `esperado_operadora 1.100`, `receita_prevista 1.600`. No lançamento, movimento `recebimento_cliente 500`. Conciliada ao receber 1.100 da operadora. Recebida total = 1.600.
 
 **D — Markup (passeio direto)**
-`valor_total 800` (custo), `valor_cliente 1.000`, `fluxo cliente_paga_agencia`, `tipo markup`.
+`valor_total 800` (custo), `valor_cliente 1.000`, `fluxo cliente_paga_agencia`, `tipos_servico {passeio}`, `formas_pagamento {pix}`.
 → `rav_cliente 200`, `esperado_operadora 0`, `receita_prevista 200`. Movimentos: `recebimento_cliente +1.000`, `pagamento_fornecedor −800`. Recebida = 200. Não entra na conciliação.
 
 **E — Cancelamento com crédito**

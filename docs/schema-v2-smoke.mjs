@@ -23,7 +23,8 @@ const [u] = await r(`insert into usuario (agencia_id, nome, email, perfil) value
 await db.exec(`set app.usuario_id = '${u.id}'`);
 const [c] = await r(`insert into cliente (agencia_id, nome, cpf) values ($1,'Maria','12345678901') returning id`, [ag.id]);
 const [f] = await r(`insert into fornecedor (agencia_id, nome, percentual_comissao_padrao) values ($1,'CVC',10) returning id`, [ag.id]);
-const [v] = await r(`insert into viagem (agencia_id, cliente_id, vendedor_id, destino, data_ida, data_volta) values ($1,$2,$3,'Lisboa', current_date+30, current_date+40) returning id, codigo`, [ag.id, c.id, u.id]);
+const [v] = await r(`insert into viagem (agencia_id, vendedor_id, destino, tipo, data_ida, data_volta) values ($1,$2,'Lisboa','internacional', current_date+30, current_date+40) returning id, codigo`, [ag.id, u.id]);
+await r(`insert into viagem_passageiro (agencia_id, viagem_id, cliente_id, titular) values ($1,$2,$3,true)`, [ag.id, v.id, c.id]);
 console.log("codigo viagem:", v.codigo);
 
 // Exemplo B: RAV via operadora
@@ -37,14 +38,16 @@ const [rc] = await r(`insert into reserva (agencia_id, viagem_id, fornecedor_id,
 console.assert(+rc.valor_esperado_operadora === 1100 && +rc.receita_prevista === 1600, "exemplo C", rc);
 
 // Exemplo D: markup
-const [rd] = await r(`insert into reserva (agencia_id, viagem_id, fornecedor_id, tipo_receita, valor_total, valor_cliente, fluxo_pagamento)
-  values ($1,$2,$3,'markup',800,1000,'cliente_paga_agencia') returning valor_esperado_operadora, receita_prevista, id`, [ag.id, v.id, f.id]);
+const [rd] = await r(`insert into reserva (agencia_id, viagem_id, fornecedor_id, tipos_servico, formas_pagamento, valor_total, valor_cliente, fluxo_pagamento)
+  values ($1,$2,$3,'{passeio}','{pix,cartao}',800,1000,'cliente_paga_agencia') returning valor_esperado_operadora, receita_prevista, id`, [ag.id, v.id, f.id]);
 console.assert(+rd.valor_esperado_operadora === 0 && +rd.receita_prevista === 200, "exemplo D", rd);
 
 // movimentos + view financeira
 await db.exec(`set app.motivo = ''`);
 await r(`insert into movimento_financeiro (agencia_id, reserva_id, tipo, valor) values ($1,$2,'recebimento_cliente',500)`, [ag.id, rc.id]);
 await r(`insert into movimento_financeiro (agencia_id, reserva_id, tipo, valor) values ($1,$2,'recebimento_cliente',1000),($1,$2,'pagamento_fornecedor',-800)`, [ag.id, rd.id]);
+const tit = await r(`select nome from vw_viagem_titular where viagem_id = $1`, [v.id]);
+console.assert(tit[0]?.nome === "Maria", "titular", tit);
 const fin = await r(`select reserva_id, recebido_operadora, recebido_cliente, receita_recebida, aguardando_operadora, conciliada from vw_reserva_financeiro where reserva_id in ($1,$2,$3) order by receita_recebida`, [rb.id, rc.id, rd.id]);
 console.log("vw_reserva_financeiro:", fin);
 const dRow = fin.find(x => x.reserva_id === rd.id);

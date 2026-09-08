@@ -228,7 +228,8 @@ create table viagem (
   id                    uuid primary key default gen_random_uuid(),
   agencia_id            uuid not null references agencia(id),
   codigo                text not null,
-  cliente_id            uuid not null references cliente(id) on delete restrict,
+  -- nacional/internacional: corte principal dos relatórios
+  tipo                  text not null default 'nacional' check (tipo in ('nacional','internacional')),
   oportunidade_id       uuid references oportunidade(id),
   vendedor_id           uuid not null references usuario(id),   -- quem vendeu (posição)
   agente_id             uuid references usuario(id),            -- quem opera (transferível)
@@ -253,7 +254,6 @@ create table viagem (
 create unique index ux_viagem_codigo         on viagem (agencia_id, codigo);
 create index ix_viagem_agencia_ida           on viagem (agencia_id, data_ida);
 create index ix_viagem_agencia_volta         on viagem (agencia_id, data_volta);
-create index ix_viagem_cliente_volta         on viagem (cliente_id, data_volta);   -- aviso de viagem duplicada
 create index ix_viagem_vendedor              on viagem (vendedor_id);
 create index ix_viagem_agente                on viagem (agente_id);
 create index ix_viagem_destino_trgm          on viagem using gin (destino gin_trgm_ops);
@@ -273,7 +273,8 @@ end; $$ language plpgsql;
 create trigger trg_viagem_codigo before insert on viagem
   for each row execute function fn_codigo_viagem();
 
--- Todo passageiro é uma pessoa em `cliente`. Sem nome/documento duplicado aqui.
+-- Todo passageiro é uma pessoa em `cliente`. Não há "cliente responsável" na viagem:
+-- o passageiro `titular` é o contato e identifica a viagem nas listas.
 create table viagem_passageiro (
   id          uuid primary key default gen_random_uuid(),
   agencia_id  uuid not null references agencia(id),
@@ -301,7 +302,8 @@ create table reserva (
   fornecedor_id             uuid not null references fornecedor(id) on delete restrict,
   localizador               text,
   data_compra               date not null default current_date,
-  tipo_receita              text not null default 'comissao' check (tipo_receita in ('comissao','markup','taxa_servico')),
+  -- o que foi vendido nesta reserva (relatórios). Detalhe operacional fica em `servico`.
+  tipos_servico             text[] not null default '{}' check (tipos_servico <@ array['aereo','hospedagem','seguro','traslado','passeio','ingresso','aluguel_carro','documentacao','outro']),
   status                    text not null default 'pendente' check (status in ('pendente','emitida','cancelada')),
 
   -- DIGITADOS (BRL)
@@ -319,7 +321,7 @@ create table reserva (
   -- PAGAMENTO DO CLIENTE
   fluxo_pagamento           text not null default 'cliente_paga_operadora'
                               check (fluxo_pagamento in ('cliente_paga_operadora','cliente_paga_agencia')),
-  forma_pagamento           text check (forma_pagamento in ('pix','cartao_credito','cartao_debito','boleto','transferencia','dinheiro','link_pagamento','outro')),
+  formas_pagamento          text[] not null default '{}' check (formas_pagamento <@ array['pix','boleto','cartao']),
   cartao_de                 text not null default 'nao_se_aplica' check (cartao_de in ('cliente','agencia','nao_se_aplica')),
 
   -- PREVISÃO E CONCILIAÇÃO (calculada pela API, gravada, editável)
@@ -370,6 +372,7 @@ create index ix_reserva_agencia_compra      on reserva (agencia_id, data_compra)
 create index ix_reserva_fornecedor_compra   on reserva (fornecedor_id, data_compra);
 create index ix_reserva_fornecedor_loc      on reserva (agencia_id, fornecedor_id, localizador) where localizador is not null; -- aviso de duplicada
 create index ix_reserva_localizador_trgm    on reserva using gin (localizador gin_trgm_ops);
+create index ix_reserva_tipos_servico       on reserva using gin (tipos_servico);
 create index ix_reserva_prevista_pendente   on reserva (agencia_id, data_prevista_comissao)
   where excluido_em is null and not conciliacao_encerrada and status <> 'cancelada';
 
@@ -688,6 +691,12 @@ select v.id as viagem_id, v.agencia_id,
     else 'a_receber' end as fase_financeira
 from viagem v where v.excluido_em is null;
 
+-- contato da viagem = passageiro titular (ou o primeiro, se nenhum marcado)
+create view vw_viagem_titular as
+select distinct on (vp.viagem_id) vp.viagem_id, c.id as cliente_id, c.nome
+  from viagem_passageiro vp join cliente c on c.id = vp.cliente_id
+ order by vp.viagem_id, vp.titular desc, c.nome;
+
 create view vw_resultado_viagem as
 select
   v.id as viagem_id, v.agencia_id, v.codigo, v.destino, v.data_ida, v.data_volta, v.cancelada,
@@ -700,7 +709,7 @@ select
   rp.status                                               as repasse_status,
   coalesce(sum(f.receita_recebida), 0) - coalesce(rp.valor, 0) as resultado_agencia
 from viagem v
-join cliente c on c.id = v.cliente_id
+left join vw_viagem_titular c on c.viagem_id = v.id
 join usuario u on u.id = v.vendedor_id
 left join reserva r on r.viagem_id = v.id and r.excluido_em is null
 left join vw_reserva_financeiro f on f.reserva_id = r.id
@@ -717,7 +726,7 @@ select r.agencia_id, r.id as reserva_id, v.codigo, c.nome as cliente, fo.nome as
 from vw_reserva_financeiro f
 join reserva r on r.id = f.reserva_id
 join viagem v on v.id = r.viagem_id
-join cliente c on c.id = v.cliente_id
+left join vw_viagem_titular c on c.viagem_id = v.id
 join fornecedor fo on fo.id = r.fornecedor_id
 where f.aguardando_operadora and v.excluido_em is null;
 
@@ -728,22 +737,22 @@ select r.agencia_id, r.id as reserva_id, v.codigo, c.nome as cliente, r.valor_cl
 from vw_reserva_financeiro f
 join reserva r on r.id = f.reserva_id
 join viagem v on v.id = r.viagem_id
-join cliente c on c.id = v.cliente_id
+left join vw_viagem_titular c on c.viagem_id = v.id
 where r.fluxo_pagamento = 'cliente_paga_agencia' and r.status <> 'cancelada'
   and f.recebido_cliente < r.valor_cliente and v.excluido_em is null;
 
 create view vw_agenda as
 select v.agencia_id, v.id as viagem_id, v.codigo, c.nome as cliente, 'embarque' as evento, v.data_ida as data_evento
-  from viagem v join cliente c on c.id = v.cliente_id
+  from viagem v left join vw_viagem_titular c on c.viagem_id = v.id
  where not v.cancelada and v.excluido_em is null and v.data_ida >= current_date
 union all
 select v.agencia_id, v.id, v.codigo, c.nome, 'retorno', v.data_volta
-  from viagem v join cliente c on c.id = v.cliente_id
+  from viagem v left join vw_viagem_titular c on c.viagem_id = v.id
  where not v.cancelada and v.excluido_em is null and v.data_volta >= current_date
 union all
 select r.agencia_id, v.id, v.codigo, c.nome, 'comissao_prevista', r.data_prevista_comissao
   from vw_reserva_financeiro f join reserva r on r.id = f.reserva_id
-  join viagem v on v.id = r.viagem_id join cliente c on c.id = v.cliente_id
+  join viagem v on v.id = r.viagem_id left join vw_viagem_titular c on c.viagem_id = v.id
  where f.aguardando_operadora and r.data_prevista_comissao is not null and v.excluido_em is null
 union all
 select d.agencia_id, null, null, c.nome, 'passaporte_vence', d.validade
