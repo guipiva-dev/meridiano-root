@@ -1,6 +1,31 @@
-# Meridiano — Design System v2
+# Meridiano — Design System v3
 
-Tema e padrão visual do software. Tokens em `frontend/src/styles/tokens.css` (fonte da verdade para código). Mock aprovado em `docs/design/design-system-v2.html` (+ `.pdf`, `.png`).
+Tema e padrão visual do software. Tokens em `frontend/src/styles/tokens.css` (fonte da verdade para código). Mock em `docs/design/design-system-v3.html` (+ `.pdf`, `.png`).
+
+## 0. v3 — refinamentos após a segunda avaliação (2026-09-07)
+
+Estrutura mantida. Polimento de estados e microinterações.
+
+| Tema | Decisão v3 |
+|---|---|
+| Estados de campo | Cinco tokens: `--field-editable-bg`, `--field-calc-bg` (+selo "calculado", editável), `--field-readonly-bg` (texto em painel, sem borda), `--field-error-border`, `--field-disabled-*` |
+| Resultado da reserva | Venda e Custo em peso 600 cinza-700; **Receita da agência** 22px navy — o resultado é o número mais forte |
+| Resumo da viagem | Venda total · Custo total · Comissão da vendedora · **Resultado da agência** (= receita das reservas − comissão). "Receita prevista" fica só no painel por reserva |
+| Cor do resultado | Navy normal; **verde só acima da meta**; vermelho negativo. Verde por "ser positivo" é decoração |
+| Bordas | Dentro da reserva, seções separadas por espaço (28px) e eyebrow, sem linhas; painel financeiro em fundo `--surface-2`, sem divisórias |
+| Chips | Não selecionado: borda `--border`, texto `--n-500`, peso 500. Selecionado: navy + ✓ |
+| Texto mínimo | 12px para tudo que se lê; descrições de bloco em `--n-700` |
+| Sidebar | gap ícone–texto 10px, padding lateral 16px, ícone 18px opaco |
+| Linha selecionada | fundo `--selected` + barra azul só na primeira célula |
+| Modo compacto | Ao **adicionar reserva**, a anterior recolhe; o cabeçalho recolhido mostra fornecedor · localizador · status · serviços · total · receita |
+| Botões | "+ Adicionar reserva" (adiciona bloco na tela; nada persiste) e "Salvar viagem" (persiste tudo). "Cancelar" sai sem salvar — com confirmação se houver alterações. Não existe "Descartar"; "Excluir rascunho" é ação explícita com modal |
+| Aviso de viagem semelhante | "Adicionar reserva à viagem existente" (primário) · "Abrir viagem" · "Continuar criando nova" |
+| Estado sujo | `● Alterações não salvas` em `--dirty` ao lado das ações; sair pede confirmação |
+| Pós-save | Botão vira "Salvando…" (spinner) → "✓ Salvo" verde por 2 s → normal, com "Salvo às 14:32" ao lado. Sem modal, sem toast |
+| Atalhos | `Ctrl+Enter` adicionar reserva · `Ctrl+S` salvar viagem · `Esc` recolher/cancelar edição · `Ctrl+K` busca. Mostrados só onde ajudam |
+| Seções novas | 6 Estados de campo · 7 Estados e feedback (salvando, sujo, skeleton, vazio, 422 no campo, 409, 403, offline, toast com Desfazer) · 8 Modais de decisão (cancelar reserva com motivo e desfecho, sair sem salvar, excluir rascunho) |
+
+**Fluxo de persistência (decisão):** a tela "Nova viagem" é um rascunho local até "Salvar viagem". "Adicionar reserva" só abre outro bloco. Um único POST/PUT com viagem + reservas, transacional. Isso responde "se lancei a reserva, preciso salvar a viagem?" — sim, sempre, e só existe um botão que persiste.
 
 ## 0. v2 — o que mudou depois da avaliação de UX (2026-09-07)
 
