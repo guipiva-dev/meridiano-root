@@ -27,6 +27,7 @@ agência, pasta por agência no storage.
 | Termo | Definição |
 |---|---|
 | **Pessoa / cliente** | Registro em `cliente`. Todo viajante é uma pessoa; a viagem não tem "cliente responsável" — o passageiro **titular** é o contato e o nome que identifica a viagem. |
+| **Grupo / empresa** | `grupo_cliente`: agrupa pessoas (família, empresa, grupo de amigos) para organizar o cadastro e filtrar. Opcional; uma pessoa pertence a no máximo um grupo. Não é entidade financeira. |
 | **Viagem** | O processo: passageiros (um titular), um destino, um período, tipo **nacional** ou **internacional**. Agrupa reservas. |
 | **Reserva** | Uma compra num portal/fornecedor. Tem localizador, valores e conciliação própria. |
 | **Serviço** | Item entregue ao viajante dentro de uma reserva: aéreo, hotel, seguro, passeio. |
@@ -60,6 +61,7 @@ Regras estruturais:
 - Toda reserva marca **o que foi vendido** em `tipos_servico[]` (aéreo, hospedagem, seguro, traslado, passeio, ingresso, aluguel de carro, documentação, outro) — vários por reserva; é o corte dos relatórios. O detalhe operacional (voo, bilhete, quarto) fica em `servico`, opcional.
 - `viagem.tipo` é `nacional` ou `internacional` — corte principal dos relatórios.
 - Não existe "cliente responsável". Todo passageiro é um registro em `cliente` (pessoa); `viagem_passageiro` liga pessoa à viagem e marca o **titular** (contato, nome nas listas, aviso de viagem duplicada). Documentos e alertas de validade valem para todos os viajantes.
+- Pessoas podem pertencer a um **grupo/empresa** (`cliente.grupo_id`): organização e filtro do cadastro, não regra financeira.
 - `viagem.vendedor_id` é obrigatório: quem vendeu. `viagem.agente_id`: quem opera (transferível).
 - Horários de serviço (voo, check-in) são **hora local do lugar**, sem fuso (`timestamp`). Carimbos de sistema são `timestamptz`.
 
@@ -254,6 +256,8 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 23 | Tipo de receita | Removido; derivado |
 | 24 | Formas de pagamento | pix, boleto, cartão — multi |
 | 25 | Comissão do vendedor externo e NFSe | Na tela de lançamento: `repasse.valor` (quando o vendedor gera repasse) e `nfse_status` |
+| 26 | Cartão de quem | Removido |
+| 27 | Grupo/empresa de clientes | `grupo_cliente` (família, empresa, outro), opcional em `cliente` |
 
 ### Pendências
 - **Contador**: base e regime da receita bruta do MEI (4.9).

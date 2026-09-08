@@ -1,6 +1,6 @@
 # Meridiano — Design System v3
 
-Tema e padrão visual do software. Tokens em `frontend/src/styles/tokens.css` (fonte da verdade para código). Mock em `docs/design/design-system-v3.html` (+ `.pdf`, `.png`).
+Tema e padrão visual do software. Tokens em `frontend/src/styles/tokens.css` (fonte da verdade para código). Mock em `docs/design/design-system-v3.html` (+ `.pdf`, `.png`). Regras de implementação (componentes, escalas, estado, a11y) em `design-system-contrato.md`.
 
 ## 0. v3 — refinamentos após a segunda avaliação (2026-09-07)
 

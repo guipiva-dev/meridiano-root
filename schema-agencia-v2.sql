@@ -88,9 +88,25 @@ create index ix_log_acesso_email on log_acesso (email, criado_em desc);
 -- 3. PESSOAS (cliente = responsável e/ou passageiro), DOCUMENTOS, CRM
 -- =============================================================================
 
+-- Grupo/empresa: organiza clientes (família, empresa, grupo de amigos). Opcional.
+create table grupo_cliente (
+  id           uuid primary key default gen_random_uuid(),
+  agencia_id   uuid not null references agencia(id),
+  nome         text not null,
+  tipo         text not null default 'familia' check (tipo in ('familia','empresa','outro')),
+  cnpj         text check (cnpj ~ '^[0-9]{14}$'),
+  observacoes  text,
+  excluido_em  timestamptz,
+  excluido_por uuid,
+  criado_em    timestamptz not null default now(),
+  atualizado_em timestamptz not null default now()
+);
+create index ix_grupo_cliente_agencia_nome on grupo_cliente (agencia_id, nome);
+
 create table cliente (
   id               uuid primary key default gen_random_uuid(),
   agencia_id       uuid not null references agencia(id),
+  grupo_id         uuid references grupo_cliente(id) on delete set null,
   nome             text not null,
   cpf              text check (cpf ~ '^[0-9]{11}$'),
   email            text,
@@ -112,6 +128,7 @@ create unique index ux_cliente_cpf on cliente (agencia_id, cpf) where cpf is not
 create index ix_cliente_agencia_nome on cliente (agencia_id, nome);
 create index ix_cliente_nome_trgm    on cliente using gin (nome gin_trgm_ops);
 create index ix_cliente_tags         on cliente using gin (tags);
+create index ix_cliente_grupo        on cliente (grupo_id) where grupo_id is not null;
 
 create table documento_cliente (
   id            uuid primary key default gen_random_uuid(),
@@ -641,6 +658,7 @@ $$ language plpgsql;
 
 create trigger upd_usuario      before update on usuario      for each row execute function set_atualizado_em();
 create trigger upd_cliente      before update on cliente      for each row execute function set_atualizado_em();
+create trigger upd_grupo_cliente before update on grupo_cliente for each row execute function set_atualizado_em();
 create trigger upd_oportunidade before update on oportunidade for each row execute function set_atualizado_em();
 create trigger upd_fornecedor   before update on fornecedor   for each row execute function set_atualizado_em();
 create trigger upd_viagem       before update on viagem       for each row execute function set_atualizado_em();
@@ -828,7 +846,7 @@ do $$
 declare t text;
 begin
   foreach t in array array[
-    'usuario','cliente','documento_cliente','log_acesso_documento','interacao','oportunidade',
+    'usuario','grupo_cliente','cliente','documento_cliente','log_acesso_documento','interacao','oportunidade',
     'fornecedor','regra_pagamento_fornecedor','contador_viagem','viagem','viagem_passageiro',
     'reserva','reserva_alteracao','movimento_financeiro','credito','repasse','fechamento_periodo',
     'servico','anexo','tarefa','auditoria'
