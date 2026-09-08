@@ -1,0 +1,1006 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meridiano — Protótipo v1</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --navy-900:#1b1740;--navy-800:#29235c;--navy-700:#3b3478;--navy-600:#4a4390;
+  --blue-700:#055c95;--blue-600:#0672b9;--blue-500:#5396d1;--blue-100:#e3effa;--blue-50:#f1f7fd;
+  --orange-700:#b8631f;--orange-600:#e18334;--orange-100:#fbe7d5;
+  --yellow-500:#f9b233;--yellow-100:#fbf297;--yellow-50:#fefbe4;
+  --n-0:#fff;--n-50:#f5f6fa;--n-100:#eceef4;--n-200:#e4e7ec;--n-300:#cdd1dc;--n-400:#9ea3ba;--n-500:#5f637f;--n-700:#3a3d58;--n-900:#1e1b3a;
+  --green-600:#1f9d63;--green-100:#dcf5e8;--red-600:#d64545;--red-100:#fbe2e2;
+  --bg:var(--n-50);--surface:var(--n-0);--surface-2:var(--n-100);--border:var(--n-200);--border-strong:var(--n-300);
+  --text:var(--n-900);--text-muted:var(--n-500);--heading:var(--navy-800);
+  --primary:var(--blue-600);--primary-hover:var(--blue-700);--accent:var(--orange-600);--accent-hover:var(--orange-700);
+  --calc:var(--blue-50);--selected:var(--blue-50);--attention:var(--yellow-500);--attention-soft:var(--yellow-50);
+  --focus:var(--blue-500);
+  --font-ui:"Manrope","Segoe UI",system-ui,sans-serif;--font-mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+  --r-card:8px;--r-input:6px;--r-btn:6px;--r-pill:999px;
+  --input-h:40px;--row-h:40px;
+  color-scheme:light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:14px;line-height:1.5}
+h1,h2,h3{color:var(--heading);margin:0;text-wrap:balance}
+h1{font-size:28px;font-weight:800;letter-spacing:-.01em}
+h2{font-size:18px;font-weight:700}
+h3{font-size:16px;font-weight:700}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.mono{font-family:var(--font-mono);font-size:13px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1400px;margin:0 auto;padding:40px 32px 80px;display:flex;flex-direction:column;gap:56px}
+.intro{display:grid;grid-template-columns:1.3fr 1fr;gap:32px;align-items:end;padding-bottom:28px;border-bottom:1px solid var(--border)}
+.intro p{max-width:62ch;color:var(--n-700);margin:12px 0 0;font-size:15px}
+.lockup{display:flex;align-items:center;gap:12px}
+.mark{width:40px;height:40px;border-radius:10px;background:var(--navy-800);position:relative;overflow:hidden}
+.mark::after{content:"";position:absolute;left:8px;right:8px;top:19px;height:3px;background:var(--orange-600);border-radius:2px;transform:rotate(-20deg)}
+.mark::before{content:"";position:absolute;left:12px;top:9px;width:16px;height:16px;border-radius:50%;background:var(--yellow-500)}
+.lockup strong{font-size:20px;font-weight:800;color:var(--navy-800)}
+section{display:flex;flex-direction:column;gap:16px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.sec-head p{margin:0;color:var(--n-700);max-width:64ch}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:20px}
+/* palette */
+.swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.sw{border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;background:var(--surface)}
+.sw .chip{height:80px;display:flex;align-items:flex-end;padding:10px}
+.sw .chip span{font-size:12px;font-weight:700;letter-spacing:.04em}
+.sw .meta{padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.sw .meta b{font-size:13px;color:var(--heading)}
+.sw .meta small{color:var(--text-muted);font-size:12px}
+.roles{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.roles .card{padding:14px 16px;display:flex;flex-direction:column;gap:4px}
+.roles .dot{width:14px;height:14px;border-radius:4px;margin-bottom:6px}
+.roles b{font-size:14px;color:var(--heading)}
+.roles span{font-size:13px;color:var(--text-muted)}
+.states{display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 10px;border-radius:var(--r-pill);font-size:12px;font-weight:700}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.p-ok{background:var(--green-100);color:#167a4c}
+.p-err{background:var(--red-100);color:#b73737}
+.p-warn{background:var(--yellow-50);color:var(--orange-700)}
+.p-info{background:var(--blue-50);color:var(--blue-700)}
+.p-neutral{background:var(--n-100);color:var(--n-500)}
+.p-primary{background:var(--blue-100);color:var(--blue-700)}
+/* type */
+.type{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.type .card{display:flex;flex-direction:column;gap:14px}
+.tline{display:grid;grid-template-columns:96px 1fr;gap:12px;align-items:baseline}
+.tline small{color:var(--text-muted);font-size:12px}
+/* buttons */
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{height:40px;padding:0 16px;border-radius:var(--r-btn);border:1px solid transparent;font:inherit;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;background:var(--surface);color:var(--heading)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
+.btn-accent{background:var(--accent);color:#fff;font-weight:700}.btn-accent:hover{background:var(--accent-hover)}
+.btn-secondary{border-color:var(--border-strong)}.btn-secondary:hover{background:var(--surface-2)}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn-danger{border-color:var(--red-600);color:var(--red-600)}.btn-danger:hover{background:var(--red-100)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn-sm{height:34px;padding:0 12px;font-size:13px}
+.btn-icon{width:40px;padding:0;justify-content:center;border-color:var(--border-strong)}
+/* inputs */
+.field{display:flex;flex-direction:column;gap:6px;min-width:0}
+.field label{font-size:13px;font-weight:600;color:var(--n-700);display:flex;align-items:center;gap:6px}
+.field label .help{width:15px;height:15px;border-radius:50%;border:1px solid var(--n-400);color:var(--n-500);font-size:10px;display:inline-grid;place-items:center;font-weight:700;cursor:help}
+.field input,.field select{height:var(--input-h);border:1px solid var(--border-strong);border-radius:var(--r-input);padding:0 12px;font:inherit;font-size:14px;background:var(--surface);color:var(--text);width:100%}
+.field input:focus,.field select:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 3px rgba(83,150,209,.3)}
+.field .money{display:flex;align-items:center;border:1px solid var(--border-strong);border-radius:var(--r-input);background:var(--surface);height:var(--input-h)}
+.field .money span{padding:0 10px;color:var(--text-muted);font-size:13px;border-right:1px solid var(--border);height:100%;display:flex;align-items:center}
+.field .money input{border:0;height:38px;text-align:right;font-variant-numeric:tabular-nums;font-weight:600}
+.field .money input:focus{box-shadow:none}
+.field .money:focus-within{border-color:var(--focus);box-shadow:0 0 0 3px rgba(83,150,209,.3)}
+.field.calc .money,.field.calc input{background:var(--calc);border-color:var(--blue-100)}
+.field.calc label::after{content:"calculado";font-size:12px;font-weight:600;color:var(--blue-700);background:var(--blue-100);border-radius:var(--r-pill);padding:1px 7px;margin-left:auto}
+.field.err input{border-color:var(--red-600)}
+.field .hint{font-size:12px;color:var(--text-muted)}
+.field.err .hint{color:var(--red-600)}
+.chips{display:flex;gap:8px;flex-wrap:wrap;min-height:var(--input-h);align-items:center}
+.chip-t{height:32px;padding:0 12px;border-radius:var(--r-pill);border:1px solid var(--border);background:var(--surface);font-size:13px;font-weight:500;color:var(--n-500);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.chip-t:hover{border-color:var(--n-400)}
+.chip-t.on{background:var(--navy-800);border-color:var(--navy-800);color:#fff}
+.chip-t.on::before{content:"✓";font-size:12px}
+.chip-t.titular{outline:2px solid var(--orange-600);outline-offset:1px}
+.more{font-size:13px;color:var(--primary);font-weight:600;cursor:pointer}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);background:var(--surface-2);padding:0 14px;height:38px;font-weight:700;border-bottom:1px solid var(--border)}
+td{padding:8px 14px;height:52px;border-bottom:1px solid var(--border);white-space:nowrap;vertical-align:middle}
+tbody tr{cursor:pointer}
+tbody tr:hover td{background:var(--blue-50)}
+tr.sel td{background:var(--selected)}
+tr.sel td:first-child{box-shadow:inset 3px 0 0 var(--primary)}
+td.r,th.r{text-align:right}
+td .primary{font-weight:700;color:var(--heading)}
+td .secondary{font-size:13px;color:var(--text-muted);margin-top:2px}
+td.muted{color:var(--text-muted);font-size:13px}
+td .code{font-family:var(--font-mono);font-size:12px;color:var(--text-muted)}
+.tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--r-card);background:var(--surface)}
+/* tiles */
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:16px 18px;display:flex;flex-direction:column;gap:6px}
+.tile small{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+.tile b{font-size:28px;color:var(--heading);font-variant-numeric:tabular-nums;font-weight:800;letter-spacing:-.01em;line-height:1.1}
+.tile a{font-size:13px;font-weight:600;color:var(--primary);text-decoration:none;margin-top:4px}
+.tile a.warn{color:var(--orange-700)}
+.tile span{font-size:13px;color:var(--text-muted)}
+/* app mock */
+.app{border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden;background:var(--bg);display:grid;grid-template-columns:220px 1fr;min-height:720px;box-shadow:0 16px 40px rgba(41,35,92,.14)}
+.side{background:var(--navy-800);color:#d5d6ea;display:flex;flex-direction:column;padding:14px 0}
+.side .brand{display:flex;align-items:center;gap:10px;padding:6px 18px 20px;color:#fff;font-weight:800;font-size:17px}
+.side .brand .mark{width:28px;height:28px;border-radius:7px;background:var(--navy-700)}
+.side .brand .mark::before{width:11px;height:11px;left:8px;top:6px}
+.side .brand .mark::after{left:5px;right:5px;top:14px;height:2px}
+.nav .grp{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#9a9bc4;padding:8px 20px 6px;font-weight:700}
+.nav a{display:flex;align-items:center;gap:10px;padding:0 16px;height:42px;color:inherit;text-decoration:none;font-weight:500;font-size:14px;border-left:3px solid transparent}
+.nav a:hover{background:var(--navy-700);color:#fff}
+.nav a.on{color:#fff;border-left-color:var(--orange-600);background:rgba(255,255,255,.07);font-weight:700}
+.nav a .badge{margin-left:auto;background:var(--yellow-500);color:var(--navy-900);font-size:11px;font-weight:800;border-radius:var(--r-pill);padding:2px 8px}
+.ico{width:18px;height:18px;border-radius:4px;border:2px solid currentColor;opacity:1;flex:none}
+.nav a.on .ico{background:var(--orange-600);border-color:var(--orange-600);opacity:1}
+.nav .sep{height:1px;background:rgba(255,255,255,.14);margin:12px 18px}
+.main{display:flex;flex-direction:column;min-width:0}
+.top{height:56px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;padding:0 24px}
+.search{flex:1;max-width:460px;height:38px;border:1px solid var(--border-strong);border-radius:var(--r-input);display:flex;align-items:center;gap:8px;padding:0 12px;color:var(--text-muted);font-size:14px}
+.search kbd{margin-left:auto;font:11px var(--font-mono);border:1px solid var(--border);border-radius:4px;padding:1px 6px;background:var(--surface-2);color:var(--text-muted)}
+.top .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+.top .av{width:34px;height:34px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);display:grid;place-items:center;font-weight:800;font-size:12px;margin-left:6px}
+.top .who{font-size:13px;color:var(--n-700);display:flex;flex-direction:column;line-height:1.2;align-items:flex-end;margin-left:8px}
+.top .who b{color:var(--heading)}
+.page{padding:24px 28px 32px;display:flex;flex-direction:column;gap:20px;max-width:1400px}
+.page-head{display:flex;align-items:flex-start;gap:16px}
+.page-head .t{display:flex;flex-direction:column;gap:6px}
+.page-head h2{font-size:24px;font-weight:800;display:flex;align-items:center;gap:12px}
+.page-head .code{font-family:var(--font-mono);font-size:13px;font-weight:500;color:var(--navy-700);background:var(--blue-100);padding:3px 10px;border-radius:var(--r-pill)}
+.page-head .sub{font-size:14px;color:var(--text-muted);display:flex;gap:14px;align-items:center}
+.page-head .sub b{color:var(--n-700);font-weight:600}
+.page-head .actions{margin-left:auto;display:flex;align-items:center;gap:10px}
+.page-head .timer{font:13px var(--font-mono);color:var(--text-muted);margin-right:8px}
+.notice{background:var(--surface);border:1px solid var(--border);border-left:4px solid var(--attention);border-radius:var(--r-card);padding:14px 18px;display:flex;gap:16px;align-items:center}
+.notice .txt{display:flex;flex-direction:column;gap:2px}
+.notice .txt b{color:var(--heading)}
+.notice .txt span{font-size:13px;color:var(--text-muted)}
+.notice .row{margin-left:auto}
+.block{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);overflow:hidden}
+.block > .bh{display:flex;align-items:center;gap:12px;padding:14px 20px;border-bottom:1px solid var(--border)}
+.block > .bh h3{font-size:16px}
+.block > .bh .meta{color:var(--n-700);font-size:13px}
+.block > .bb{padding:24px;display:flex;flex-direction:column;gap:28px}
+.sub-eyebrow{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);display:flex;align-items:center;gap:10px}
+
+.reserva > .bh{background:var(--surface-2)}
+.reserva > .bh .num-id{font-size:12px;font-weight:800;color:#fff;background:var(--navy-800);border-radius:var(--r-pill);padding:2px 9px}
+.reserva > .bh .forn{font-weight:700;color:var(--heading);font-size:15px}
+.reserva > .bh .loc{font-family:var(--font-mono);font-size:13px;color:var(--n-700)}
+.reserva > .bh .total{margin-left:auto;font-weight:800;color:var(--heading);font-size:16px;font-variant-numeric:tabular-nums}
+.reserva > .bh .tog{font-size:13px;color:var(--primary);font-weight:600;margin-left:14px}
+.fin{display:grid;grid-template-columns:repeat(5,1fr);border-radius:var(--r-card);overflow:hidden;background:var(--surface-2)}
+.fin div{padding:14px 18px;display:flex;flex-direction:column;gap:3px}
+.fin div:last-child{background:var(--navy-800)}
+.fin small{font-size:12px;letter-spacing:.05em;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+.fin b{font-size:16px;color:var(--n-700);font-variant-numeric:tabular-nums;font-weight:600}
+.fin div:last-child b{font-size:22px;font-weight:800}
+.fin div:last-child small{color:#c9cbe6}.fin div:last-child b{color:#fff}
+.fin .sub{font-size:12px;color:var(--text-muted)}
+.fin div:last-child .sub{color:#c9cbe6}
+.reserva.collapsed .bb{display:none}
+.summary-strip{display:flex;gap:28px;align-items:center;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card)}
+.summary-strip div{display:flex;flex-direction:column;gap:2px}
+.summary-strip small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+.summary-strip b{font-size:18px;color:var(--n-700);font-variant-numeric:tabular-nums;font-weight:600}
+.summary-strip .res b{color:var(--heading);font-size:24px}
+.summary-strip .res.acima b{color:var(--green-600)}.summary-strip .res.neg b{color:var(--red-600)}
+.summary-strip .sep{width:1px;height:36px;background:var(--border)}
+.footer-actions{display:flex;gap:10px;align-items:center;padding-top:4px}
+.footer-actions .hint{margin-left:auto;font-size:12px;color:var(--n-700)}
+kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--surface);color:var(--n-700)}
+.dont{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dont ul{margin:0;padding-left:18px;color:var(--n-700)}
+.dont li{margin:6px 0}
+.changes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px;font-size:14px;color:var(--n-700)}
+.changes div::before{content:"→";color:var(--orange-600);font-weight:800;margin-right:8px}
+@media (max-width:1000px){.swatches,.roles{grid-template-columns:repeat(3,1fr)}.type,.intro,.dont,.changes{grid-template-columns:1fr}.app{grid-template-columns:1fr}.side{display:none}.grid-4,.grid-3,.tiles{grid-template-columns:1fr 1fr}.fin{grid-template-columns:repeat(2,1fr)}}
+.dirty{font-size:13px;font-weight:600;color:var(--orange-700);margin-right:6px}
+.grp-f{display:flex;flex-direction:column;gap:14px}
+.reserva > .bh .svc{font-size:13px;color:var(--n-700)}
+.reserva > .bh .total small{font-size:12px;font-weight:600;color:var(--text-muted);margin-left:8px}
+.field.ro .val{height:var(--input-h);display:flex;align-items:center;justify-content:flex-end;padding:0 12px;font-weight:700;color:var(--heading);font-variant-numeric:tabular-nums;background:var(--surface-2);border-radius:var(--r-input)}
+.field.dis input{background:var(--surface-2);color:var(--n-400);border-color:var(--border);cursor:not-allowed}
+.states-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.st{display:flex;flex-direction:column;gap:12px}
+.st p{margin:0;font-size:13px;color:var(--n-700)}
+.spin{width:14px;height:14px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;display:inline-block}
+.saved-at{font-size:13px;color:var(--text-muted)}
+.sk-row{display:flex;gap:12px}
+.sk{height:14px;border-radius:4px;background:linear-gradient(90deg,var(--n-100),var(--n-200),var(--n-100))}
+.empty{display:flex;flex-direction:column;gap:6px;align-items:flex-start;padding:8px 0}
+.empty b{color:var(--heading)}.empty span{font-size:13px;color:var(--n-700);margin-bottom:6px}
+.inline-banner{border-radius:var(--r-card);padding:12px 14px;display:flex;flex-direction:column;gap:8px;font-size:14px;border:1px solid var(--border);border-left-width:4px}
+.inline-banner b{color:var(--heading)}.inline-banner span{font-size:13px;color:var(--n-700)}
+.inline-banner.warn{border-left-color:var(--attention)}.inline-banner.err{border-left-color:var(--red-600)}.inline-banner.neutral{border-left-color:var(--n-400)}
+.toast{background:var(--navy-800);color:#fff;border-radius:var(--r-card);padding:12px 14px;font-size:14px;display:flex;gap:12px;align-items:center;box-shadow:0 8px 24px rgba(41,35,92,.25)}
+.toast a{color:var(--yellow-500);font-weight:700;margin-left:auto;text-decoration:none}
+.modals{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;align-items:start}
+.modal{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:22px;display:flex;flex-direction:column;gap:14px;box-shadow:0 16px 40px rgba(41,35,92,.16)}
+.modal h3{font-size:18px}.modal p{margin:0;color:var(--n-700);font-size:14px}
+@media (max-width:1000px){.states-grid,.modals{grid-template-columns:1fr}}
+@media (prefers-reduced-motion:no-preference){.btn,.chip-t{transition:background .12s,border-color .12s}}
+
+/* ===== protótipo: navegação e telas ===== */
+.proto-bar{position:fixed;top:0;left:0;right:0;height:36px;background:var(--navy-900);color:#c9cbe6;display:flex;align-items:center;gap:6px;padding:0 12px;font-size:12px;z-index:50;overflow-x:auto;white-space:nowrap}
+.proto-bar b{color:#fff;margin-right:8px}
+.proto-bar a{color:#c9cbe6;text-decoration:none;padding:3px 8px;border-radius:4px}
+.proto-bar a:hover{background:var(--navy-700);color:#fff}
+.proto-bar a.cur{background:var(--orange-600);color:#fff;font-weight:700}
+.screen{display:none}
+.screen.cur{display:block}
+.shell{display:grid;grid-template-columns:220px 1fr;min-height:calc(100vh - 36px);margin-top:36px;background:var(--bg)}
+.shell .side{position:sticky;top:36px;height:calc(100vh - 36px)}
+.shell .main{min-width:0}
+.shell .page{max-width:1400px}
+.nav a{cursor:pointer}
+/* login */
+.auth{min-height:calc(100vh - 36px);margin-top:36px;display:grid;grid-template-columns:1.1fr 1fr;background:var(--bg)}
+.auth .art{background:var(--navy-800);color:#fff;padding:56px;display:flex;flex-direction:column;justify-content:space-between}
+.auth .art h1{color:#fff;font-size:32px;max-width:14ch;line-height:1.15}
+.auth .art p{color:#c9cbe6;max-width:44ch;font-size:15px}
+.auth .art .mark{width:48px;height:48px;border-radius:12px;background:var(--navy-700)}
+.auth .form{display:grid;place-items:center;padding:40px}
+.auth .form .card{width:400px;display:flex;flex-direction:column;gap:16px;padding:32px}
+.auth .form h2{font-size:22px}
+.auth .req{font-size:12px;color:var(--text-muted);display:flex;flex-direction:column;gap:3px}
+.auth .req .ok{color:var(--green-700)}
+/* page common */
+.filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.filters .field{min-width:160px}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border)}
+.tabs a{padding:10px 14px;font-size:14px;font-weight:600;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
+.tabs a.on{color:var(--heading);border-bottom-color:var(--orange-600)}
+.tabs a .cnt{font-size:12px;background:var(--surface-2);border-radius:var(--r-pill);padding:1px 7px;margin-left:6px;color:var(--n-700)}
+.pager{display:flex;align-items:center;gap:8px;padding:12px 14px;font-size:13px;color:var(--text-muted);border-top:1px solid var(--border)}
+.pager .btn{margin-left:auto}
+.two{display:grid;grid-template-columns:1fr 360px;gap:20px;align-items:start}
+.three{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.list{display:flex;flex-direction:column}
+.list .it{display:flex;gap:12px;align-items:center;padding:12px 16px;border-bottom:1px solid var(--border);font-size:14px}
+.list .it:last-child{border-bottom:0}
+.list .it .t{display:flex;flex-direction:column;gap:2px;min-width:0}
+.list .it .t b{color:var(--heading)}
+.list .it .t span{font-size:13px;color:var(--text-muted)}
+.list .it .r{margin-left:auto;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:var(--heading)}
+.timeline{display:flex;flex-direction:column;gap:0}
+.timeline .ev{display:grid;grid-template-columns:18px 1fr;gap:12px;padding:10px 0;position:relative}
+.timeline .ev::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--blue-500);margin:5px 0 0 4px}
+.timeline .ev.money::before{background:var(--green-600)}
+.timeline .ev.warn::before{background:var(--orange-600)}
+.timeline .ev:not(:last-child)::after{content:"";position:absolute;left:8px;top:22px;bottom:-4px;width:2px;background:var(--border)}
+.timeline .ev .w{display:flex;flex-direction:column;gap:2px;font-size:14px}
+.timeline .ev .w span{font-size:12px;color:var(--text-muted)}
+.timeline .ev .w em{font-style:normal;color:var(--n-700);font-size:13px}
+.check{width:18px;height:18px;border:2px solid var(--border-strong);border-radius:4px;display:inline-grid;place-items:center;flex:none}
+.check.on{background:var(--blue-600);border-color:var(--blue-600);color:#fff;font-size:12px}
+.drawer{background:var(--surface);border:1px solid var(--border);border-radius:var(--r-card);padding:24px;display:flex;flex-direction:column;gap:20px;position:sticky;top:60px}
+.drawer h3{font-size:16px}
+.bar{height:10px;background:var(--surface-2);border-radius:var(--r-pill);overflow:hidden}
+.bar i{display:block;height:100%;background:var(--blue-600);border-radius:var(--r-pill)}
+.bar i.warn{background:var(--orange-600)}
+.chart{display:flex;align-items:flex-end;gap:10px;height:160px;padding:8px 0 0}
+.chart div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;font-size:11px;color:var(--text-muted)}
+.chart div i{display:block;width:100%;background:var(--blue-100);border-radius:4px 4px 0 0;position:relative}
+.chart div i b{position:absolute;left:0;right:0;bottom:0;background:var(--blue-600);border-radius:4px 4px 0 0}
+.chart div.cur i b{background:var(--orange-600)}
+.mini{font-size:13px;color:var(--text-muted)}
+.day{display:flex;flex-direction:column;gap:0;border:1px solid var(--border);border-radius:var(--r-card);background:var(--surface);overflow:hidden}
+.day .dh{padding:10px 16px;background:var(--surface-2);font-weight:700;color:var(--heading);font-size:14px;display:flex;gap:10px;align-items:center}
+.day .dh span{font-weight:500;color:var(--text-muted);font-size:13px}
+.split{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.vend{border:1px solid var(--border);border-radius:var(--r-card);background:var(--surface);overflow:hidden}
+.vend .vh{display:flex;align-items:center;gap:12px;padding:14px 18px;border-bottom:1px solid var(--border)}
+.vend .vh .av{width:34px;height:34px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);display:grid;place-items:center;font-weight:800;font-size:12px}
+.vend .vh .t{display:flex;flex-direction:column}
+.vend .vh .t b{color:var(--heading)}.vend .vh .t span{font-size:13px;color:var(--text-muted)}
+.vend .vh .tot{margin-left:auto;text-align:right}
+.vend .vh .tot b{font-size:20px;color:var(--heading);font-variant-numeric:tabular-nums}
+.vend .vh .tot span{font-size:12px;color:var(--text-muted);display:block}
+.month{display:flex;align-items:center;gap:16px;padding:14px 18px;border-bottom:1px solid var(--border);font-size:14px}
+.month:last-child{border-bottom:0}
+.month b{color:var(--heading);width:140px}
+.month .m{color:var(--text-muted);font-size:13px;width:200px}
+.month .n{font-variant-numeric:tabular-nums;width:140px;text-align:right}
+.month .a{margin-left:auto}
+.perm{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.perm div{font-size:12px;padding:8px 10px;border:1px solid var(--border);border-radius:var(--r-input);display:flex;flex-direction:column;gap:6px}
+.perm div b{font-size:13px;color:var(--heading)}
+.perm .ok{color:var(--green-700)}.perm .no{color:var(--n-400)}
+.page .modal{position:relative;margin-top:28px}.page .modal::before{content:"exemplo de modal";position:absolute;top:-22px;left:0;font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);font-weight:700}
+@media (max-width:1000px){.two,.three,.split,.auth{grid-template-columns:1fr}.shell{grid-template-columns:1fr}.shell .side{display:none}.perm{grid-template-columns:1fr 1fr}}
+</style></head><body>
+<div class="proto-bar"><b>Protótipo Meridiano v1</b>
+<a href="#/login">Login</a><a href="#/definir-senha">Convite</a><a href="#/viagens">Viagens</a><a href="#/nova-viagem">Nova viagem</a><a href="#/viagem">Detalhe</a><a href="#/clientes">Clientes</a><a href="#/pessoa">Pessoa</a><a href="#/grupos">Grupos</a><a href="#/fornecedores">Fornecedores</a><a href="#/financeiro">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/fechamento">Fechamento</a><a href="#/agenda">Agenda</a><a href="#/dashboard">Dashboard</a><a href="#/usuarios">Usuários</a><a href="#/auditoria">Auditoria</a>
+</div>
+
+<!-- ===================== LOGIN ===================== -->
+<section class="screen" id="s-login">
+  <div class="auth">
+    <div class="art">
+      <div class="lockup"><div class="mark"></div><strong style="color:#fff">Meridiano</strong></div>
+      <div><h1>Vendas, comissões e operação da agência num só lugar.</h1><p style="margin-top:16px">Lance a viagem em minutos, saiba quanto cada reserva deixa e nunca esqueça uma comissão atrasada.</p></div>
+      <p style="font-size:13px">© 2026 Build Solutions</p>
+    </div>
+    <div class="form">
+      <div class="card">
+        <h2>Entrar</h2>
+        <div class="field"><label>E-mail</label><input type="email" value="guilherme@vivaturismo.com.br"></div>
+        <div class="field"><label>Senha</label><input type="password" value="••••••••••"></div>
+        <button class="btn btn-primary" style="justify-content:center">Entrar</button>
+        <a href="#/definir-senha" class="more" style="text-align:center">Esqueci minha senha</a>
+        <div class="inline-banner err" style="display:none"><b>E-mail ou senha incorretos.</b></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONVITE / DEFINIR SENHA ===================== -->
+<section class="screen" id="s-definir-senha">
+  <div class="auth">
+    <div class="art">
+      <div class="lockup"><div class="mark"></div><strong style="color:#fff">Meridiano</strong></div>
+      <div><h1>Você foi convidada para a Viva Turismo.</h1><p style="margin-top:16px">Defina sua senha para começar. O convite vale por 72 horas.</p></div>
+      <p style="font-size:13px">© 2026 Build Solutions</p>
+    </div>
+    <div class="form">
+      <div class="card">
+        <h2>Definir senha</h2>
+        <div class="field"><label>Nome</label><input value="Ana Paula Ribeiro" readonly style="background:var(--surface-2)"></div>
+        <div class="field"><label>E-mail</label><input value="ana@vivaturismo.com.br" readonly style="background:var(--surface-2)"></div>
+        <div class="field"><label>Nova senha</label><input type="password" value="••••••••••••"></div>
+        <div class="req"><span class="ok">✓ Pelo menos 8 caracteres</span><span class="ok">✓ Diferente do e-mail</span></div>
+        <div class="field"><label>Confirmar senha</label><input type="password" value="••••••••••••"></div>
+        <button class="btn btn-primary" style="justify-content:center">Definir senha e entrar</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SHELL ===================== -->
+<div class="shell" id="shell">
+  <aside class="side">
+    <div class="brand"><div class="mark"></div>Meridiano</div>
+    <nav class="nav">
+      <div class="grp">Operação</div>
+      <a href="#/viagens" data-nav="viagens nova-viagem viagem"><i class="ico"></i>Viagens</a>
+      <a href="#/clientes" data-nav="clientes pessoa grupos"><i class="ico"></i>Clientes</a>
+      <a href="#/fornecedores" data-nav="fornecedores"><i class="ico"></i>Fornecedores</a>
+      <a href="#/financeiro" data-nav="financeiro repasses fechamento"><i class="ico"></i>Financeiro<span class="badge">3</span></a>
+      <a href="#/agenda" data-nav="agenda"><i class="ico"></i>Agenda<span class="badge">5</span></a>
+      <a href="#/dashboard" data-nav="dashboard"><i class="ico"></i>Relatórios</a>
+      <div class="sep"></div>
+      <div class="grp">Administração</div>
+      <a href="#/usuarios" data-nav="usuarios"><i class="ico"></i>Usuários</a>
+      <a href="#/auditoria" data-nav="auditoria"><i class="ico"></i>Auditoria</a>
+    </nav>
+  </aside>
+  <div class="main">
+    <div class="top">
+      <div class="search">Buscar cliente, viagem, localizador… <kbd>Ctrl K</kbd></div>
+      <div class="right">
+        <a href="#/nova-viagem" class="btn btn-accent btn-sm" style="text-decoration:none">+ Nova viagem</a>
+        <button class="btn btn-icon btn-sm" title="Notificações">🔔</button>
+        <button class="btn btn-icon btn-sm" title="Ajuda">?</button>
+        <div class="who"><b>Guilherme</b><span>Viva Turismo</span></div>
+        <div class="av">GP</div>
+      </div>
+    </div>
+
+    <!-- ===================== VIAGENS (LISTA) ===================== -->
+    <section class="screen" id="s-viagens">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Viagens</h2><div class="sub"><span>42 viagens · <b>7 em emissão</b> · <b style="color:var(--red-700)">3 com comissão atrasada</b></span></div></div>
+          <div class="actions"><button class="btn btn-secondary">Exportar CSV</button><a href="#/nova-viagem" class="btn btn-accent" style="text-decoration:none">+ Nova viagem</a></div>
+        </div>
+        <div class="tabs"><a class="on">Todas<span class="cnt">42</span></a><a>Em emissão<span class="cnt">7</span></a><a>Embarcam esta semana<span class="cnt">2</span></a><a>Comissão atrasada<span class="cnt">3</span></a><a>Concluídas<span class="cnt">28</span></a></div>
+        <div class="filters">
+          <div class="field" style="min-width:260px"><input placeholder="Cliente, destino, localizador…"></div>
+          <div class="field"><select><option>Vendedor: todos</option><option>Ana Paula</option><option>Guilherme</option></select></div>
+          <div class="field"><select><option>Tipo: todos</option><option>Nacional</option><option>Internacional</option></select></div>
+          <div class="field"><select><option>Ida: próximos 90 dias</option><option>Este mês</option><option>Qualquer</option></select></div>
+          <span class="more">Limpar filtros</span>
+        </div>
+        <div class="tblwrap"><table>
+          <thead><tr><th>Viagem</th><th>Ida</th><th>Vendedor</th><th>Fase</th><th>Financeiro</th><th class="r">Vendido</th><th class="r">Receita</th></tr></thead>
+          <tbody>
+            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Carlos Mendes</div><div class="secondary">Lisboa · Internacional · <span class="code">VG-2026-0042</span></div></td><td class="muted">18/04/2026</td><td class="muted">Ana Paula</td><td><span class="pill p-info">em emissão</span></td><td><span class="pill p-neutral">sem receita</span></td><td class="r num">R$ 13.700,00</td><td class="r num"><b>R$ 2.120,00</b></td></tr>
+            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Ana Beatriz Souza</div><div class="secondary">Cancún · Internacional · <span class="code">VG-2026-0041</span></div></td><td class="muted">04/04/2026</td><td class="muted">Guilherme</td><td><span class="pill p-primary">confirmada</span></td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 14.200,00</td><td class="r num"><b>R$ 1.610,00</b></td></tr>
+            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Marcos e Renata Lima</div><div class="secondary">Fernando de Noronha · Nacional · <span class="code">VG-2026-0040</span></div></td><td class="muted">29/03/2026</td><td class="muted">Guilherme</td><td><span class="pill p-primary">confirmada</span></td><td><span class="pill p-warn">parcial</span></td><td class="r num">R$ 9.800,00</td><td class="r num"><b>R$ 1.180,00</b></td></tr>
+            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Família Oliveira</div><div class="secondary">Gramado · Nacional · <span class="code">VG-2026-0038</span></div></td><td class="muted">22/03/2026</td><td class="muted">Ana Paula</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-err">atrasada</span></td><td class="r num">R$ 6.800,00</td><td class="r num"><b>R$ 740,00</b></td></tr>
+            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Juliana Prado</div><div class="secondary">Buenos Aires · Internacional · <span class="code">VG-2026-0035</span></div></td><td class="muted">10/03/2026</td><td class="muted">Guilherme</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-ok">quitada</span></td><td class="r num">R$ 4.300,00</td><td class="r num"><b>R$ 430,00</b></td></tr>
+            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Roberto Tanaka</div><div class="secondary">Orlando · Internacional · <span class="code">VG-2026-0033</span></div></td><td class="muted">02/03/2026</td><td class="muted">Ana Paula</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-err">atrasada</span></td><td class="r num">R$ 21.400,00</td><td class="r num"><b>R$ 2.350,00</b></td></tr>
+            <tr onclick="location.hash='#/viagem'"><td><div class="primary">Patrícia Nunes</div><div class="secondary">Porto de Galinhas · Nacional · <span class="code">VG-2026-0031</span></div></td><td class="muted">20/02/2026</td><td class="muted">Guilherme</td><td><span class="pill p-err">cancelada</span></td><td><span class="pill p-neutral">crédito</span></td><td class="r num">R$ 5.100,00</td><td class="r num"><b>R$ 0,00</b></td></tr>
+          </tbody>
+        </table><div class="pager">1–7 de 42 <button class="btn btn-secondary btn-sm">Próxima →</button></div></div>
+      </div>
+    </section>
+
+    <!-- ===================== NOVA VIAGEM ===================== -->
+    <section class="screen" id="s-nova-viagem">
+      <div class="page">
+          <div class="page-head">
+            <div class="t">
+              <h2>Nova viagem <span class="code">VG-2026-0042</span></h2>
+              <div class="sub"><span>Titular: <b>Carlos Mendes</b></span><span class="pill p-neutral">rascunho</span><span>Vendedora: <b>Ana Paula</b></span></div>
+            </div>
+            <div class="actions"><span class="dirty">● Alterações não salvas</span><span class="timer">02:14</span><button class="btn btn-ghost">Cancelar</button><button class="btn btn-primary">Salvar viagem</button></div>
+          </div>
+
+          <div class="notice">
+            <div class="txt"><b>Encontramos uma viagem semelhante para Carlos Mendes</b><span><span class="mono">VG-2026-0039</span> · Porto · 15–22/04 · em emissão</span></div>
+            <div class="row"><button class="btn btn-primary btn-sm">Adicionar reserva à viagem existente</button><button class="btn btn-secondary btn-sm">Abrir viagem</button><button class="btn btn-ghost btn-sm">Continuar criando nova</button></div>
+          </div>
+
+          <div class="block">
+            <div class="bh"><h3>Dados da viagem</h3><span class="meta">Quem viaja, para onde, quando, quem vendeu</span></div>
+            <div class="bb">
+              <div class="grid-4">
+                <div class="field" style="grid-column:span 2"><label>Passageiros <i class="help" title="O titular (contorno laranja) é o contato da viagem">?</i></label><div class="chips"><span class="chip-t on titular">Carlos Mendes</span><span class="chip-t on">Lúcia Mendes</span><span class="more">+ pessoa</span></div></div>
+                <div class="field"><label>Destino</label><input value="Lisboa"></div>
+                <div class="field"><label>Tipo</label><select><option>Internacional</option><option>Nacional</option></select></div>
+                <div class="field"><label>Ida</label><input type="date" value="2026-04-18"></div>
+                <div class="field"><label>Volta</label><input type="date" value="2026-04-28"></div>
+                <div class="field"><label>Vendedor</label><select><option>Ana Paula (externa)</option><option>Guilherme (você)</option></select></div>
+                <div class="field"><label>Comissão da vendedora <i class="help" title="Valor definido pelo dono. Só aparece para vendedor externo.">?</i></label><div class="money"><span>R$</span><input value="300,00"></div></div>
+              </div>
+              <span class="more">+ mais campos (ocasião, observações)</span>
+            </div>
+          </div>
+
+          <div class="block reserva collapsed">
+            <div class="bh"><span class="num-id">Reserva 1</span><span class="forn">CVC Operadora</span><span class="loc">K7X2PQ</span><span class="pill p-info">em emissão</span><span class="svc">Aéreo · Hospedagem · Passeio</span><span class="total">R$ 10.500,00 <small>receita R$ 1.600,00</small></span><span class="tog">Expandir</span></div>
+            <div class="bb"></div>
+          </div>
+
+          <div class="block reserva">
+            <div class="bh"><span class="num-id">Reserva 2</span><span class="forn">Decolar</span><span class="loc">DCL-88213</span><span class="pill p-primary">emitida</span><span class="total">R$ 3.200,00</span><span class="tog">Recolher</span></div>
+            <div class="bb">
+              <div class="grp-f">
+                <div class="sub-eyebrow">Reserva</div>
+                <div class="grid-4">
+                  <div class="field"><label>Fornecedor</label><select><option>Decolar</option><option>CVC Operadora</option><option>Azul Viagens</option></select></div>
+                  <div class="field"><label>Localizador</label><input class="mono" value="DCL-88213"></div>
+                  <div class="field"><label>Data da compra</label><input type="date" value="2026-03-14"></div>
+                  <div class="field"><label>NFSe</label><select><option>Não precisa</option><option>Falta emitir</option><option>Emitida</option></select></div>
+                  <div class="field" style="grid-column:1 / -1"><label>Serviços vendidos</label><div class="chips"><span class="chip-t">Aéreo</span><span class="chip-t">Hospedagem</span><span class="chip-t on">Seguro</span><span class="chip-t on">Traslado</span><span class="chip-t">Passeio</span><span class="chip-t">Ingresso</span><span class="chip-t">Aluguel de carro</span><span class="chip-t">Documentação</span><span class="chip-t">Outro</span></div></div>
+                </div>
+              </div>
+              <div class="grp-f">
+                <div class="sub-eyebrow">Financeiro</div>
+                <div class="grid-4">
+                  <div class="field"><label>Total da reserva <i class="help" title="O que o fornecedor cobrou, taxas incluídas">?</i></label><div class="money"><span>R$</span><input value="3.000,00"></div></div>
+                  <div class="field"><label>Do total, quanto é taxa</label><div class="money"><span>R$</span><input value="120,00"></div></div>
+                  <div class="field calc"><label>Comissão <i class="help" title="Sugerida pelo % do fornecedor (10 %). Edite se divergir.">?</i></label><div class="money"><span>R$</span><input value="300,00"></div></div>
+                  <div class="field"><label>RAV da operadora</label><div class="money"><span>R$</span><input value="20,00"></div></div>
+                  <div class="field"><label>Cliente pagou</label><div class="money"><span>R$</span><input value="3.200,00"></div></div>
+                  <div class="field"><label>RAV do cliente vem <i class="help" title="Via operadora: ela devolve junto com a comissão. Retido: o cliente pagou a diferença à agência.">?</i></label><select><option>Via operadora</option><option>Retido pela agência</option></select></div>
+                  <div class="field" style="grid-column:span 2"><label>Formas de pagamento</label><div class="chips"><span class="chip-t on">PIX</span><span class="chip-t">Boleto</span><span class="chip-t">Cartão</span></div></div>
+                </div>
+              </div>
+              <div class="grp-f">
+                <div class="sub-eyebrow">Resultado desta reserva</div>
+                <div class="fin">
+                  <div><small>Venda</small><b>R$ 3.200,00</b><span class="sub">cliente pagou</span></div>
+                  <div><small>Custo</small><b>R$ 3.000,00</b><span class="sub">total do fornecedor</span></div>
+                  <div><small>Comissão + RAV op.</small><b>R$ 320,00</b><span class="sub">esperado da operadora</span></div>
+                  <div><small>RAV do cliente</small><b>R$ 200,00</b><span class="sub">venda − custo</span></div>
+                  <div><small>Receita da agência</small><b>R$ 520,00</b><span class="sub">prevista</span></div>
+                </div>
+              </div>
+              <div class="row"><span class="more">+ mais campos (taxa de serviço, moeda e câmbio, observações)</span><span style="color:var(--border)">|</span><span class="more">+ detalhar serviços (voo, hotel, apólice)</span></div>
+            </div>
+          </div>
+
+          <div class="summary-strip">
+            <div><small>Venda total</small><b>R$ 13.700,00</b></div><span class="sep"></span>
+            <div><small>Custo total</small><b>R$ 13.000,00</b></div><span class="sep"></span>
+            <div><small>Comissão da vendedora</small><b>R$ 300,00</b></div><span class="sep"></span>
+            <div class="res"><small>Resultado da agência <i class="help" title="Receita das reservas (R$ 2.120) − comissão da vendedora">?</i></small><b>R$ 1.820,00</b></div>
+            <div style="margin-left:auto"><button class="btn btn-accent">+ Adicionar reserva</button></div>
+          </div>
+          <div class="footer-actions"><span class="hint"><kbd class="k">Ctrl</kbd>+<kbd class="k">Enter</kbd> adicionar reserva · <kbd class="k">Ctrl</kbd>+<kbd class="k">S</kbd> salvar viagem · <kbd class="k">Esc</kbd> recolher · <kbd class="k">Ctrl</kbd>+<kbd class="k">K</kbd> buscar</span></div>
+        </div>
+    </section>
+
+    <!-- ===================== DETALHE DA VIAGEM ===================== -->
+    <section class="screen" id="s-viagem">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Carlos Mendes · Lisboa <span class="code">VG-2026-0042</span></h2><div class="sub"><span>18–28/04/2026 · Internacional · 2 passageiros</span><span class="pill p-info">em emissão</span><span class="pill p-neutral">sem receita</span><span>Vendedora: <b>Ana Paula</b> · Agente: <b>Guilherme</b></span></div></div>
+          <div class="actions"><button class="btn btn-secondary">Transferir</button><button class="btn btn-danger">Cancelar viagem…</button><a href="#/nova-viagem" class="btn btn-primary" style="text-decoration:none">Editar</a></div>
+        </div>
+        <div class="tabs"><a class="on">Resumo</a><a>Reservas<span class="cnt">2</span></a><a>Financeiro</a><a>Documentos<span class="cnt">3</span></a><a>Timeline</a></div>
+        <div class="two">
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="summary-strip">
+              <div><small>Venda total</small><b>R$ 13.700,00</b></div><span class="sep"></span>
+              <div><small>Custo total</small><b>R$ 13.000,00</b></div><span class="sep"></span>
+              <div><small>Comissão da vendedora</small><b>R$ 300,00</b></div><span class="sep"></span>
+              <div class="res"><small>Resultado da agência</small><b>R$ 1.820,00</b></div>
+              <div style="margin-left:auto;text-align:right"><small style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700">Recebido</small><br><b class="num" style="font-size:18px;color:var(--n-700)">R$ 0,00</b></div>
+            </div>
+            <div class="block reserva collapsed">
+              <div class="bh"><span class="num-id">Reserva 1</span><span class="forn">CVC Operadora</span><span class="loc">K7X2PQ</span><span class="pill p-info">em emissão</span><span class="svc">Aéreo · Hospedagem · Passeio</span><span class="total">R$ 10.500,00 <small>receita R$ 1.600,00</small></span><span class="tog">Expandir</span></div><div class="bb"></div>
+            </div>
+            <div class="block reserva collapsed">
+              <div class="bh"><span class="num-id">Reserva 2</span><span class="forn">Decolar</span><span class="loc">DCL-88213</span><span class="pill p-primary">emitida</span><span class="svc">Seguro · Traslado</span><span class="total">R$ 3.200,00 <small>receita R$ 520,00</small></span><span class="tog">Expandir</span></div><div class="bb"></div>
+            </div>
+            <div class="block">
+              <div class="bh"><h3>Comissões desta viagem</h3><span class="meta">O que a agência espera receber das operadoras</span></div>
+              <div class="list">
+                <div class="it"><div class="t"><b>CVC · K7X2PQ</b><span>previsto para 20/03/2026</span></div><span class="pill p-info">a receber</span><div class="r">R$ 1.600,00</div><button class="btn btn-secondary btn-sm">Marcar recebida</button></div>
+                <div class="it"><div class="t"><b>Decolar · DCL-88213</b><span>previsto para 05/04/2026</span></div><span class="pill p-info">a receber</span><div class="r">R$ 320,00</div><button class="btn btn-secondary btn-sm">Marcar recebida</button></div>
+              </div>
+            </div>
+            <div class="block">
+              <div class="bh"><h3>Passageiros e documentos</h3><span class="meta">Passaporte válido até 6 meses após a volta</span></div>
+              <div class="list">
+                <div class="it"><div class="t"><b>Carlos Mendes <span class="pill p-neutral" style="height:20px">titular</span></b><span>Passaporte FX123456 · válido até 12/2031</span></div><span class="pill p-ok">ok</span></div>
+                <div class="it"><div class="t"><b>Lúcia Mendes</b><span>Passaporte GB998877 · vence 30/05/2026</span></div><span class="pill p-warn">vence em 32 dias</span><button class="btn btn-tertiary btn-sm btn-ghost">Abrir pessoa</button></div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="block"><div class="bh"><h3>Timeline</h3></div><div style="padding:8px 20px 16px">
+              <div class="timeline">
+                <div class="ev"><div class="w"><b>Reserva 2 emitida</b><em>Decolar · DCL-88213</em><span>hoje 10:12 · Guilherme</span></div></div>
+                <div class="ev warn"><div class="w"><b>Comissão da reserva 1 alterada</b><em>R$ 1.000,00 → R$ 1.100,00 · motivo: "operadora revisou %"</em><span>ontem 16:40 · Guilherme</span></div></div>
+                <div class="ev"><div class="w"><b>Reserva 1 lançada</b><em>CVC · K7X2PQ · R$ 10.500,00</em><span>12/03 14:32 · Ana Paula</span></div></div>
+                <div class="ev"><div class="w"><b>Viagem criada</b><em>Lisboa · 18–28/04</em><span>12/03 14:20 · Ana Paula</span></div></div>
+              </div></div></div>
+            <div class="block"><div class="bh"><h3>Anexos</h3><span class="meta">3</span></div>
+              <div class="list">
+                <div class="it"><div class="t"><b>voucher-cvc-K7X2PQ.pdf</b><span>reserva 1 · 212 KB</span></div><span class="more">Abrir</span></div>
+                <div class="it"><div class="t"><b>passaporte-lucia.jpg</b><span>pessoa · sensível · descarte 28/10/2026</span></div><span class="more">Abrir</span></div>
+                <div class="it"><div class="t"><b>comprovante-pix.png</b><span>reserva 2 · 88 KB</span></div><span class="more">Abrir</span></div>
+                <div class="it"><button class="btn btn-secondary btn-sm">+ Anexar</button></div>
+              </div></div>
+            <div class="block"><div class="bh"><h3>Tarefas</h3></div>
+              <div class="list">
+                <div class="it"><span class="check"></span><div class="t"><b>Check-in e envio de documentos</b><span>15/04 · automática</span></div></div>
+                <div class="it"><span class="check on">✓</span><div class="t"><b>Confirmar seguro com Decolar</b><span>concluída ontem</span></div></div>
+              </div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ===================== CLIENTES ===================== -->
+    <section class="screen" id="s-clientes">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Clientes</h2><div class="sub"><span>318 pessoas · 41 grupos · <b style="color:var(--orange-700)">6 passaportes vencendo</b></span></div></div>
+          <div class="actions"><a href="#/grupos" class="btn btn-secondary" style="text-decoration:none">Grupos e empresas</a><button class="btn btn-secondary">Exportar CSV</button><a href="#/pessoa" class="btn btn-primary" style="text-decoration:none">+ Nova pessoa</a></div>
+        </div>
+        <div class="filters">
+          <div class="field" style="min-width:280px"><input placeholder="Nome, CPF, telefone, e-mail…"></div>
+          <div class="field"><select><option>Grupo: todos</option><option>Família Mendes</option><option>Construtora Horizonte</option></select></div>
+          <div class="field"><select><option>Documentos: todos</option><option>Passaporte vencendo</option><option>Sem CPF</option></select></div>
+          <div class="field"><select><option>Última viagem: qualquer</option><option>Há mais de 11 meses (recompra)</option></select></div>
+        </div>
+        <div class="tblwrap"><table>
+          <thead><tr><th>Pessoa</th><th>Grupo</th><th>Contato</th><th>Documentos</th><th>Última viagem</th><th class="r">Viagens</th></tr></thead>
+          <tbody>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Carlos Mendes</div><div class="secondary"><span class="code">123.456.789-01</span> · 52 anos</div></td><td class="muted">Família Mendes</td><td class="muted">(11) 99876-1234</td><td><span class="pill p-ok">ok</span></td><td class="muted">Lisboa · abr/2026</td><td class="r num">4</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Lúcia Mendes</div><div class="secondary"><span class="code">987.654.321-00</span> · 49 anos</div></td><td class="muted">Família Mendes</td><td class="muted">(11) 99876-5678</td><td><span class="pill p-warn">passaporte vence em 32 dias</span></td><td class="muted">Lisboa · abr/2026</td><td class="r num">3</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Ana Beatriz Souza</div><div class="secondary"><span class="code">321.654.987-11</span> · 34 anos</div></td><td class="muted">—</td><td class="muted">(21) 98765-4321</td><td><span class="pill p-ok">ok</span></td><td class="muted">Cancún · abr/2026</td><td class="r num">1</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Roberto Tanaka</div><div class="secondary"><span class="code">555.666.777-88</span> · 61 anos</div></td><td class="muted">Construtora Horizonte</td><td class="muted">(41) 99111-2222</td><td><span class="pill p-neutral">sem passaporte</span></td><td class="muted">Orlando · mar/2026</td><td class="r num">7</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Patrícia Nunes</div><div class="secondary"><span class="code">444.333.222-11</span> · 28 anos</div></td><td class="muted">—</td><td class="muted">(85) 98888-7777</td><td><span class="pill p-ok">ok</span></td><td class="muted">cancelada · fev/2026</td><td class="r num">2</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Fernanda Oliveira</div><div class="secondary"><span class="code">111.222.333-44</span> · 45 anos</div></td><td class="muted">Família Oliveira</td><td class="muted">(51) 97777-6666</td><td><span class="pill p-ok">ok</span></td><td class="muted">Gramado · mar/2026</td><td class="r num">5</td></tr>
+          </tbody>
+        </table><div class="pager">1–6 de 318 <button class="btn btn-secondary btn-sm">Próxima →</button></div></div>
+      </div>
+    </section>
+
+    <!-- ===================== PESSOA ===================== -->
+    <section class="screen" id="s-pessoa">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Lúcia Mendes</h2><div class="sub"><span><span class="code">987.654.321-00</span></span><span>Família Mendes</span><span class="pill p-warn">passaporte vence em 32 dias</span><span>3 viagens · cliente desde 2023</span></div></div>
+          <div class="actions"><span class="timer">salvo às 09:41</span><button class="btn btn-ghost">Cancelar</button><button class="btn btn-primary">Salvar</button></div>
+        </div>
+        <div class="tabs"><a class="on">Dados</a><a>Documentos<span class="cnt">2</span></a><a>Viagens<span class="cnt">3</span></a><a>Atendimentos<span class="cnt">6</span></a></div>
+        <div class="two">
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="block"><div class="bh"><h3>Dados pessoais</h3></div><div class="bb"><div class="grid-4">
+              <div class="field" style="grid-column:span 2"><label>Nome completo</label><input value="Lúcia Helena Mendes"></div>
+              <div class="field"><label>CPF</label><input class="mono" value="987.654.321-00"></div>
+              <div class="field"><label>Nascimento</label><input type="date" value="1977-02-14"></div>
+              <div class="field"><label>Grupo / empresa</label><select><option>Família Mendes</option><option>— nenhum —</option><option>Construtora Horizonte</option><option>+ Criar grupo…</option></select></div>
+              <div class="field"><label>Cidade</label><input value="São Paulo"></div>
+              <div class="field"><label>UF</label><select><option>SP</option><option>RJ</option></select></div>
+              <div class="field"><label>Origem</label><select><option>Indicação</option><option>Instagram</option><option>Site</option></select></div>
+            </div></div></div>
+            <div class="block"><div class="bh"><h3>Contato</h3></div><div class="bb"><div class="grid-4">
+              <div class="field"><label>WhatsApp</label><input value="(11) 99876-5678"></div>
+              <div class="field"><label>Telefone</label><input value=""></div>
+              <div class="field" style="grid-column:span 2"><label>E-mail</label><input value="lucia.mendes@gmail.com"></div>
+              <div class="field" style="grid-column:1 / -1"><label>Tags</label><div class="chips"><span class="chip-t on">lua de mel 2023</span><span class="chip-t on">gosta de cruzeiro</span><span class="more">+ tag</span></div></div>
+            </div></div></div>
+            <div class="block"><div class="bh"><h3>Documentos</h3><span class="meta">Alerta 180 dias antes de vencer</span><button class="btn btn-secondary btn-sm" style="margin-left:auto">+ Documento</button></div>
+              <div class="tblwrap" style="border:0;border-radius:0"><table>
+                <thead><tr><th>Tipo</th><th>Número</th><th>Emissão</th><th>Validade</th><th>País</th><th></th></tr></thead>
+                <tbody>
+                  <tr><td>Passaporte</td><td class="code">GB998877</td><td class="muted">30/05/2016</td><td><span class="pill p-warn">30/05/2026 · 32 dias</span></td><td class="muted">Brasil</td><td class="r"><span class="more">Editar</span></td></tr>
+                  <tr><td>RG</td><td class="code">22.333.444-5</td><td class="muted">10/01/2010</td><td class="muted">—</td><td class="muted">SSP-SP</td><td class="r"><span class="more">Editar</span></td></tr>
+                </tbody></table></div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:20px">
+            <div class="block"><div class="bh"><h3>Viagens</h3><span class="meta">3</span></div><div class="list">
+              <div class="it"><div class="t"><b>Lisboa</b><span>18–28/04/2026 · <span class="code">VG-2026-0042</span></span></div><span class="pill p-info">em emissão</span></div>
+              <div class="it"><div class="t"><b>Gramado</b><span>jun/2025 · <span class="code">VG-2025-0118</span></span></div><span class="pill p-ok">concluída</span></div>
+              <div class="it"><div class="t"><b>Cancún</b><span>set/2023 · <span class="code">VG-2023-0031</span></span></div><span class="pill p-ok">concluída</span></div>
+            </div></div>
+            <div class="block"><div class="bh"><h3>Atendimentos</h3><button class="btn btn-secondary btn-sm" style="margin-left:auto">+ Registrar</button></div><div style="padding:8px 20px 16px"><div class="timeline">
+              <div class="ev"><div class="w"><b>WhatsApp</b><em>Pediu orçamento de Portugal para abril; prefere hotel no centro.</em><span>10/03 · Ana Paula</span></div></div>
+              <div class="ev"><div class="w"><b>Ligação</b><em>Avisada sobre validade do passaporte.</em><span>02/03 · Guilherme</span></div></div>
+              <div class="ev"><div class="w"><b>Tarefa automática</b><em>Retomar contato (11 meses da última viagem)</em><span>15/05/2026 · aberta</span></div></div>
+            </div></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== GRUPOS / EMPRESAS ===================== -->
+    <section class="screen" id="s-grupos">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Grupos e empresas</h2><div class="sub"><span>41 grupos · organizam o cadastro de pessoas; não têm valor financeiro</span></div></div>
+          <div class="actions"><button class="btn btn-primary">+ Novo grupo</button></div>
+        </div>
+        <div class="two">
+          <div class="tblwrap"><table>
+            <thead><tr><th>Grupo</th><th>Tipo</th><th>CNPJ</th><th class="r">Pessoas</th><th class="r">Viagens</th></tr></thead>
+            <tbody>
+              <tr class="sel"><td><div class="primary">Família Mendes</div><div class="secondary">Carlos, Lúcia, Pedro, Maria</div></td><td><span class="pill p-neutral">família</span></td><td class="muted">—</td><td class="r num">4</td><td class="r num">6</td></tr>
+              <tr><td><div class="primary">Construtora Horizonte</div><div class="secondary">incentivo anual · contato: Roberto Tanaka</div></td><td><span class="pill p-info">empresa</span></td><td class="code">12.345.678/0001-90</td><td class="r num">12</td><td class="r num">3</td></tr>
+              <tr><td><div class="primary">Família Oliveira</div><div class="secondary">Fernanda, Marcelo, Júlia</div></td><td><span class="pill p-neutral">família</span></td><td class="muted">—</td><td class="r num">3</td><td class="r num">5</td></tr>
+              <tr><td><div class="primary">Turma do Pilates</div><div class="secondary">grupo de amigas · viaja em setembro</div></td><td><span class="pill p-neutral">outro</span></td><td class="muted">—</td><td class="r num">8</td><td class="r num">2</td></tr>
+            </tbody></table><div class="pager">1–4 de 41</div></div>
+          <div class="drawer">
+            <h3>Família Mendes</h3>
+            <div class="field"><label>Nome</label><input value="Família Mendes"></div>
+            <div class="field"><label>Tipo</label><select><option>Família</option><option>Empresa</option><option>Outro</option></select></div>
+            <div class="field"><label>CNPJ <span style="font-weight:400;color:var(--text-muted)">(empresa)</span></label><input class="mono" placeholder="00.000.000/0000-00" disabled style="background:var(--surface-2)"></div>
+            <div class="field"><label>Observações</label><input value="Viajam sempre em abril, aniversário de casamento"></div>
+            <div><span class="eyebrow">Pessoas · 4</span><div class="list" style="margin-top:8px">
+              <div class="it" style="padding:8px 0"><div class="t"><b>Carlos Mendes</b><span>titular habitual</span></div><span class="more">Abrir</span></div>
+              <div class="it" style="padding:8px 0"><div class="t"><b>Lúcia Mendes</b></div><span class="more">Abrir</span></div>
+              <div class="it" style="padding:8px 0"><div class="t"><b>Pedro Mendes</b><span>menor · 14 anos</span></div><span class="more">Abrir</span></div>
+              <div class="it" style="padding:8px 0"><div class="t"><b>Maria Mendes</b><span>menor · 9 anos</span></div><span class="more">Abrir</span></div>
+              <div class="it" style="padding:8px 0"><span class="more">+ Vincular pessoa</span></div>
+            </div></div>
+            <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Cancelar</button><button class="btn btn-primary">Salvar</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FORNECEDORES ===================== -->
+    <section class="screen" id="s-fornecedores">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Fornecedores</h2><div class="sub"><span>23 cadastrados · a regra de pagamento define quando a comissão é esperada</span></div></div>
+          <div class="actions"><button class="btn btn-primary">+ Novo fornecedor</button></div>
+        </div>
+        <div class="two">
+          <div class="tblwrap"><table>
+            <thead><tr><th>Fornecedor</th><th>Tipo</th><th>Comissão padrão</th><th>Pagamento</th><th class="r">Reservas</th><th class="r">Receita 2026</th></tr></thead>
+            <tbody>
+              <tr class="sel"><td><div class="primary">CVC Operadora</div><div class="secondary">plantão 0800 707 0700</div></td><td class="muted">operadora</td><td class="r num">10 %</td><td class="muted">1–14 → dia 20 · 15–31 → dia 5</td><td class="r num">48</td><td class="r num"><b>R$ 31.200,00</b></td></tr>
+              <tr><td><div class="primary">Decolar</div><div class="secondary">portal parceiro</div></td><td class="muted">consolidadora</td><td class="r num">8 %</td><td class="muted">30 dias após a compra</td><td class="r num">19</td><td class="r num"><b>R$ 6.900,00</b></td></tr>
+              <tr><td><div class="primary">Azul Viagens</div><div class="secondary"></div></td><td class="muted">operadora</td><td class="r num">9 %</td><td class="muted">1–31 → dia 10 do mês seguinte</td><td class="r num">14</td><td class="r num"><b>R$ 5.100,00</b></td></tr>
+              <tr><td><div class="primary">Assist Card</div><div class="secondary">seguro viagem</div></td><td class="muted">seguradora</td><td class="r num">25 %</td><td class="muted">15 dias após a compra</td><td class="r num">31</td><td class="r num"><b>R$ 2.300,00</b></td></tr>
+              <tr><td><div class="primary">Lisboa Tours</div><div class="secondary">receptivo · venda direta com markup</div></td><td class="muted">receptivo</td><td class="r num">—</td><td class="muted">—</td><td class="r num">6</td><td class="r num"><b>R$ 1.150,00</b></td></tr>
+            </tbody></table><div class="pager">1–5 de 23</div></div>
+          <div class="drawer">
+            <h3>CVC Operadora</h3>
+            <div class="grid-4" style="grid-template-columns:1fr 1fr">
+              <div class="field" style="grid-column:span 2"><label>Nome</label><input value="CVC Operadora"></div>
+              <div class="field"><label>Tipo</label><select><option>Operadora</option><option>Consolidadora</option><option>Cia aérea</option><option>Hotel</option><option>Seguradora</option><option>Receptivo</option></select></div>
+              <div class="field"><label>CNPJ</label><input class="mono" value="10.760.260/0001-19"></div>
+              <div class="field"><label>Comissão padrão <i class="help" title="Pré-preenche a comissão no lançamento">?</i></label><div class="money"><input value="10,0"><span style="border-right:0;border-left:1px solid var(--border)">%</span></div></div>
+              <div class="field"><label>Telefone de emergência</label><input value="0800 707 0700"></div>
+            </div>
+            <div><span class="eyebrow">Quando paga a comissão</span>
+              <div class="list" style="margin-top:8px">
+                <div class="it" style="padding:8px 0"><div class="t"><b>Vendas de 1 a 14</b><span>pagam dia 20 do mesmo mês</span></div><span class="more">Editar</span></div>
+                <div class="it" style="padding:8px 0"><div class="t"><b>Vendas de 15 a 31</b><span>pagam dia 5 do mês seguinte</span></div><span class="more">Editar</span></div>
+                <div class="it" style="padding:8px 0"><span class="more">+ Janela</span><span class="mini" style="margin-left:auto">ou prazo fixo em dias</span></div>
+              </div></div>
+            <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Cancelar</button><button class="btn btn-primary">Salvar</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ===================== FINANCEIRO · CONCILIAÇÃO ===================== -->
+    <section class="screen" id="s-financeiro">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Comissões a receber</h2><div class="sub"><span>O que as operadoras ainda devem à agência</span></div></div>
+          <div class="actions"><a href="#/repasses" class="btn btn-secondary" style="text-decoration:none">Repasses</a><a href="#/fechamento" class="btn btn-secondary" style="text-decoration:none">Fechamento</a><button class="btn btn-secondary">Exportar CSV</button></div>
+        </div>
+        <div class="tiles">
+          <div class="tile"><small>A receber</small><b>R$ 18.420,00</b><span>14 reservas · 6 operadoras</span></div>
+          <div class="tile"><small>Atrasadas</small><b style="color:var(--red-600)">R$ 3.090,00</b><a class="warn" href="#">3 reservas · pior: 41 dias →</a></div>
+          <div class="tile"><small>Vencem esta semana</small><b>R$ 5.240,00</b><a href="#">4 reservas →</a></div>
+          <div class="tile"><small>Recebido no mês</small><b>R$ 9.150,00</b><span>▲ 12 % vs fevereiro</span></div>
+        </div>
+        <div class="tabs"><a class="on">Pendentes<span class="cnt">14</span></a><a>Atrasadas<span class="cnt">3</span></a><a>Recebidas em março<span class="cnt">22</span></a><a>Divergências<span class="cnt">1</span></a></div>
+        <div class="filters">
+          <div class="field"><select><option>Operadora: todas</option><option>CVC</option><option>Decolar</option><option>Azul Viagens</option></select></div>
+          <div class="field"><select><option>Previsto: qualquer data</option><option>Até hoje</option><option>Esta semana</option></select></div>
+          <span class="mini" style="margin-left:auto">2 selecionadas · <b>R$ 1.920,00</b></span><button class="btn btn-accent btn-sm">Marcar recebidas</button>
+        </div>
+        <div class="tblwrap"><table>
+          <thead><tr><th style="width:40px"></th><th>Reserva</th><th>Operadora</th><th>Previsto</th><th>Situação</th><th class="r">Esperado</th><th class="r">Recebido</th><th></th></tr></thead>
+          <tbody>
+            <tr><td><span class="check"></span></td><td><div class="primary">Família Oliveira · Gramado</div><div class="secondary"><span class="code">VG-2026-0038</span> · <span class="code">CVC-77A2Q</span></div></td><td class="muted">CVC</td><td class="muted">20/02/2026</td><td><span class="pill p-err">41 dias de atraso</span></td><td class="r num">R$ 740,00</td><td class="r num muted">R$ 0,00</td><td class="r"><button class="btn btn-secondary btn-sm">Receber</button></td></tr>
+            <tr><td><span class="check"></span></td><td><div class="primary">Roberto Tanaka · Orlando</div><div class="secondary"><span class="code">VG-2026-0033</span> · <span class="code">AZ-90213</span></div></td><td class="muted">Azul Viagens</td><td class="muted">10/03/2026</td><td><span class="pill p-err">23 dias de atraso</span></td><td class="r num">R$ 2.350,00</td><td class="r num muted">R$ 0,00</td><td class="r"><button class="btn btn-secondary btn-sm">Receber</button></td></tr>
+            <tr><td><span class="check"></span></td><td><div class="primary">Marcos e Renata Lima · Noronha</div><div class="secondary"><span class="code">VG-2026-0040</span> · <span class="code">DCL-71100</span></div></td><td class="muted">Decolar</td><td class="muted">28/03/2026</td><td><span class="pill p-warn">parcial</span></td><td class="r num">R$ 1.180,00</td><td class="r num">R$ 600,00</td><td class="r"><button class="btn btn-secondary btn-sm">Receber saldo</button></td></tr>
+            <tr class="sel"><td><span class="check on">✓</span></td><td><div class="primary">Carlos Mendes · Lisboa</div><div class="secondary"><span class="code">VG-2026-0042</span> · <span class="code">K7X2PQ</span></div></td><td class="muted">CVC</td><td class="muted">05/04/2026</td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 1.600,00</td><td class="r num muted">R$ 0,00</td><td class="r"><button class="btn btn-secondary btn-sm">Receber</button></td></tr>
+            <tr class="sel"><td><span class="check on">✓</span></td><td><div class="primary">Carlos Mendes · Lisboa</div><div class="secondary"><span class="code">VG-2026-0042</span> · <span class="code">DCL-88213</span></div></td><td class="muted">Decolar</td><td class="muted">05/04/2026</td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 320,00</td><td class="r num muted">R$ 0,00</td><td class="r"><button class="btn btn-secondary btn-sm">Receber</button></td></tr>
+            <tr><td><span class="check"></span></td><td><div class="primary">Ana Beatriz Souza · Cancún</div><div class="secondary"><span class="code">VG-2026-0041</span> · <span class="code">CVC-3391B</span></div></td><td class="muted">CVC</td><td class="muted">20/04/2026</td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 1.610,00</td><td class="r num muted">R$ 0,00</td><td class="r"><button class="btn btn-secondary btn-sm">Receber</button></td></tr>
+          </tbody></table><div class="pager">1–6 de 14</div></div>
+        <div class="modal" style="max-width:520px">
+          <h3>Receber comissão · CVC · K7X2PQ</h3>
+          <p>Esperado <b class="num">R$ 1.600,00</b> (comissão R$ 1.000 + RAV operadora R$ 100 + RAV cliente R$ 500).</p>
+          <div class="grid-4" style="grid-template-columns:1fr 1fr">
+            <div class="field calc"><label>Valor recebido</label><div class="money"><span>R$</span><input value="1.600,00"></div></div>
+            <div class="field"><label>Data</label><input type="date" value="2026-04-05"></div>
+            <div class="field" style="grid-column:span 2"><label>Forma</label><select><option>Transferência</option><option>PIX</option><option>Boleto</option></select></div>
+          </div>
+          <div class="inline-banner neutral" style="display:none"><b>Valor menor que o esperado.</b><span>Registre a diferença como divergência com motivo, ou deixe em aberto para receber o saldo depois.</span></div>
+          <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Confirmar recebimento</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== REPASSES ===================== -->
+    <section class="screen" id="s-repasses">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Repasses a vendedores</h2><div class="sub"><span>Liberado quando toda comissão da viagem entra · valor definido por você</span></div></div>
+          <div class="actions"><a href="#/financeiro" class="btn btn-secondary" style="text-decoration:none">Comissões</a><button class="btn btn-secondary">Histórico</button></div>
+        </div>
+        <div class="tiles" style="grid-template-columns:repeat(3,1fr)">
+          <div class="tile"><small>A pagar agora</small><b>R$ 1.150,00</b><a href="#">2 vendedores · 5 viagens →</a></div>
+          <div class="tile"><small>Bloqueado</small><b>R$ 2.380,00</b><span>aguardando comissão de 9 viagens</span></div>
+          <div class="tile"><small>Sem valor definido</small><b style="color:var(--orange-700)">3</b><a class="warn" href="#">viagens esperando você informar →</a></div>
+        </div>
+        <div class="split">
+          <div class="vend">
+            <div class="vh"><div class="av">AP</div><div class="t"><b>Ana Paula Ribeiro</b><span>vendedora externa · 12 viagens em 2026</span></div><div class="tot"><b>R$ 850,00</b><span>a pagar · 3 viagens</span></div></div>
+            <div class="list">
+              <div class="it"><div class="t"><b>Família Oliveira · Gramado</b><span><span class="code">VG-2026-0038</span> · comissão recebida 02/04</span></div><span class="pill p-ok">liberado</span><div class="r">R$ 250,00</div></div>
+              <div class="it"><div class="t"><b>Juliana Prado · Buenos Aires</b><span><span class="code">VG-2026-0035</span> · comissão recebida 28/03</span></div><span class="pill p-ok">liberado</span><div class="r">R$ 200,00</div></div>
+              <div class="it"><div class="t"><b>Roberto Tanaka · Orlando</b><span><span class="code">VG-2026-0033</span> · comissão recebida 30/03</span></div><span class="pill p-ok">liberado</span><div class="r">R$ 400,00</div></div>
+              <div class="it"><div class="t"><b>Carlos Mendes · Lisboa</b><span><span class="code">VG-2026-0042</span> · aguardando 2 comissões</span></div><span class="pill p-neutral">bloqueado</span><div class="r" style="color:var(--text-muted)">R$ 300,00</div></div>
+              <div class="it"><div class="t"><b>Turma do Pilates · Maragogi</b><span><span class="code">VG-2026-0044</span> · sem valor definido</span></div><span class="pill p-warn">informar valor</span><div class="field" style="width:140px"><div class="money"><span>R$</span><input placeholder="0,00"></div></div></div>
+              <div class="it" style="background:var(--surface-2)"><span class="mini">Liberado: <b>R$ 850,00</b> em 3 viagens</span><div style="margin-left:auto" class="row"><button class="btn btn-secondary btn-sm">Ver extrato</button><button class="btn btn-accent btn-sm">Pagar R$ 850,00</button></div></div>
+            </div>
+          </div>
+          <div class="vend">
+            <div class="vh"><div class="av">MC</div><div class="t"><b>Marcos Castro</b><span>vendedor externo · 4 viagens em 2026</span></div><div class="tot"><b>R$ 300,00</b><span>a pagar · 2 viagens</span></div></div>
+            <div class="list">
+              <div class="it"><div class="t"><b>Beatriz Campos · Salvador</b><span><span class="code">VG-2026-0029</span> · comissão recebida 15/03</span></div><span class="pill p-ok">liberado</span><div class="r">R$ 180,00</div></div>
+              <div class="it"><div class="t"><b>Henrique Dias · Foz do Iguaçu</b><span><span class="code">VG-2026-0030</span> · comissão recebida 20/03</span></div><span class="pill p-ok">liberado</span><div class="r">R$ 120,00</div></div>
+              <div class="it"><div class="t"><b>Silvia Rocha · Santiago</b><span><span class="code">VG-2026-0039</span> · aguardando 1 comissão</span></div><span class="pill p-neutral">bloqueado</span><div class="r" style="color:var(--text-muted)">R$ 250,00</div></div>
+              <div class="it" style="background:var(--surface-2)"><span class="mini">Liberado: <b>R$ 300,00</b> em 2 viagens</span><div style="margin-left:auto" class="row"><button class="btn btn-secondary btn-sm">Ver extrato</button><button class="btn btn-accent btn-sm">Pagar R$ 300,00</button></div></div>
+            </div>
+          </div>
+        </div>
+        <div class="modal" style="max-width:520px">
+          <h3>Pagar R$ 850,00 a Ana Paula?</h3>
+          <p>3 viagens saem de "a pagar" para "pago" com a data abaixo. O valor pago fica congelado mesmo que a viagem mude depois.</p>
+          <div class="grid-4" style="grid-template-columns:1fr 1fr"><div class="field"><label>Data do pagamento</label><input type="date" value="2026-04-07"></div><div class="field"><label>Observação</label><input placeholder="PIX, ref. março"></div></div>
+          <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Confirmar pagamento</button></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== FECHAMENTO DE PERÍODO ===================== -->
+    <section class="screen" id="s-fechamento">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Fechamento de período</h2><div class="sub"><span>Mês fechado: reservas e recebimentos só mudam com permissão e motivo</span></div></div>
+        </div>
+        <div class="two">
+          <div class="block">
+            <div class="bh"><h3>2026</h3><span class="meta">competência = mês da compra (comercial) e do recebimento (financeiro)</span></div>
+            <div>
+              <div class="month"><b>Abril</b><span class="m">em andamento</span><span class="n">R$ 2.120,00 prevista</span><span class="n">R$ 0,00 recebida</span><span class="a"><span class="pill p-info">aberto</span></span></div>
+              <div class="month"><b>Março</b><span class="m">22 reservas · 3 comissões pendentes</span><span class="n">R$ 11.940,00 prevista</span><span class="n">R$ 9.150,00 recebida</span><span class="a row"><span class="pill p-warn">pendências</span><button class="btn btn-primary btn-sm">Fechar março…</button></span></div>
+              <div class="month"><b>Fevereiro</b><span class="m">fechado em 05/03 por Guilherme</span><span class="n">R$ 8.310,00 prevista</span><span class="n">R$ 8.310,00 recebida</span><span class="a row"><span class="pill p-ok">fechado</span><button class="btn btn-ghost btn-sm">Reabrir…</button></span></div>
+              <div class="month"><b>Janeiro</b><span class="m">fechado em 04/02 por Guilherme</span><span class="n">R$ 6.870,00 prevista</span><span class="n">R$ 6.870,00 recebida</span><span class="a"><span class="pill p-ok">fechado</span></span></div>
+            </div>
+          </div>
+          <div class="modal">
+            <h3>Fechar março de 2026?</h3>
+            <p>3 comissões de março ainda não foram recebidas (R$ 3.090,00). Elas continuam em aberto na conciliação; só a edição das reservas de março passa a exigir permissão e motivo.</p>
+            <div class="list">
+              <div class="it" style="padding:8px 0"><div class="t"><b>CVC · CVC-77A2Q</b><span>41 dias de atraso</span></div><div class="r">R$ 740,00</div></div>
+              <div class="it" style="padding:8px 0"><div class="t"><b>Azul · AZ-90213</b><span>23 dias de atraso</span></div><div class="r">R$ 2.350,00</div></div>
+            </div>
+            <div class="row" style="justify-content:flex-end"><button class="btn btn-ghost">Voltar</button><button class="btn btn-primary">Fechar março</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- ===================== AGENDA ===================== -->
+    <section class="screen" id="s-agenda">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Agenda</h2><div class="sub"><span>Hoje, terça 7 de abril · <b>5 tarefas</b> · 2 embarques esta semana</span></div></div>
+          <div class="actions"><div class="field" style="min-width:180px"><select><option>Responsável: todos</option><option>Guilherme</option><option>Ana Paula</option></select></div><button class="btn btn-primary">+ Tarefa</button></div>
+        </div>
+        <div class="tabs"><a class="on">Tarefas</a><a>Embarques e retornos</a><a>Documentos vencendo<span class="cnt">6</span></a><a>Créditos vencendo<span class="cnt">1</span></a></div>
+        <div class="two">
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="day"><div class="dh">Atrasadas <span>2</span></div><div class="list">
+              <div class="it"><span class="check"></span><div class="t"><b>Retomar contato — Roberto Tanaka</b><span>recompra · 11 meses da última viagem · venceu há 3 dias</span></div><span class="pill p-err">atrasada</span><span class="mini">Guilherme</span></div>
+              <div class="it"><span class="check"></span><div class="t"><b>Cobrar comissão CVC-77A2Q</b><span>Família Oliveira · manual</span></div><span class="pill p-err">atrasada</span><span class="mini">Guilherme</span></div>
+            </div></div>
+            <div class="day"><div class="dh">Hoje <span>3</span></div><div class="list">
+              <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">Confirmar seguro com Decolar</b><span>Carlos Mendes · Lisboa</span></div><span class="mini">Guilherme</span></div>
+              <div class="it"><span class="check"></span><div class="t"><b>Passaporte vence em 30/05 — Lúcia Mendes</b><span>automática · 180 dias antes</span></div><span class="pill p-warn">documento</span><span class="mini">Ana Paula</span></div>
+              <div class="it"><span class="check"></span><div class="t"><b>Enviar voucher do hotel</b><span>Ana Beatriz Souza · Cancún</span></div><span class="mini">Guilherme</span></div>
+            </div></div>
+            <div class="day"><div class="dh">Esta semana</div><div class="list">
+              <div class="it"><span class="check"></span><div class="t"><b>Check-in e envio de documentos — Cancún</b><span>quinta 09/04 · automática · ida 12/04</span></div><span class="pill p-info">embarque</span><span class="mini">Guilherme</span></div>
+              <div class="it"><span class="check"></span><div class="t"><b>Pós-viagem: avaliação e fotos — Gramado</b><span>sexta 10/04 · automática</span></div><span class="mini">Ana Paula</span></div>
+            </div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:16px">
+            <div class="block"><div class="bh"><h3>Embarques</h3><span class="meta">próximos 14 dias</span></div><div class="list">
+              <div class="it"><div class="t"><b>Ana Beatriz Souza</b><span>Cancún · dom 12/04 · 2 pax</span></div><span class="pill p-primary">confirmada</span></div>
+              <div class="it"><div class="t"><b>Carlos e Lúcia Mendes</b><span>Lisboa · sáb 18/04 · 2 pax</span></div><span class="pill p-info">em emissão</span></div>
+            </div></div>
+            <div class="block"><div class="bh"><h3>Retornos</h3></div><div class="list">
+              <div class="it"><div class="t"><b>Marcos e Renata Lima</b><span>Noronha · qua 08/04</span></div><span class="mini">pós-viagem em 11/04</span></div>
+            </div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== DASHBOARD / RELATÓRIOS ===================== -->
+    <section class="screen" id="s-dashboard">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Relatórios</h2><div class="sub"><span>Abril de 2026 · caixa e competência</span></div></div>
+          <div class="actions"><div class="field" style="min-width:160px"><select><option>2026</option><option>2025</option></select></div><div class="field" style="min-width:180px"><select><option>Vendedor: todos</option></select></div><button class="btn btn-secondary">Exportar CSV</button></div>
+        </div>
+        <div class="tiles">
+          <div class="tile"><small>Vendido no ano</small><b>R$ 187.400,00</b><span>62 reservas · 41 viagens</span></div>
+          <div class="tile"><small>Receita prevista</small><b>R$ 24.180,00</b><span>margem média 12,9 %</span></div>
+          <div class="tile"><small>Recebido no ano</small><b>R$ 27.630,00</b><a href="#">inclui R$ 6,1 mil de 2025 →</a></div>
+          <div class="tile"><small>Teto MEI 2026</small><b>34 %</b><div class="bar" style="margin-top:6px"><i style="width:34%"></i></div><span>R$ 27.630 de R$ 81.000 · alerta em 80 %</span></div>
+        </div>
+        <div class="three">
+          <div class="block" style="grid-column:span 2"><div class="bh"><h3>Receita por mês</h3><span class="meta">prevista (claro) e recebida (escuro)</span></div><div style="padding:8px 20px 16px">
+            <div class="chart">
+              <div><i style="height:70px"><b style="height:70px"></b></i>jan</div>
+              <div><i style="height:85px"><b style="height:85px"></b></i>fev</div>
+              <div><i style="height:120px"><b style="height:92px"></b></i>mar</div>
+              <div class="cur"><i style="height:40px"><b style="height:0"></b></i>abr</div>
+              <div><i style="height:55px"><b style="height:0"></b></i>mai</div>
+              <div><i style="height:30px"><b style="height:0"></b></i>jun</div>
+            </div></div></div>
+          <div class="block"><div class="bh"><h3>Nacional × internacional</h3></div><div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px">
+            <div><div style="display:flex;justify-content:space-between;font-size:13px"><b>Internacional</b><span class="num">R$ 131.200 · 70 %</span></div><div class="bar" style="margin-top:6px"><i style="width:70%"></i></div></div>
+            <div><div style="display:flex;justify-content:space-between;font-size:13px"><b>Nacional</b><span class="num">R$ 56.200 · 30 %</span></div><div class="bar" style="margin-top:6px"><i style="width:30%;background:var(--blue-500)"></i></div></div>
+            <span class="mini">Margem: internacional 13,4 % · nacional 11,6 %</span>
+          </div></div>
+        </div>
+        <div class="split">
+          <div class="block"><div class="bh"><h3>Fornecedores</h3><span class="meta">por receita no ano</span></div>
+            <div class="tblwrap" style="border:0;border-radius:0"><table>
+              <thead><tr><th>Fornecedor</th><th class="r">Reservas</th><th class="r">Volume</th><th class="r">Receita</th><th class="r">Margem</th></tr></thead>
+              <tbody>
+                <tr><td class="primary">CVC Operadora</td><td class="r num">24</td><td class="r num">R$ 98.100</td><td class="r num"><b>R$ 12.400</b></td><td class="r num">12,6 %</td></tr>
+                <tr><td class="primary">Decolar</td><td class="r num">11</td><td class="r num">R$ 31.700</td><td class="r num"><b>R$ 3.050</b></td><td class="r num">9,6 %</td></tr>
+                <tr><td class="primary">Azul Viagens</td><td class="r num">9</td><td class="r num">R$ 28.900</td><td class="r num"><b>R$ 2.780</b></td><td class="r num">9,6 %</td></tr>
+                <tr><td class="primary">Assist Card</td><td class="r num">18</td><td class="r num">R$ 9.200</td><td class="r num"><b>R$ 2.300</b></td><td class="r num">25,0 %</td></tr>
+              </tbody></table></div></div>
+          <div class="block"><div class="bh"><h3>Serviços vendidos</h3><span class="meta">reservas que incluem cada serviço</span></div>
+            <div style="padding:16px 20px;display:flex;flex-direction:column;gap:12px">
+              <div><div style="display:flex;justify-content:space-between;font-size:13px"><b>Aéreo</b><span class="num">48</span></div><div class="bar" style="margin-top:6px"><i style="width:77%"></i></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px"><b>Hospedagem</b><span class="num">44</span></div><div class="bar" style="margin-top:6px"><i style="width:71%"></i></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px"><b>Seguro</b><span class="num">31</span></div><div class="bar" style="margin-top:6px"><i style="width:50%"></i></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px"><b>Traslado</b><span class="num">19</span></div><div class="bar" style="margin-top:6px"><i style="width:31%"></i></div></div>
+              <div><div style="display:flex;justify-content:space-between;font-size:13px"><b>Passeio</b><span class="num">14</span></div><div class="bar" style="margin-top:6px"><i style="width:23%"></i></div></div>
+            </div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== USUÁRIOS ===================== -->
+    <section class="screen" id="s-usuarios">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Usuários</h2><div class="sub"><span>Viva Turismo · 5 usuários · 1 convite pendente</span></div></div>
+          <div class="actions"><button class="btn btn-primary">+ Convidar</button></div>
+        </div>
+        <div class="two">
+          <div class="tblwrap"><table>
+            <thead><tr><th>Usuário</th><th>Perfil</th><th>Repasse</th><th>Último acesso</th><th>Situação</th><th></th></tr></thead>
+            <tbody>
+              <tr><td><div class="primary">Guilherme Piva</div><div class="secondary">guilherme@vivaturismo.com.br</div></td><td><span class="pill p-primary">dono</span></td><td class="muted">—</td><td class="muted">hoje 09:12</td><td><span class="pill p-ok">ativo</span></td><td class="r"><span class="more">Editar</span></td></tr>
+              <tr class="sel"><td><div class="primary">Ana Paula Ribeiro</div><div class="secondary">ana@vivaturismo.com.br</div></td><td><span class="pill p-neutral">vendedor externo</span></td><td class="muted">gera · sugestão 10 %</td><td class="muted">ontem 18:40</td><td><span class="pill p-ok">ativo</span></td><td class="r"><span class="more">Editar</span></td></tr>
+              <tr><td><div class="primary">Marcos Castro</div><div class="secondary">sem login · só referenciado nas viagens</div></td><td><span class="pill p-neutral">vendedor externo</span></td><td class="muted">gera · sugestão 8 %</td><td class="muted">—</td><td><span class="pill p-neutral">sem login</span></td><td class="r"><span class="more">Convidar</span></td></tr>
+              <tr><td><div class="primary">Cláudia Ferreira</div><div class="secondary">claudia@contabilx.com.br</div></td><td><span class="pill p-neutral">contador</span></td><td class="muted">—</td><td class="muted">02/04</td><td><span class="pill p-ok">ativo</span></td><td class="r"><span class="more">Editar</span></td></tr>
+              <tr><td><div class="primary">Bruno Sales</div><div class="secondary">bruno@vivaturismo.com.br</div></td><td><span class="pill p-neutral">agente</span></td><td class="muted">—</td><td class="muted">—</td><td><span class="pill p-warn">convite expira em 2 dias</span></td><td class="r"><span class="more">Reenviar</span></td></tr>
+            </tbody></table></div>
+          <div class="drawer">
+            <h3>Ana Paula Ribeiro</h3>
+            <div class="field"><label>Nome</label><input value="Ana Paula Ribeiro"></div>
+            <div class="field"><label>E-mail</label><input value="ana@vivaturismo.com.br"></div>
+            <div class="field"><label>Perfil</label><select><option>Vendedor externo</option><option>Agente</option><option>Financeiro</option><option>Contador</option><option>Dono</option></select></div>
+            <div class="grid-4" style="grid-template-columns:1fr 1fr"><div class="field"><label>Gera repasse</label><select><option>Sim</option><option>Não</option></select></div><div class="field"><label>Sugestão de %</label><div class="money"><input value="10,0"><span style="border-right:0;border-left:1px solid var(--border)">%</span></div></div></div>
+            <div><span class="eyebrow">O que este perfil vê</span><div class="perm" style="grid-template-columns:1fr 1fr;margin-top:8px">
+              <div><b>Viagens</b><span class="ok">✓ só as próprias</span><span class="no">✗ custo e comissão</span><span class="no">✗ resultado</span></div>
+              <div><b>Clientes</b><span class="ok">✓ só das próprias viagens</span><span class="no">✗ documentos</span></div>
+              <div><b>Financeiro</b><span class="ok">✓ o próprio repasse</span><span class="no">✗ conciliação</span></div>
+              <div><b>Admin</b><span class="no">✗ usuários</span><span class="no">✗ auditoria</span></div>
+            </div></div>
+            <div class="row" style="justify-content:flex-end"><button class="btn btn-danger btn-sm">Inativar…</button><span style="flex:1"></span><button class="btn btn-ghost">Cancelar</button><button class="btn btn-primary">Salvar</button></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== AUDITORIA ===================== -->
+    <section class="screen" id="s-auditoria">
+      <div class="page">
+        <div class="page-head">
+          <div class="t"><h2>Auditoria</h2><div class="sub"><span>Toda alteração em viagem, reserva, recebimento, repasse, usuário e cliente · retenção 24 meses</span></div></div>
+          <div class="actions"><button class="btn btn-secondary">Exportar CSV</button></div>
+        </div>
+        <div class="filters">
+          <div class="field" style="min-width:240px"><input placeholder="Código da viagem, localizador, pessoa…"></div>
+          <div class="field"><select><option>Quem: todos</option><option>Guilherme</option><option>Ana Paula</option></select></div>
+          <div class="field"><select><option>O quê: tudo</option><option>Valores de reserva</option><option>Recebimentos</option><option>Cancelamentos</option><option>Acesso a documento</option></select></div>
+          <div class="field"><input type="date" value="2026-04-01"></div><div class="field"><input type="date" value="2026-04-07"></div>
+        </div>
+        <div class="block"><div style="padding:8px 24px 16px"><div class="timeline">
+          <div class="ev warn"><div class="w"><b>Guilherme alterou a comissão da reserva K7X2PQ</b><em>R$ 1.000,00 → R$ 1.100,00 · motivo: "operadora revisou %" · viagem <span class="code">VG-2026-0042</span></em><span>hoje 16:40</span></div></div>
+          <div class="ev money"><div class="w"><b>Guilherme registrou recebimento de R$ 600,00</b><em>Decolar · DCL-71100 · parcial (esperado R$ 1.180,00) · viagem <span class="code">VG-2026-0040</span></em><span>hoje 11:05</span></div></div>
+          <div class="ev"><div class="w"><b>Ana Paula visualizou o passaporte de Lúcia Mendes</b><em>documento sensível · LGPD</em><span>hoje 10:31</span></div></div>
+          <div class="ev"><div class="w"><b>Guilherme emitiu a reserva DCL-88213</b><em>pendente → emitida · viagem <span class="code">VG-2026-0042</span></em><span>hoje 10:12</span></div></div>
+          <div class="ev warn"><div class="w"><b>Guilherme cancelou a reserva PG-5521</b><em>motivo: "cliente desistiu" · desfecho: crédito R$ 5.100,00 válido até 02/2027 · viagem <span class="code">VG-2026-0031</span></em><span>ontem 15:20</span></div></div>
+          <div class="ev money"><div class="w"><b>Guilherme pagou repasse de R$ 470,00 a Marcos Castro</b><em>2 viagens · PIX</em><span>ontem 14:02</span></div></div>
+          <div class="ev"><div class="w"><b>Guilherme fechou fevereiro de 2026</b><em>22 reservas · R$ 8.310,00</em><span>05/03 09:15</span></div></div>
+        </div></div><div class="pager">1–7 de 412 <button class="btn btn-secondary btn-sm">Mais antigas →</button></div></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<script>
+(function(){
+  var screens=['login','definir-senha','viagens','nova-viagem','viagem','clientes','pessoa','grupos','fornecedores','financeiro','repasses','fechamento','agenda','dashboard','usuarios','auditoria'];
+  var auth={'login':1,'definir-senha':1};
+  function show(){
+    var id=(location.hash||'#/viagens').replace('#/','');
+    if(screens.indexOf(id)<0) id='viagens';
+    document.querySelectorAll('.screen').forEach(function(s){s.classList.toggle('cur',s.id==='s-'+id);});
+    document.getElementById('shell').style.display=auth[id]?'none':'grid';
+    document.querySelectorAll('.proto-bar a').forEach(function(a){a.classList.toggle('cur',a.getAttribute('href')==='#/'+id);});
+    document.querySelectorAll('.nav a[data-nav]').forEach(function(a){a.classList.toggle('on',a.getAttribute('data-nav').split(' ').indexOf(id)>=0);});
+    window.scrollTo(0,0);
+  }
+  window.addEventListener('hashchange',show);show();
+})();
+</script>
+</body></html>
