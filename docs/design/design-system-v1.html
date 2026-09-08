@@ -1,0 +1,355 @@
+<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Meridiano Design System</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --navy-900:#1b1740;--navy-800:#29235c;--navy-700:#3b3478;
+  --blue-700:#055c95;--blue-600:#0672b9;--blue-500:#5396d1;--blue-100:#e3effa;--blue-50:#f1f7fd;
+  --orange-700:#b8631f;--orange-600:#e18334;--orange-100:#fbe7d5;
+  --yellow-500:#f9b233;--yellow-100:#fbf297;--yellow-50:#fefbe4;
+  --n-0:#fff;--n-50:#f6f7fb;--n-100:#eef0f6;--n-200:#e3e6ef;--n-300:#cfd3e1;--n-400:#a3a8bf;--n-500:#6b6f8a;--n-700:#3f4260;--n-900:#1e1b3a;
+  --green-600:#1f9d63;--green-100:#dcf5e8;--red-600:#d64545;--red-100:#fbe2e2;
+  --bg:var(--n-50);--surface:var(--n-0);--surface-2:var(--n-100);--border:var(--n-200);--border-strong:var(--n-300);
+  --text:var(--n-900);--text-muted:var(--n-500);--heading:var(--navy-800);
+  --primary:var(--blue-600);--primary-hover:var(--blue-700);--accent:var(--orange-600);--accent-hover:var(--orange-700);--accent-text:var(--orange-700);
+  --highlight:var(--yellow-100);--highlight-soft:var(--yellow-50);--emphasis:var(--yellow-500);--info:var(--blue-500);--focus:var(--blue-500);
+  --font-ui:"Manrope","Segoe UI",system-ui,sans-serif;--font-mono:"JetBrains Mono","Cascadia Code",Consolas,monospace;
+  color-scheme: light;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:var(--font-ui);font-size:14px;line-height:1.45}
+h1,h2,h3{color:var(--heading);margin:0;text-wrap:balance}
+h1{font-size:26px;font-weight:800;letter-spacing:-.01em}
+h2{font-size:16px;font-weight:700}
+.eyebrow{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted)}
+.mono{font-family:var(--font-mono);font-size:13px}
+.num{font-variant-numeric:tabular-nums}
+.wrap{max-width:1180px;margin:0 auto;padding:40px 24px 80px;display:flex;flex-direction:column;gap:48px}
+.intro{display:grid;grid-template-columns:1.2fr 1fr;gap:32px;align-items:end;padding-bottom:24px;border-bottom:1px solid var(--border)}
+.intro p{max-width:60ch;color:var(--n-700);margin:12px 0 0}
+.lockup{display:flex;align-items:center;gap:12px}
+.mark{width:40px;height:40px;border-radius:10px;background:var(--navy-800);position:relative;overflow:hidden}
+.mark::after{content:"";position:absolute;left:8px;right:8px;top:19px;height:3px;background:var(--orange-600);border-radius:2px;transform:rotate(-20deg)}
+.mark::before{content:"";position:absolute;left:12px;top:9px;width:16px;height:16px;border-radius:50%;background:var(--yellow-500)}
+.lockup strong{font-size:20px;font-weight:800;color:var(--navy-800);letter-spacing:-.01em}
+section{display:flex;flex-direction:column;gap:16px}
+.sec-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px}
+.sec-head p{margin:0;color:var(--text-muted);max-width:60ch}
+/* palette */
+.swatches{display:grid;grid-template-columns:repeat(6,1fr);gap:12px}
+.sw{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--surface)}
+.sw .chip{height:88px;display:flex;align-items:flex-end;padding:10px}
+.sw .chip span{font-size:12px;font-weight:700;letter-spacing:.04em}
+.sw .meta{padding:10px 12px;display:flex;flex-direction:column;gap:2px}
+.sw .meta b{font-size:13px;color:var(--heading)}
+.sw .meta small{color:var(--text-muted);font-size:12px}
+.neutrals{display:grid;grid-template-columns:repeat(9,1fr);gap:6px}
+.neutrals div{height:40px;border-radius:6px;border:1px solid var(--border);display:flex;align-items:flex-end;justify-content:center;padding-bottom:4px;font-size:10px;color:var(--text-muted)}
+.states{display:flex;gap:10px;flex-wrap:wrap}
+.pill{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:4px;font-size:12px;font-weight:600}
+.pill::before{content:"";width:6px;height:6px;border-radius:50%;background:currentColor}
+.p-ok{background:var(--green-100);color:var(--green-600)}
+.p-err{background:var(--red-100);color:var(--red-600)}
+.p-warn{background:var(--yellow-50);color:var(--orange-700)}
+.p-info{background:var(--blue-50);color:var(--blue-700)}
+.p-neutral{background:var(--n-100);color:var(--n-500)}
+.p-primary{background:var(--blue-100);color:var(--blue-700)}
+/* type */
+.type{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+.type .card{display:flex;flex-direction:column;gap:14px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:20px}
+.tline{display:grid;grid-template-columns:70px 1fr;gap:12px;align-items:baseline}
+.tline small{color:var(--text-muted);font-size:12px}
+/* buttons */
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.btn{height:36px;padding:0 14px;border-radius:8px;border:1px solid transparent;font:inherit;font-weight:600;font-size:14px;cursor:pointer;display:inline-flex;align-items:center;gap:8px;background:var(--surface);color:var(--heading)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.btn-primary{background:var(--primary);color:#fff}.btn-primary:hover{background:var(--primary-hover)}
+.btn-accent{background:var(--accent);color:#fff;font-weight:700}.btn-accent:hover{background:var(--accent-hover)}
+.btn-secondary{border-color:var(--border-strong)}.btn-secondary:hover{background:var(--surface-2)}
+.btn-ghost:hover{background:var(--surface-2)}
+.btn-danger{border-color:var(--red-600);color:var(--red-600)}.btn-danger:hover{background:var(--red-100)}
+.btn[disabled]{opacity:.5;cursor:not-allowed}
+.btn-sm{height:30px;padding:0 10px;font-size:13px}
+/* inputs */
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:12px;font-weight:600;color:var(--text-muted)}
+.field input,.field select{height:36px;border:1px solid var(--border-strong);border-radius:4px;padding:0 10px;font:inherit;font-size:14px;background:var(--surface);color:var(--text);width:100%}
+.field input:focus,.field select:focus{outline:none;border-color:var(--focus);box-shadow:0 0 0 2px rgba(83,150,209,.35)}
+.field .money{display:flex;align-items:center;border:1px solid var(--border-strong);border-radius:4px;background:var(--surface);height:36px}
+.field .money span{padding:0 8px;color:var(--text-muted);font-size:13px;border-right:1px solid var(--border)}
+.field .money input{border:0;height:34px;text-align:right;font-variant-numeric:tabular-nums}
+.field .money input:focus{box-shadow:none}
+.field .money:focus-within{border-color:var(--focus);box-shadow:0 0 0 2px rgba(83,150,209,.35)}
+.field.calc .money{background:var(--highlight-soft)}
+.field.calc input{background:var(--highlight-soft)}
+.field.err input{border-color:var(--red-600)}
+.field .hint{font-size:12px;color:var(--text-muted)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;min-height:36px;align-items:center}
+.chip-t{height:28px;padding:0 10px;border-radius:999px;border:1px solid var(--border-strong);background:var(--surface);font-size:12px;font-weight:600;color:var(--n-700);display:inline-flex;align-items:center;gap:6px;cursor:pointer}
+.chip-t.on{background:var(--blue-100);border-color:var(--blue-500);color:var(--blue-700)}
+.chip-t.on::before{content:"✓";font-size:11px}
+.more{font-size:12px;color:var(--primary);font-weight:600;align-self:center}
+.field.err .hint{color:var(--red-600)}
+.field.ro .val{height:36px;display:flex;align-items:center;justify-content:flex-end;padding:0 10px;font-weight:700;color:var(--heading);font-variant-numeric:tabular-nums;background:var(--surface-2);border-radius:4px}
+.grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:13px}
+th{text-align:left;font-size:12px;letter-spacing:.04em;text-transform:uppercase;color:var(--text-muted);background:var(--surface-2);padding:0 12px;height:34px;font-weight:600;border-bottom:1px solid var(--border)}
+td{padding:0 12px;height:36px;border-bottom:1px solid var(--border);white-space:nowrap}
+tr:hover td{background:var(--blue-50)}
+tr.sel td{background:var(--highlight-soft)}
+td.r,th.r{text-align:right}
+.tblwrap{overflow-x:auto;border:1px solid var(--border);border-radius:12px;background:var(--surface)}
+/* app mock */
+.app{border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg);display:grid;grid-template-columns:232px 1fr;min-height:640px;box-shadow:0 12px 32px rgba(41,35,92,.16)}
+.side{background:var(--navy-800);color:#cfd0e6;display:flex;flex-direction:column;padding:16px 0}
+.side .brand{display:flex;align-items:center;gap:10px;padding:4px 16px 18px;color:#fff;font-weight:800;font-size:17px}
+.side .brand .mark{width:28px;height:28px;border-radius:7px;background:var(--navy-700)}
+.side .brand .mark::before{width:11px;height:11px;left:8px;top:6px}
+.side .brand .mark::after{left:5px;right:5px;top:14px;height:2px}
+.nav a{display:flex;align-items:center;gap:10px;padding:0 16px;height:38px;color:inherit;text-decoration:none;font-weight:500;font-size:14px;border-left:3px solid transparent}
+.nav a:hover{background:var(--navy-700);color:#fff}
+.nav a.on{color:#fff;border-left-color:var(--orange-600);background:rgba(255,255,255,.06);font-weight:700}
+.nav a .badge{margin-left:auto;background:var(--yellow-500);color:var(--navy-900);font-size:11px;font-weight:800;border-radius:10px;padding:1px 7px}
+.nav .sep{height:1px;background:rgba(255,255,255,.12);margin:10px 16px}
+.nav .grp{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:#8f90b3;padding:10px 19px 4px}
+.ico{width:18px;height:18px;border-radius:4px;background:currentColor;opacity:.55}
+.main{display:flex;flex-direction:column;min-width:0}
+.top{height:52px;background:var(--surface);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:16px;padding:0 20px}
+.search{flex:1;max-width:420px;height:34px;border:1px solid var(--border-strong);border-radius:8px;display:flex;align-items:center;gap:8px;padding:0 10px;color:var(--text-muted);font-size:13px}
+.search kbd{margin-left:auto;font:11px var(--font-mono);border:1px solid var(--border);border-radius:4px;padding:1px 5px;background:var(--surface-2);color:var(--text-muted)}
+.top .who{margin-left:auto;display:flex;align-items:center;gap:10px;font-size:13px;color:var(--n-700)}
+.top .who .av{width:28px;height:28px;border-radius:50%;background:var(--blue-100);color:var(--blue-700);display:grid;place-items:center;font-weight:700;font-size:12px}
+.page{padding:20px;display:flex;flex-direction:column;gap:16px}
+.page-head{display:flex;align-items:center;gap:12px}
+.page-head h2{font-size:20px}
+.page-head .code{font-family:var(--font-mono);font-size:13px;color:var(--text-muted);background:var(--surface-2);padding:2px 8px;border-radius:4px}
+.page-head .timer{margin-left:auto;font:12px var(--font-mono);color:var(--text-muted)}
+.banner{background:var(--highlight);border:1px solid #efd95c;border-radius:8px;padding:10px 14px;font-size:13px;display:flex;gap:14px;align-items:center;color:var(--text)}
+.banner .row{margin-left:auto}
+.reserva{border:1px solid var(--border);border-radius:12px;background:var(--surface);overflow:hidden}
+.reserva .rh{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--surface-2);border-bottom:1px solid var(--border);font-size:13px}
+.reserva .rh b{color:var(--heading)}
+.reserva .rh .sum{margin-left:auto;color:var(--text-muted)}
+.reserva .rb{padding:16px;display:flex;flex-direction:column;gap:12px}
+.derived{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px 14px;background:var(--blue-50);border-radius:8px}
+.derived div{display:flex;flex-direction:column;gap:2px}
+.derived small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+.derived b{font-size:16px;color:var(--heading);font-variant-numeric:tabular-nums}
+.reserva.collapsed .rb{display:none}
+.footer-actions{display:flex;gap:10px;align-items:center;padding:12px 0 0;border-top:1px solid var(--border)}
+.footer-actions .hint{margin-left:auto;font-size:12px;color:var(--text-muted)}
+kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bottom-width:2px;border-radius:4px;padding:1px 5px;background:var(--surface);color:var(--n-700)}
+.tiles{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+.tile{background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.tile small{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);font-weight:600}
+.tile b{font-size:26px;color:var(--heading);font-variant-numeric:tabular-nums;font-weight:800;letter-spacing:-.01em}
+.tile span{font-size:12px;color:var(--text-muted)}
+.tile span.up{color:var(--green-600)}.tile span.warn{color:var(--orange-700)}
+.dont{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.dont ul{margin:0;padding-left:18px;color:var(--n-700)}
+.dont li{margin:4px 0}
+@media (max-width:900px){.swatches{grid-template-columns:repeat(3,1fr)}.type,.intro,.dont{grid-template-columns:1fr}.app{grid-template-columns:1fr}.side{display:none}.grid-4,.grid-3,.derived,.tiles{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:no-preference){.btn{transition:background .12s}}
+</style></head><body>
+
+<div class="wrap">
+  <div class="intro">
+    <div>
+      <div class="lockup"><div class="mark"></div><strong>Meridiano</strong></div>
+      <h1 style="margin-top:20px">Design System v1</h1>
+      <p>Tema e padrão visual do backoffice: navy para estrutura, azul para ação, laranja para o que precisa de atenção agora. Denso, limpo, operado com teclado. Página de aprovação — tudo abaixo vira token em <code class="mono">tokens.css</code>.</p>
+    </div>
+    <div class="card" style="display:flex;flex-direction:column;gap:8px">
+      <span class="eyebrow">Decisões</span>
+      <div style="display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:13px">
+        <b>Tipografia</b><span>Manrope (UI) · JetBrains Mono (códigos)</span>
+        <b>Densidade</b><span>linha 36px, grid 8px, raio 4/8/12</span>
+        <b>Sombra</b><span>só em flutuantes; cards usam borda</span>
+        <b>Modo escuro</b><span>fora da v1 — tokens já preparados</span>
+        <b>Componentes</b><span>shadcn/ui + Tailwind mapeado nos tokens · ícones Lucide</span>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="sec-head"><h2>1 · Paleta da marca e papel de cada cor</h2><p>Cada cor tem um trabalho. Laranja e amarelo nunca viram texto sobre branco.</p></div>
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#29235c;color:#fff"><span>NAVY</span></div><div class="meta"><b>#29235c</b><small>Estrutura: sidebar, títulos, ink forte</small></div></div>
+      <div class="sw"><div class="chip" style="background:#0672b9;color:#fff"><span>AZUL</span></div><div class="meta"><b>#0672b9</b><small>Ação primária, links, foco</small></div></div>
+      <div class="sw"><div class="chip" style="background:#5396d1;color:#fff"><span>AZUL CLARO</span></div><div class="meta"><b>#5396d1</b><small>Informação, anel de foco, gráficos</small></div></div>
+      <div class="sw"><div class="chip" style="background:#e18334;color:#fff"><span>LARANJA</span></div><div class="meta"><b>#e18334</b><small>Destaque: CTA de lançamento, item ativo</small></div></div>
+      <div class="sw"><div class="chip" style="background:#f9b233;color:#29235c"><span>AMARELO</span></div><div class="meta"><b>#f9b233</b><small>Ênfase sobre navy: badges, contadores</small></div></div>
+      <div class="sw"><div class="chip" style="background:#fbf297;color:#29235c"><span>REALCE</span></div><div class="meta"><b>#fbf297</b><small>Linha selecionada, aviso brando, campo calculado</small></div></div>
+    </div>
+    <div>
+      <span class="eyebrow">Neutros puxados para o navy</span>
+      <div class="neutrals" style="margin-top:8px">
+        <div style="background:#ffffff">0</div><div style="background:#f6f7fb">50</div><div style="background:#eef0f6">100</div><div style="background:#e3e6ef">200</div><div style="background:#cfd3e1">300</div><div style="background:#a3a8bf;color:#fff">400</div><div style="background:#6b6f8a;color:#fff">500</div><div style="background:#3f4260;color:#fff">700</div><div style="background:#1e1b3a;color:#fff">900</div>
+      </div>
+    </div>
+    <div>
+      <span class="eyebrow">Estados — separados da marca</span>
+      <div class="states" style="margin-top:8px">
+        <span class="pill p-ok">quitada</span><span class="pill p-ok">conciliada</span><span class="pill p-primary">confirmada</span><span class="pill p-info">em emissão</span><span class="pill p-info">a receber</span><span class="pill p-warn">parcial</span><span class="pill p-warn">vence em 3 dias</span><span class="pill p-err">atrasada</span><span class="pill p-err">cancelada</span><span class="pill p-neutral">sem reserva</span><span class="pill p-neutral">bloqueado</span>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>2 · Tipografia</h2><p>Manrope para interface; JetBrains Mono onde a agência digita códigos de portal — <span class="mono">0/O</span> e <span class="mono">1/l</span> não podem se confundir.</p></div>
+    <div class="type">
+      <div class="card">
+        <div class="tline"><small>xl · 20 / 800</small><span style="font-size:20px;font-weight:800;color:var(--heading)">Viagem VG-2026-0042 — Lisboa</span></div>
+        <div class="tline"><small>lg · 16 / 700</small><span style="font-size:16px;font-weight:700;color:var(--heading)">Reservas desta viagem</span></div>
+        <div class="tline"><small>md · 14 / 400</small><span>Uma viagem que usou 4 portais é 1 viagem, 4 reservas, N serviços.</span></div>
+        <div class="tline"><small>sm · 13 / 400</small><span style="font-size:13px">CVC · localizador <span class="mono">K7X2PQ</span> · compra 12/03/2026</span></div>
+        <div class="tline"><small>xs · 12 / 600</small><span class="eyebrow">Valor esperado da operadora</span></div>
+      </div>
+      <div class="card">
+        <div class="tline"><small>2xl · 26</small><span class="num" style="font-size:26px;font-weight:800;color:var(--heading)">R$ 10.500,00</span></div>
+        <div class="tline"><small>dinheiro</small><span class="num" style="display:grid;grid-template-columns:1fr 1fr;gap:4px 24px;font-size:13px"><span>Total operadora</span><span style="text-align:right">R$ 10.000,00</span><span>Cliente pagou</span><span style="text-align:right">R$ 10.500,00</span><span>RAV do cliente</span><span style="text-align:right;color:var(--green-600)">R$ 500,00</span><span>Desconto concedido</span><span style="text-align:right;color:var(--red-600)">− R$ 120,00</span></span></div>
+        <div class="tline"><small>mono</small><span class="mono">VG-2026-0042 · 123.456.789-01 · 957-2401234567</span></div>
+        <div class="tline"><small>teclas</small><span><kbd class="k">Ctrl</kbd> + <kbd class="k">Enter</kbd> salva a reserva e abre a próxima</span></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>3 · Botões</h2><p>Um botão laranja por tela: a ação que a agência veio fazer. O azul é o "salvar" de todo dia.</p></div>
+    <div class="card row">
+      <button class="btn btn-accent">+ Nova viagem</button>
+      <button class="btn btn-primary">Salvar</button>
+      <button class="btn btn-secondary">Exportar CSV</button>
+      <button class="btn btn-ghost">Cancelar</button>
+      <button class="btn btn-danger">Cancelar reserva…</button>
+      <button class="btn btn-primary" disabled>Salvando…</button>
+      <span style="width:24px"></span>
+      <button class="btn btn-secondary btn-sm">Ver timeline</button>
+      <button class="btn btn-ghost btn-sm">Editar</button>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>4 · Campos</h2><p>Fundo amarelo-claro = calculado pela regra, confira. Erro no campo, com a mensagem que a API devolve.</p></div>
+    <div class="card grid-4">
+      <div class="field"><label>Fornecedor (cadastro)</label><select><option>CVC Operadora</option><option>Decolar</option><option>Azul Viagens</option></select></div>
+      <div class="field"><label>Localizador</label><input class="mono" value="K7X2PQ"></div>
+      <div class="field"><label>Data da compra</label><input type="date" value="2026-03-12"></div>
+      <div class="field"><label>Formas de pagamento</label><div class="chips"><span class="chip-t on">PIX</span><span class="chip-t">Boleto</span><span class="chip-t on">Cartão</span></div></div>
+      <div class="field"><label>Valor total (operadora)</label><div class="money"><span>R$</span><input value="10.000,00"></div></div>
+      <div class="field calc"><label>Comissão · 10 % sugerido</label><div class="money"><span>R$</span><input value="1.000,00"></div><span class="hint">pré-preenchido pelo fornecedor</span></div>
+      <div class="field"><label>Cliente pagou</label><div class="money"><span>R$</span><input value="10.500,00"></div></div>
+      <div class="field err"><label>CPF</label><input class="mono" value="123.456.78"><span class="hint">CPF precisa de 11 dígitos</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>5 · Tabela e tiles</h2><p>Dinheiro à direita e tabular. Status como pill. Linha selecionada em realce.</p></div>
+    <div class="tiles">
+      <div class="tile"><small>Comissões a receber</small><b>R$ 18.420,00</b><span class="warn">3 atrasadas</span></div>
+      <div class="tile"><small>Recebido no mês</small><b>R$ 9.150,00</b><span class="up">▲ 12 % vs fev</span></div>
+      <div class="tile"><small>Viagens em emissão</small><b>7</b><span>2 embarcam esta semana</span></div>
+      <div class="tile"><small>Teto MEI 2026</small><b>34 %</b><span>R$ 27.6 mil de R$ 81 mil</span></div>
+    </div>
+    <div class="tblwrap"><table>
+      <thead><tr><th>Código</th><th>Cliente</th><th>Destino</th><th>Ida</th><th>Fase</th><th>Financeiro</th><th class="r">Vendido</th><th class="r">Receita prevista</th></tr></thead>
+      <tbody>
+        <tr><td class="mono">VG-2026-0041</td><td>Ana Beatriz Souza</td><td>Cancún</td><td>04/04/2026</td><td><span class="pill p-primary">confirmada</span></td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 14.200,00</td><td class="r num">R$ 1.610,00</td></tr>
+        <tr class="sel"><td class="mono">VG-2026-0042</td><td>Carlos Mendes</td><td>Lisboa</td><td>18/04/2026</td><td><span class="pill p-info">em emissão</span></td><td><span class="pill p-neutral">sem receita</span></td><td class="r num">R$ 10.500,00</td><td class="r num">R$ 1.600,00</td></tr>
+        <tr><td class="mono">VG-2026-0038</td><td>Família Oliveira</td><td>Gramado</td><td>22/03/2026</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-err">atrasada</span></td><td class="r num">R$ 6.800,00</td><td class="r num">R$ 740,00</td></tr>
+        <tr><td class="mono">VG-2026-0035</td><td>Juliana Prado</td><td>Buenos Aires</td><td>10/03/2026</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-ok">quitada</span></td><td class="r num">R$ 4.300,00</td><td class="r num">R$ 430,00</td></tr>
+      </tbody>
+    </table></div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>6 · Aplicação e tela de lançamento</h2><p>Sidebar navy, item ativo com barra laranja, busca global sempre à mão. A tela de lançamento é uma só: viagem em cima (passageiros, tipo, vendedor), reservas embaixo com fornecedor em select e serviços vendidos em multi-seleção.</p></div>
+    <div class="app">
+      <aside class="side">
+        <div class="brand"><div class="mark"></div>Meridiano</div>
+        <nav class="nav">
+          <a class="on" href="#"><i class="ico"></i>Viagens</a>
+          <a href="#"><i class="ico"></i>Clientes</a>
+          <a href="#"><i class="ico"></i>Fornecedores</a>
+          <a href="#"><i class="ico"></i>Financeiro<span class="badge">3</span></a>
+          <a href="#"><i class="ico"></i>Agenda<span class="badge">5</span></a>
+          <a href="#"><i class="ico"></i>Relatórios</a>
+          <div class="sep"></div>
+          <div class="grp">Administração</div>
+          <a href="#"><i class="ico"></i>Usuários</a>
+          <a href="#"><i class="ico"></i>Auditoria</a>
+        </nav>
+      </aside>
+      <div class="main">
+        <div class="top">
+          <div class="search">Buscar cliente, viagem, localizador… <kbd>Ctrl K</kbd></div>
+          <div class="who"><span>Viva Turismo</span><div class="av">GP</div></div>
+        </div>
+        <div class="page">
+          <div class="page-head"><h2>Nova viagem</h2><span class="code">VG-2026-0042</span><span class="timer">02:14</span></div>
+          <div class="banner">Carlos Mendes (titular) já tem a viagem <b class="mono">VG-2026-0039</b> (Porto, 15–22/04) em emissão. <div class="row"><button class="btn btn-secondary btn-sm">Abrir a existente</button><button class="btn btn-primary btn-sm">Adicionar reserva nela</button><button class="btn btn-ghost btn-sm">Criar assim mesmo</button></div></div>
+          <div class="card grid-4">
+            <div class="field"><label>Passageiros · titular em negrito</label><div class="chips"><span class="chip-t on" style="font-weight:800">Carlos Mendes</span><span class="chip-t on">Lúcia Mendes</span><span class="more">+ pessoa</span></div></div>
+            <div class="field"><label>Destino</label><input value="Lisboa"></div>
+            <div class="field"><label>Ida</label><input type="date" value="2026-04-18"></div>
+            <div class="field"><label>Volta</label><input type="date" value="2026-04-28"></div>
+            <div class="field"><label>Tipo</label><select><option>Internacional</option><option>Nacional</option></select></div>
+            <div class="field"><label>Vendedor</label><select><option>Ana Paula (vendedora externa)</option><option>Guilherme (você)</option></select></div>
+            <div class="field"><label>Comissão do vendedor externo</label><div class="money"><span>R$</span><input value="300,00"></div><span class="hint">digitada pelo dono; some se o vendedor for interno</span></div>
+            <div class="field"><label>Ocasião</label><input value="Bodas de prata"></div>
+          </div>
+          <div class="reserva">
+            <div class="rh"><b>Reserva 1</b><span>CVC Operadora</span><span class="mono">K7X2PQ</span><span class="pill p-info">em emissão</span><span class="sum num">R$ 10.500,00 · prevista R$ 1.600,00</span></div>
+            <div class="rb">
+              <div class="grid-4">
+                <div class="field"><label>Fornecedor (cadastro)</label><select><option>CVC Operadora</option><option>Decolar</option><option>Azul Viagens</option></select></div>
+                <div class="field"><label>Localizador</label><input class="mono" value="K7X2PQ"></div>
+                <div class="field"><label>Data da compra</label><input type="date" value="2026-03-12"></div>
+                <div class="field"><label>NFSe</label><select><option>Não precisa</option><option>Falta emitir</option><option>Emitida</option></select></div>
+                <div class="field" style="grid-column:1 / -1"><label>Serviços vendidos · vários</label><div class="chips"><span class="chip-t on">Aéreo</span><span class="chip-t on">Hospedagem</span><span class="chip-t">Seguro</span><span class="chip-t">Traslado</span><span class="chip-t on">Passeio</span><span class="chip-t">Ingresso</span><span class="chip-t">Aluguel de carro</span><span class="chip-t">Documentação</span><span class="chip-t">Outro</span></div></div>
+                <div class="field"><label>Total da reserva (taxas inclusas)</label><div class="money"><span>R$</span><input value="10.000,00"></div></div>
+                <div class="field"><label>Do total, quanto é taxa</label><div class="money"><span>R$</span><input value="850,00"></div></div>
+                <div class="field calc"><label>Comissão · 10 % sugerido</label><div class="money"><span>R$</span><input value="1.000,00"></div></div>
+                <div class="field"><label>RAV da operadora</label><div class="money"><span>R$</span><input value="100,00"></div></div>
+                <div class="field"><label>Cliente pagou</label><div class="money"><span>R$</span><input value="10.500,00"></div><span class="hint">acima do total = RAV do cliente, automático</span></div>
+                <div class="field"><label>RAV do cliente vem</label><select><option>Via operadora</option><option>Retido pela agência</option></select></div>
+                <div class="field"><label>Formas de pagamento</label><div class="chips"><span class="chip-t">PIX</span><span class="chip-t">Boleto</span><span class="chip-t on">Cartão</span></div></div>
+                <div class="field"><label>Cartão de quem</label><select><option>Do cliente</option><option>Da agência</option></select></div>
+                <div class="field" style="grid-column:1 / -1"><span class="more">+ mais campos (taxa de serviço, moeda e câmbio, observações)</span></div>
+              </div>
+              <div class="derived">
+                <div><small>RAV do cliente</small><b>R$ 500,00</b></div>
+                <div><small>Esperado da operadora</small><b>R$ 1.600,00</b></div>
+                <div><small>Receita prevista</small><b>R$ 1.600,00</b></div>
+              </div>
+              <div class="row"><button class="btn btn-secondary btn-sm">+ Serviço (aéreo, hotel…)</button><span style="font-size:12px;color:var(--text-muted)">2 serviços: Aéreo GRU–LIS · Hotel Avenida Palace</span></div>
+            </div>
+          </div>
+          <div class="reserva collapsed">
+            <div class="rh"><b>Reserva 2</b><span>Decolar</span><span class="mono">DCL-88213</span><span class="pill p-primary">emitida</span><span class="sum num">R$ 3.200,00 · prevista R$ 320,00</span></div>
+            <div class="rb"></div>
+          </div>
+          <div class="footer-actions">
+            <button class="btn btn-accent">+ Lançar reserva</button>
+            <button class="btn btn-primary">Salvar viagem</button>
+            <button class="btn btn-ghost">Descartar</button>
+            <span class="hint"><kbd class="k">Ctrl</kbd>+<kbd class="k">Enter</kbd> próxima reserva · <kbd class="k">Ctrl</kbd>+<kbd class="k">S</kbd> salvar · <kbd class="k">Esc</kbd> fechar</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head"><h2>7 · Regras</h2></div>
+    <div class="dont">
+      <div class="card"><span class="eyebrow" style="color:var(--green-600)">Fazer</span><ul><li>Laranja em <b>uma</b> ação por tela, a que a agência veio fazer.</li><li>Campo calculado com fundo de realce até o usuário confirmar.</li><li>Dinheiro tabular, à direita, negativo em vermelho.</li><li>Códigos de portal em monospace.</li><li>Erro da API (<span class="mono">codigo</span>) mapeado para o campo.</li><li>Sombra só em menu, popover, modal e toast.</li></ul></div>
+      <div class="card"><span class="eyebrow" style="color:var(--red-600)">Não fazer</span><ul><li>Laranja ou amarelo como texto sobre branco.</li><li>Gradiente, hero, tudo centralizado.</li><li>Card com sombra e raio grande em tudo.</li><li>Wizard de 5 passos para lançar uma reserva.</li><li>Ícone sem rótulo em ação destrutiva.</li><li>Cor em hex dentro de componente — sempre <span class="mono">var(--token)</span>.</li></ul></div>
+    </div>
+  </section>
+</div>
+</body></html>
