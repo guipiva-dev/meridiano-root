@@ -281,6 +281,8 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 31 | Comissão sugerida | Pré-preenchida pelo % do fornecedor é **sugerida** (input normal + selo "Sugerido: 10 %"), não "calculada" |
 | 32 | Cadastros | Fornecedor, grupo e usuário abrem em página própria, como pessoa; sem painel lateral |
 | 33 | Pendências da pessoa | Checklist na tela da pessoa: passaporte/visto, CPF, contato, emergência, seguro — derivado das viagens e documentos |
+| 34 | Pendências na agenda | Job diário: pendência com prazo/viagem vira `tarefa` (`chave_unica = 'pendencia:<cliente_id>:<regra>'`), responsável = agente da viagem; some quando resolvida. Pendências só de cadastro não viram tarefa. Badge de Clientes na sidebar = pessoas com pendência |
+| 35 | Navegação | Sidebar global (módulos) + subnav do módulo (≤ 6 itens) + tabs do registro (cada aba só com seu conteúdo). Acima de 6 itens no módulo: sub-sidebar interna por seções. Sem scroll horizontal de navegação |
 
 ### Pendências
 - **Contador**: base e regime da receita bruta do MEI (4.9).

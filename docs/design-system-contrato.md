@@ -71,6 +71,18 @@ Não construir 40 componentes antes das telas. Não paralelizar tudo: Nova viage
 - **Agenda age.** Toda tarefa tem Concluir · Adiar · Abrir (a viagem/pessoa) na própria linha.
 - **Pessoa usa tabs reais** (Dados · Documentos · Viagens · Atendimentos) com resumo lateral fixo; página única só no protótipo.
 
+## 4.2 Navegação em três níveis (2026-09-08)
+
+- **Sidebar global**: só módulos (Viagens, Clientes, Fornecedores, Financeiro, Agenda, Relatórios · Usuários, Auditoria). Sem submenu expansível, nunca mais de um nível. Badge amarelo = contagem acionável (Financeiro: comissões atrasadas; Agenda: tarefas de hoje/atrasadas; Clientes: pessoas com pendência).
+- **Subnav do módulo** (`.subnav`, pílulas no topo da página): até 6 itens. Hoje: Clientes → Pessoas · Grupos e empresas; Financeiro → Conciliação · Repasses · Fechamento.
+- **Acima de 6 itens**: sub-sidebar interna do módulo, agrupada por seções (Operação / Controle / Configurações), conteúdo à direita. Nunca scroll horizontal para descobrir navegação.
+- **Tabs de registro** (`.tabs`, com contadores): dentro de uma página de cadastro, cada aba mostra **só o seu conteúdo** — Pessoa: Dados · Documentos · Pendências · Viagens · Atendimentos; Fornecedor: Dados (inclui comissão padrão) · Financeiro (janelas de pagamento e vigência) · Reservas. Nada de página única com tudo empilhado.
+- Ações de navegação entre telas do mesmo módulo nunca ficam como botões no `PageHeader`; ficam na subnav.
+
+## 4.3 Pendências → Agenda
+
+Pendência é **derivada** (calculada a partir de viagens, documentos e cadastro), não gravada. Um job diário avalia as regras por pessoa e faz upsert de `tarefa` com `chave_unica = 'pendencia:<cliente_id>:<regra>'`, responsável = agente da viagem relacionada (ou dono), e cancela a tarefa quando a pendência some. Mesmo mecanismo já usado para validade de passaporte (`<documento_id>:validade`). Só pendências **com prazo ou viagem** viram tarefa (passaporte, visto, seguro, documento faltante para embarque); pendências de cadastro (contato de emergência, CPF) ficam só na aba Pendências, com selo "só aqui". Na aba, cada pendência mostra "na agenda" com link para a tarefa.
+
 ## 5. Proibido (lint / code review)
 
 hex em componente · margin arbitrária · `font-size` solto · botão com cor custom · modal fora do componente padrão · badge de status fora do mapa · cálculo financeiro duplicado em tela · toast para confirmação simples · `window.alert` · tooltip para informação obrigatória · ícone de outra biblioteca · `@media` com valor fora dos breakpoints.

@@ -257,6 +257,10 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
 /* page common */
 .filters{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
 .filters .field{min-width:160px}
+.subnav{display:flex;gap:2px;margin:-8px 0 4px}
+.subnav a{padding:6px 12px;font-size:13px;font-weight:600;color:var(--text-muted);border-radius:var(--r-pill);text-decoration:none}
+.subnav a:hover{background:var(--surface-2)}
+.subnav a.on{background:var(--blue-100);color:var(--blue-700)}
 .tabs{display:flex;gap:4px;border-bottom:1px solid var(--border)}
 .tabs a{padding:10px 14px;font-size:14px;font-weight:600;color:var(--text-muted);border-bottom:2px solid transparent;margin-bottom:-1px;cursor:pointer}
 .tabs a.on{color:var(--heading);border-bottom-color:var(--orange-600)}
@@ -407,7 +411,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <nav class="nav">
       <div class="grp">Operação</div>
       <a href="#/viagens" data-nav="viagens nova-viagem viagem"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M17.8 19.2 16 11l3.5-3.5C21 6 21.5 4 21 3c-1-.5-3 0-4.5 1.5L13 8 4.8 6.2c-.5-.1-.9.1-1.1.5l-.3.5c-.2.5-.1 1 .3 1.3L9 12l-2 3H4l-1 1 3 2 2 3 1-1v-3l3-2 3.5 5.3c.3.4.8.5 1.3.3l.5-.2c.4-.3.6-.7.5-1.2z"/></svg>Viagens</a>
-      <a href="#/clientes" data-nav="clientes pessoa grupos grupo"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clientes</a>
+      <a href="#/clientes" data-nav="clientes pessoa grupos grupo"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>Clientes<span class="badge" title="6 pessoas com pendências">6</span></a>
       <a href="#/fornecedores" data-nav="fornecedores fornecedor"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>Fornecedores</a>
       <a href="#/financeiro" data-nav="financeiro repasses fechamento"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12V7H5a2 2 0 0 1 0-4h14v4"/><path d="M3 5v14a2 2 0 0 0 2 2h16v-5"/><path d="M18 12a2 2 0 0 0 0 4h4v-4Z"/></svg>Financeiro<span class="badge">3</span></a>
       <a href="#/agenda" data-nav="agenda"><svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg>Agenda<span class="badge">5</span></a>
@@ -613,85 +617,103 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <!-- ===================== CLIENTES ===================== -->
     <section class="screen" id="s-clientes">
       <div class="page">
+        <div class="subnav"><a href="#/clientes" class="on">Pessoas</a><a href="#/grupos">Grupos e empresas</a></div>
         <div class="page-head">
           <div class="t"><h2>Clientes</h2><div class="sub"><span>318 pessoas · 41 grupos · <b style="color:var(--orange-700)">6 passaportes vencendo</b></span></div></div>
-          <div class="actions"><a href="#/grupos" class="btn btn-secondary" style="text-decoration:none">Grupos e empresas</a><button class="btn btn-secondary">Exportar CSV</button><a href="#/pessoa" class="btn btn-primary" style="text-decoration:none">+ Nova pessoa</a></div>
+          <div class="actions"><button class="btn btn-secondary">Exportar CSV</button><a href="#/pessoa" class="btn btn-primary" style="text-decoration:none">+ Nova pessoa</a></div>
         </div>
         <div class="filters">
           <div class="field" style="min-width:280px"><input placeholder="Nome, CPF, telefone, e-mail…"></div>
           <div class="field"><select><option>Grupo: todos</option><option>Família Mendes</option><option>Construtora Horizonte</option></select></div>
-          <div class="field"><select><option>Documentos: todos</option><option>Passaporte vencendo</option><option>Sem CPF</option></select></div>
+          <div class="field"><select><option>Pendências: todas</option><option>Com pendência urgente</option><option>Sem pendência</option></select></div>
           <div class="field"><select><option>Última viagem: qualquer</option><option>Há mais de 11 meses (recompra)</option></select></div>
         </div>
         <div class="tblwrap"><table>
-          <thead><tr><th>Pessoa</th><th>Grupo</th><th>Contato</th><th>Documentos</th><th>Última viagem</th><th class="r">Viagens</th></tr></thead>
+          <thead><tr><th>Pessoa</th><th>Grupo</th><th>Contato</th><th>Pendências</th><th>Última viagem</th><th class="r">Viagens</th></tr></thead>
           <tbody>
-            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Carlos Mendes</div><div class="secondary"><span class="code">***.456.789-**</span> · 52 anos</div></td><td class="muted">Família Mendes</td><td class="muted">(11) 99876-1234</td><td><span class="pill p-ok">ok</span></td><td class="muted">Lisboa · abr/2026</td><td class="r num">4</td></tr>
-            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Lúcia Mendes</div><div class="secondary"><span class="code">***.654.321-**</span> · 49 anos</div></td><td class="muted">Família Mendes</td><td class="muted">(11) 99876-5678</td><td><span class="pill p-warn">passaporte vence em 32 dias</span></td><td class="muted">Lisboa · abr/2026</td><td class="r num">3</td></tr>
-            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Ana Beatriz Souza</div><div class="secondary"><span class="code">***.654.987-**</span> · 34 anos</div></td><td class="muted">—</td><td class="muted">(21) 98765-4321</td><td><span class="pill p-ok">ok</span></td><td class="muted">Cancún · abr/2026</td><td class="r num">1</td></tr>
-            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Roberto Tanaka</div><div class="secondary"><span class="code">***.666.777-**</span> · 61 anos</div></td><td class="muted">Construtora Horizonte</td><td class="muted">(41) 99111-2222</td><td><span class="pill p-neutral">sem passaporte</span></td><td class="muted">Orlando · mar/2026</td><td class="r num">7</td></tr>
-            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Patrícia Nunes</div><div class="secondary"><span class="code">***.333.222-**</span> · 28 anos</div></td><td class="muted">—</td><td class="muted">(85) 98888-7777</td><td><span class="pill p-ok">ok</span></td><td class="muted">cancelada · fev/2026</td><td class="r num">2</td></tr>
-            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Fernanda Oliveira</div><div class="secondary"><span class="code">***.222.333-**</span> · 45 anos</div></td><td class="muted">Família Oliveira</td><td class="muted">(51) 97777-6666</td><td><span class="pill p-ok">ok</span></td><td class="muted">Gramado · mar/2026</td><td class="r num">5</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Carlos Mendes</div><div class="secondary"><span class="code">***.456.789-**</span> · 52 anos</div></td><td class="muted">Família Mendes</td><td class="muted">(11) 99876-1234</td><td><span class="muted">—</span></td><td class="muted">Lisboa · abr/2026</td><td class="r num">4</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Lúcia Mendes</div><div class="secondary"><span class="code">***.654.321-**</span> · 49 anos</div></td><td class="muted">Família Mendes</td><td class="muted">(11) 99876-5678</td><td><span class="pill p-warn">3 · passaporte urgente</span></td><td class="muted">Lisboa · abr/2026</td><td class="r num">3</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Ana Beatriz Souza</div><div class="secondary"><span class="code">***.654.987-**</span> · 34 anos</div></td><td class="muted">—</td><td class="muted">(21) 98765-4321</td><td><span class="muted">—</span></td><td class="muted">Cancún · abr/2026</td><td class="r num">1</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Roberto Tanaka</div><div class="secondary"><span class="code">***.666.777-**</span> · 61 anos</div></td><td class="muted">Construtora Horizonte</td><td class="muted">(41) 99111-2222</td><td><span class="pill p-warn">1 · sem passaporte</span></td><td class="muted">Orlando · mar/2026</td><td class="r num">7</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Patrícia Nunes</div><div class="secondary"><span class="code">***.333.222-**</span> · 28 anos</div></td><td class="muted">—</td><td class="muted">(85) 98888-7777</td><td><span class="muted">—</span></td><td class="muted">cancelada · fev/2026</td><td class="r num">2</td></tr>
+            <tr onclick="location.hash='#/pessoa'"><td><div class="primary">Fernanda Oliveira</div><div class="secondary"><span class="code">***.222.333-**</span> · 45 anos</div></td><td class="muted">Família Oliveira</td><td class="muted">(51) 97777-6666</td><td><span class="muted">—</span></td><td class="muted">Gramado · mar/2026</td><td class="r num">5</td></tr>
           </tbody>
         </table><div class="pager">1–6 de 318 <button class="btn btn-secondary btn-sm">Próxima →</button></div></div>
       </div>
     </section>
 
     <!-- ===================== PESSOA ===================== -->
-    <section class="screen" id="s-pessoa">
+        <section class="screen" id="s-pessoa">
       <div class="page">
+        <div class="subnav"><a href="#/clientes" class="on">Pessoas</a><a href="#/grupos">Grupos e empresas</a></div>
         <div class="page-head">
           <div class="t"><h2>Lúcia Mendes</h2><div class="sub"><span><span class="code">987.654.321-00</span></span><span>Família Mendes</span><span class="pill p-warn">3 pendências</span><span>3 viagens · cliente desde 2023</span></div></div>
           <div class="actions"><span class="timer">salvo às 09:41</span><a href="#/clientes" class="btn btn-ghost" style="text-decoration:none">Fechar</a><button class="btn btn-primary">Salvar</button></div>
         </div>
-        <div class="tabs"><a class="on">Dados</a><a>Documentos<span class="cnt">2</span></a><a>Viagens<span class="cnt">3</span></a><a>Atendimentos<span class="cnt">6</span></a></div>
-        <div class="two">
-          <div style="display:flex;flex-direction:column;gap:20px">
-            <div class="block"><div class="bh"><h3>Dados pessoais</h3></div><div class="bb"><div class="grid-4">
-              <div class="field" style="grid-column:span 2"><label>Nome completo</label><input value="Lúcia Helena Mendes"></div>
-              <div class="field"><label>CPF</label><input class="mono" value="987.654.321-00"></div>
-              <div class="field"><label>Nascimento</label><input type="date" value="1977-02-14"></div>
-              <div class="field"><label>Grupo / empresa</label><select><option>Família Mendes</option><option>— nenhum —</option><option>Construtora Horizonte</option><option>+ Criar grupo…</option></select></div>
-              <div class="field"><label>Cidade</label><input value="São Paulo"></div>
-              <div class="field"><label>UF</label><select><option>SP</option><option>RJ</option></select></div>
-              <div class="field"><label>Origem</label><select><option>Indicação</option><option>Instagram</option><option>Site</option></select></div>
-            </div></div></div>
-            <div class="block"><div class="bh"><h3>Contato</h3></div><div class="bb"><div class="grid-4">
-              <div class="field"><label>WhatsApp</label><input value="(11) 99876-5678"></div>
-              <div class="field"><label>Telefone</label><input value=""></div>
-              <div class="field" style="grid-column:span 2"><label>E-mail</label><input value="lucia.mendes@gmail.com"></div>
-              <div class="field" style="grid-column:1 / -1"><label>Tags</label><div class="chips"><span class="chip-t on">lua de mel 2023</span><span class="chip-t on">gosta de cruzeiro</span><span class="more">+ tag</span></div></div>
-            </div></div></div>
-            <div class="block"><div class="bh"><h3>Documentos</h3><span class="meta">Alerta 180 dias antes de vencer</span><button class="btn btn-secondary btn-sm" style="margin-left:auto">+ Documento</button></div>
-              <div class="tblwrap" style="border:0;border-radius:0"><table>
-                <thead><tr><th>Tipo</th><th>Número</th><th>Emissão</th><th>Validade</th><th>País</th><th></th></tr></thead>
-                <tbody>
-                  <tr><td>Passaporte</td><td class="code">GB998877</td><td class="muted">30/05/2016</td><td><span class="pill p-warn">30/05/2026 · 32 dias</span></td><td class="muted">Brasil</td><td class="r"><span class="more">Editar</span></td></tr>
-                  <tr><td>RG</td><td class="code">22.333.444-5</td><td class="muted">10/01/2010</td><td class="muted">—</td><td class="muted">SSP-SP</td><td class="r"><span class="more">Editar</span></td></tr>
-                </tbody></table></div>
-            </div>
+        <div class="tabs" data-tabs="pessoa"><a class="on" data-tab="dados">Dados</a><a data-tab="documentos">Documentos<span class="cnt">2</span></a><a data-tab="pendencias">Pendências<span class="cnt" style="background:var(--yellow-50);color:var(--orange-700)">3</span></a><a data-tab="viagens">Viagens<span class="cnt">3</span></a><a data-tab="atendimentos">Atendimentos<span class="cnt">6</span></a></div>
+
+        <div data-panel="dados" style="display:flex;flex-direction:column;gap:20px;max-width:1100px">
+          <div class="block"><div class="bh"><h3>Dados pessoais</h3></div><div class="bb"><div class="grid-4">
+            <div class="field" style="grid-column:span 2"><label>Nome completo</label><input value="Lúcia Helena Mendes"></div>
+            <div class="field"><label>CPF</label><input class="mono" value="987.654.321-00"></div>
+            <div class="field"><label>Nascimento</label><input type="date" value="1977-02-14"></div>
+            <div class="field"><label>Grupo / empresa</label><select><option>Família Mendes</option><option>— nenhum —</option><option>Construtora Horizonte</option><option>+ Criar grupo…</option></select></div>
+            <div class="field"><label>Cidade</label><input value="São Paulo"></div>
+            <div class="field"><label>UF</label><select><option>SP</option><option>RJ</option></select></div>
+            <div class="field"><label>Origem</label><select><option>Indicação</option><option>Instagram</option><option>Site</option></select></div>
+          </div></div></div>
+          <div class="block"><div class="bh"><h3>Contato</h3></div><div class="bb"><div class="grid-4">
+            <div class="field"><label>WhatsApp</label><input value="(11) 99876-5678"></div>
+            <div class="field"><label>Telefone</label><input value=""></div>
+            <div class="field" style="grid-column:span 2"><label>E-mail</label><input value="lucia.mendes@gmail.com"></div>
+            <div class="field" style="grid-column:span 2"><label>Contato de emergência</label><input placeholder="Nome e telefone"></div>
+            <div class="field" style="grid-column:1 / -1"><label>Tags</label><div class="chips"><span class="chip-t on">lua de mel 2023</span><span class="chip-t on">gosta de cruzeiro</span><span class="more">+ tag</span></div></div>
+          </div></div></div>
+          <div class="block"><div class="bh"><h3>Observações</h3></div><div class="bb"><div class="field"><input value="Prefere hotel no centro; evita voos com conexão longa."></div></div></div>
+        </div>
+
+        <div data-panel="documentos" style="display:none;max-width:1100px">
+          <div class="block"><div class="bh"><h3>Documentos</h3><span class="meta">Alerta 180 dias antes de vencer · acesso registrado (LGPD)</span><button class="btn btn-primary btn-sm" style="margin-left:auto">+ Documento</button></div>
+            <div class="tblwrap" style="border:0;border-radius:0"><table>
+              <thead><tr><th>Tipo</th><th>Número</th><th>Emissão</th><th>Validade</th><th>País</th><th>Anexo</th><th></th></tr></thead>
+              <tbody>
+                <tr><td>Passaporte</td><td class="code">GB998877</td><td class="muted">30/05/2016</td><td><span class="pill p-warn">30/05/2026 · 32 dias</span></td><td class="muted">Brasil</td><td><span class="more">passaporte-lucia.jpg</span></td><td class="r"><span class="more">Editar</span></td></tr>
+                <tr><td>RG</td><td class="code">22.333.444-5</td><td class="muted">10/01/2010</td><td class="muted">—</td><td class="muted">SSP-SP</td><td class="muted">—</td><td class="r"><span class="more">Editar</span></td></tr>
+              </tbody></table></div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:20px">
-            <div class="block"><div class="bh"><h3>Pendências</h3><span class="meta">o que falta para esta pessoa viajar sem surpresa</span></div>
-              <div class="list">
-                <div class="it"><span class="check"></span><div class="t"><b>Renovar passaporte</b><span>vence em 30/05/2026 — 32 dias; viagem para Lisboa em 18/04 exige 6 meses de validade</span></div><span class="pill p-warn">urgente</span><button class="btn btn-secondary btn-sm">Criar tarefa</button></div>
-                <div class="it"><span class="check"></span><div class="t"><b>Informar visto / ESTA quando aplicável</b><span>destino Portugal: não exige visto para brasileiros até 90 dias</span></div><span class="pill p-neutral">não se aplica</span></div>
-                <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">CPF cadastrado</b><span>ok</span></div></div>
-                <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">WhatsApp cadastrado</b><span>ok</span></div></div>
-                <div class="it"><span class="check"></span><div class="t"><b>Contato de emergência</b><span>nenhum informado</span></div><button class="btn btn-ghost btn-sm">Adicionar</button></div>
-                <div class="it"><span class="check"></span><div class="t"><b>Seguro viagem para Lisboa</b><span>reserva 2 (Decolar) cobre seguro · confirmar apólice em nome dela</span></div><button class="btn btn-ghost btn-sm">Abrir reserva</button></div>
-              </div></div>
-            <div class="block"><div class="bh"><h3>Viagens</h3><span class="meta">3</span></div><div class="list">
-              <div class="it"><div class="t"><b>Lisboa</b><span>18–28/04/2026 · <span class="code">VG-2026-0042</span></span></div><span class="pill p-info">em emissão</span></div>
-              <div class="it"><div class="t"><b>Gramado</b><span>jun/2025 · <span class="code">VG-2025-0118</span></span></div><span class="pill p-ok">concluída</span></div>
-              <div class="it"><div class="t"><b>Cancún</b><span>set/2023 · <span class="code">VG-2023-0031</span></span></div><span class="pill p-ok">concluída</span></div>
+        </div>
+
+        <div data-panel="pendencias" style="display:none;max-width:1100px">
+          <div class="block"><div class="bh"><h3>Pendências</h3><span class="meta">Derivadas das viagens e documentos. As com prazo entram na Agenda automaticamente.</span></div>
+            <div class="list">
+              <div class="it"><span class="check"></span><div class="t"><b>Renovar passaporte</b><span>vence em 30/05/2026 — 32 dias; viagem para Lisboa em 18/04 exige 6 meses de validade</span></div><span class="pill p-warn">urgente</span><span class="pill p-info">na agenda</span><button class="btn btn-secondary btn-sm">Abrir tarefa</button></div>
+              <div class="it"><span class="check"></span><div class="t"><b>Seguro viagem para Lisboa</b><span>reserva 2 (Decolar) cobre seguro · confirmar apólice em nome dela</span></div><span class="pill p-info">na agenda</span><button class="btn btn-ghost btn-sm">Abrir reserva</button></div>
+              <div class="it"><span class="check"></span><div class="t"><b>Contato de emergência</b><span>nenhum informado</span></div><span class="pill p-neutral">só aqui</span><button class="btn btn-ghost btn-sm">Preencher</button></div>
+              <div class="it"><span class="check"></span><div class="t"><b>Informar visto / ESTA quando aplicável</b><span>destino Portugal: não exige visto para brasileiros até 90 dias</span></div><span class="pill p-neutral">não se aplica</span></div>
+              <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">CPF cadastrado</b><span>ok</span></div></div>
+              <div class="it"><span class="check on">✓</span><div class="t"><b style="text-decoration:line-through;color:var(--text-muted)">WhatsApp cadastrado</b><span>ok</span></div></div>
             </div></div>
-            <div class="block"><div class="bh"><h3>Atendimentos</h3><button class="btn btn-secondary btn-sm" style="margin-left:auto">+ Registrar</button></div><div style="padding:8px 20px 16px"><div class="timeline">
-              <div class="ev"><div class="w"><b>WhatsApp</b><em>Pediu orçamento de Portugal para abril; prefere hotel no centro.</em><span>10/03 · Ana Paula</span></div></div>
-              <div class="ev"><div class="w"><b>Ligação</b><em>Avisada sobre validade do passaporte.</em><span>02/03 · Guilherme</span></div></div>
-              <div class="ev"><div class="w"><b>Tarefa automática</b><em>Retomar contato (11 meses da última viagem)</em><span>15/05/2026 · aberta</span></div></div>
-            </div></div></div>
-          </div>
+        </div>
+
+        <div data-panel="viagens" style="display:none;max-width:1100px">
+          <div class="tblwrap"><table>
+            <thead><tr><th>Viagem</th><th>Período</th><th>Papel</th><th>Fase</th><th>Financeiro</th><th class="r">Vendido</th></tr></thead>
+            <tbody>
+              <tr onclick="location.hash='#/viagem'"><td><div class="primary">Lisboa</div><div class="secondary">Internacional · <span class="code">VG-2026-0042</span></div></td><td class="muted">18–28/04/2026</td><td class="muted">passageira</td><td><span class="pill p-info">em emissão</span></td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 13.700,00</td></tr>
+              <tr onclick="location.hash='#/viagem'"><td><div class="primary">Gramado</div><div class="secondary">Nacional · <span class="code">VG-2025-0118</span></div></td><td class="muted">12–16/06/2025</td><td class="muted">titular</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-ok">recebida</span></td><td class="r num">R$ 4.900,00</td></tr>
+              <tr onclick="location.hash='#/viagem'"><td><div class="primary">Cancún</div><div class="secondary">Internacional · <span class="code">VG-2023-0031</span></div></td><td class="muted">02–10/09/2023</td><td class="muted">passageira</td><td><span class="pill p-ok">concluída</span></td><td><span class="pill p-ok">recebida</span></td><td class="r num">R$ 11.200,00</td></tr>
+            </tbody></table></div>
+        </div>
+
+        <div data-panel="atendimentos" style="display:none;max-width:1100px">
+          <div class="block"><div class="bh"><h3>Atendimentos</h3><span class="meta">histórico de contato</span><button class="btn btn-primary btn-sm" style="margin-left:auto">+ Registrar</button></div><div style="padding:8px 24px 16px"><div class="timeline">
+            <div class="ev"><div class="w"><b>WhatsApp</b><em>Pediu orçamento de Portugal para abril; prefere hotel no centro.</em><span>10/03/2026 · Ana Paula</span></div></div>
+            <div class="ev"><div class="w"><b>Ligação</b><em>Avisada sobre validade do passaporte.</em><span>02/03/2026 · Guilherme</span></div></div>
+            <div class="ev"><div class="w"><b>WhatsApp</b><em>Enviou fotos de Gramado; elogiou o hotel.</em><span>20/06/2025 · Ana Paula</span></div></div>
+            <div class="ev"><div class="w"><b>Presencial</b><em>Fechou Gramado; pagou por pix.</em><span>28/04/2025 · Guilherme</span></div></div>
+            <div class="ev"><div class="w"><b>Tarefa automática</b><em>Pós-viagem: avaliação e fotos — Cancún</em><span>13/09/2023 · concluída</span></div></div>
+            <div class="ev"><div class="w"><b>Tarefa automática</b><em>Retomar contato (11 meses da última viagem)</em><span>15/05/2026 · aberta</span></div></div>
+          </div></div></div>
         </div>
       </div>
     </section>
@@ -699,6 +721,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <!-- ===================== GRUPOS / EMPRESAS ===================== -->
     <section class="screen" id="s-grupos">
       <div class="page">
+        <div class="subnav"><a href="#/clientes">Pessoas</a><a href="#/grupos" class="on">Grupos e empresas</a></div>
         <div class="page-head">
           <div class="t"><h2>Grupos e empresas</h2><div class="sub"><span>41 grupos · organizam o cadastro de pessoas; não têm valor financeiro</span></div></div>
           <div class="actions"><button class="btn btn-primary">+ Novo grupo</button></div>
@@ -741,9 +764,10 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <!-- ===================== FINANCEIRO · CONCILIAÇÃO ===================== -->
     <section class="screen" id="s-financeiro">
       <div class="page">
+        <div class="subnav"><a href="#/financeiro" class="on">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/fechamento">Fechamento</a></div>
         <div class="page-head">
           <div class="t"><h2>Comissões a receber</h2><div class="sub"><span>O que as operadoras ainda devem à agência</span></div></div>
-          <div class="actions"><a href="#/repasses" class="btn btn-secondary" style="text-decoration:none">Repasses</a><a href="#/fechamento" class="btn btn-secondary" style="text-decoration:none">Fechamento</a><button class="btn btn-secondary">Exportar CSV</button></div>
+          <div class="actions"><button class="btn btn-secondary">Exportar CSV</button></div>
         </div>
         <div class="tiles">
           <div class="tile"><small>A receber</small><b>R$ 18.420,00</b><span>14 reservas · 6 operadoras</span></div>
@@ -784,9 +808,10 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <!-- ===================== REPASSES ===================== -->
     <section class="screen" id="s-repasses">
       <div class="page">
+        <div class="subnav"><a href="#/financeiro">Conciliação</a><a href="#/repasses" class="on">Repasses</a><a href="#/fechamento">Fechamento</a></div>
         <div class="page-head">
           <div class="t"><h2>Repasses a vendedores</h2><div class="sub"><span>Liberado quando toda comissão da viagem entra · valor definido por você</span></div></div>
-          <div class="actions"><a href="#/financeiro" class="btn btn-secondary" style="text-decoration:none">Comissões</a><button class="btn btn-secondary">Histórico</button></div>
+          <div class="actions"><button class="btn btn-secondary">Histórico</button></div>
         </div>
         <div class="tiles" style="grid-template-columns:repeat(3,1fr)">
           <div class="tile"><small>A pagar agora</small><b>R$ 1.150,00</b><a href="#">2 vendedores · 5 viagens →</a></div>
@@ -827,6 +852,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <!-- ===================== FECHAMENTO DE PERÍODO ===================== -->
     <section class="screen" id="s-fechamento">
       <div class="page">
+        <div class="subnav"><a href="#/financeiro">Conciliação</a><a href="#/repasses">Repasses</a><a href="#/fechamento" class="on">Fechamento</a></div>
         <div class="page-head">
           <div class="t"><h2>Fechamento de período</h2><div class="sub"><span>Mês fechado: reservas e recebimentos só mudam com permissão e motivo</span></div></div>
         </div>
@@ -1011,30 +1037,48 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     </section>
 
     <!-- ===================== FORNECEDOR ===================== -->
-    <section class="screen" id="s-fornecedor">
+        <section class="screen" id="s-fornecedor">
       <div class="page">
         <div class="page-head">
           <div class="t"><h2>CVC Operadora</h2><div class="sub"><span>Operadora · 48 reservas · comissão padrão 10 %</span></div></div>
           <div class="actions"><span class="timer">salvo às 09:41</span><a href="#/fornecedores" class="btn btn-ghost" style="text-decoration:none">Fechar</a><button class="btn btn-primary">Salvar</button></div>
         </div>
-        <div class="block"><div class="bb" style="max-width:820px">
-            <div class="grid-4" style="grid-template-columns:1fr 1fr">
-              <div class="field" style="grid-column:span 2"><label>Nome</label><input value="CVC Operadora"></div>
-              <div class="field"><label>Tipo</label><select><option>Operadora</option><option>Consolidadora</option><option>Cia aérea</option><option>Hotel</option><option>Seguradora</option><option>Receptivo</option></select></div>
-              <div class="field"><label>CNPJ</label><input class="mono" value="10.760.260/0001-19"></div>
-              <div class="field"><label>Comissão padrão <i class="help" title="Pré-preenche a comissão no lançamento">?</i></label><div class="money"><input value="10,0"><span style="border-right:0;border-left:1px solid var(--border)">%</span></div></div>
-              <div class="field"><label>Telefone de emergência</label><input value="0800 707 0700"></div>
+        <div class="tabs" data-tabs="fornecedor"><a class="on" data-tab="dados">Dados</a><a data-tab="financeiro">Financeiro</a><a data-tab="reservas">Reservas<span class="cnt">48</span></a></div>
+
+        <div data-panel="dados" style="max-width:900px">
+          <div class="block"><div class="bh"><h3>Dados</h3></div><div class="bb"><div class="grid-4" style="grid-template-columns:1fr 1fr">
+            <div class="field" style="grid-column:span 2"><label>Nome</label><input value="CVC Operadora"></div>
+            <div class="field"><label>Tipo</label><select><option>Operadora</option><option>Consolidadora</option><option>Cia aérea</option><option>Hotel</option><option>Seguradora</option><option>Receptivo</option></select></div>
+            <div class="field"><label>CNPJ</label><input class="mono" value="10.760.260/0001-19"></div>
+            <div class="field"><label>Comissão padrão <i class="help" title="Pré-preenche a comissão no lançamento como valor sugerido">?</i></label><div class="money"><input value="10,0"><span style="border-right:0;border-left:1px solid var(--border)">%</span></div></div>
+            <div class="field"><label>Telefone de emergência</label><input value="0800 707 0700"></div>
+            <div class="field"><label>Site / portal</label><input value="https://agentes.cvc.com.br"></div>
+            <div class="field"><label>Contato comercial</label><input value="Renata · (11) 3003-9282"></div>
+            <div class="field" style="grid-column:span 2"><label>Observações</label><input value="Pagamento de comissão cai por transferência; extrato no portal em 'Financeiro > Comissões'."></div>
+          </div></div></div>
+        </div>
+
+        <div data-panel="financeiro" style="display:none;max-width:900px">
+          <div class="block"><div class="bh"><h3>Quando paga a comissão</h3><span class="meta">define a data prevista de cada reserva na conciliação</span></div><div class="bb">
+            <div class="inline-banner neutral"><b>Regra vigente desde 01/01/2026</b><span>Alterar cria uma nova versão válida a partir de uma data. Reservas já lançadas mantêm a previsão gravada.</span></div>
+            <div class="list">
+              <div class="it" style="padding:10px 0"><div class="t"><b>Vendas de 1 a 14</b><span>pagam dia 20 do mesmo mês</span></div><span class="more">Editar</span></div>
+              <div class="it" style="padding:10px 0"><div class="t"><b>Vendas de 15 a 31</b><span>pagam dia 5 do mês seguinte</span></div><span class="more">Editar</span></div>
+              <div class="it" style="padding:10px 0"><span class="more">+ Janela</span><span class="mini" style="margin-left:auto">ou prazo fixo em dias</span></div>
             </div>
-            <div><span class="eyebrow">Quando paga a comissão</span><span class="mini" style="margin-left:10px">regra vigente desde <b>01/01/2026</b> · alterar cria uma nova versão válida a partir de uma data; reservas antigas mantêm a previsão gravada</span>
-              <div class="list" style="margin-top:8px">
-                <div class="it" style="padding:8px 0"><div class="t"><b>Vendas de 1 a 14</b><span>pagam dia 20 do mesmo mês</span></div><span class="more">Editar</span></div>
-                <div class="it" style="padding:8px 0"><div class="t"><b>Vendas de 15 a 31</b><span>pagam dia 5 do mês seguinte</span></div><span class="more">Editar</span></div>
-                <div class="it" style="padding:8px 0"><span class="more">+ Janela</span><span class="mini" style="margin-left:auto">ou prazo fixo em dias</span></div>
-              </div>
-              <div class="row" style="margin-top:12px"><button class="btn btn-secondary btn-sm">Nova versão da regra a partir de…</button><span class="mini">versão anterior: 30 dias após a compra (até 31/12/2025)</span></div>
-              <div class="list" style="display:none">
-              </div></div>
-            </div></div>
+            <div class="row"><button class="btn btn-secondary btn-sm">Nova versão da regra a partir de…</button><span class="mini">versão anterior: 30 dias após a compra (até 31/12/2025)</span></div>
+          </div></div>
+        </div>
+
+        <div data-panel="reservas" style="display:none">
+          <div class="tblwrap"><table>
+            <thead><tr><th>Reserva</th><th>Compra</th><th>Situação</th><th class="r">Venda</th><th class="r">Esperado</th><th class="r">Recebido</th></tr></thead>
+            <tbody>
+              <tr onclick="location.hash='#/viagem'"><td><div class="primary">Carlos Mendes · Lisboa</div><div class="secondary"><span class="code">VG-2026-0042</span> · <span class="code">K7X2PQ</span></div></td><td class="muted">12/03/2026</td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 10.500,00</td><td class="r num">R$ 1.600,00</td><td class="r num muted">R$ 0,00</td></tr>
+              <tr onclick="location.hash='#/viagem'"><td><div class="primary">Ana Beatriz Souza · Cancún</div><div class="secondary"><span class="code">VG-2026-0041</span> · <span class="code">CVC-3391B</span></div></td><td class="muted">02/03/2026</td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 14.200,00</td><td class="r num">R$ 1.610,00</td><td class="r num muted">R$ 0,00</td></tr>
+              <tr onclick="location.hash='#/viagem'"><td><div class="primary">Família Oliveira · Gramado</div><div class="secondary"><span class="code">VG-2026-0038</span> · <span class="code">CVC-77A2Q</span></div></td><td class="muted">05/02/2026</td><td><span class="pill p-err">atrasada</span></td><td class="r num">R$ 6.800,00</td><td class="r num">R$ 740,00</td><td class="r num muted">R$ 0,00</td></tr>
+            </tbody></table><div class="pager">1–3 de 48</div></div>
+        </div>
       </div>
     </section>
 
@@ -1076,6 +1120,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     window.scrollTo(0,0);document.getElementById('shell').classList.remove('menu-open');
   }
   window.addEventListener('hashchange',show);show();
+  document.querySelectorAll('[data-tabs]').forEach(function(t){t.querySelectorAll('a[data-tab]').forEach(function(a){a.addEventListener('click',function(){var k=a.getAttribute('data-tab');t.querySelectorAll('a[data-tab]').forEach(function(x){x.classList.toggle('on',x===a);});var pg=t.parentElement;pg.querySelectorAll('[data-panel]').forEach(function(p){p.style.display=p.getAttribute('data-panel')===k?'':'none';});});});});
 })();
 </script>
 </body></html>
