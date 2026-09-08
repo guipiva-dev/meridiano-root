@@ -203,6 +203,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
 .dont li{margin:6px 0}
 .changes{display:grid;grid-template-columns:repeat(2,1fr);gap:8px 24px;font-size:14px;color:var(--n-700)}
 .changes div::before{content:"→";color:var(--orange-600);font-weight:800;margin-right:8px}
+@media (max-width:1366px){.summary-strip{flex-wrap:wrap;row-gap:14px}.summary-strip .res{flex-basis:auto}.summary-strip > div[style*="margin-left:auto"]{width:100%;margin-left:0;text-align:left}.list .it > .mini{display:none}}
 @media (max-width:1000px){.swatches,.roles{grid-template-columns:repeat(3,1fr)}.type,.intro,.dont,.changes{grid-template-columns:1fr}.app{grid-template-columns:1fr}.side{display:none}.grid-4,.grid-3,.tiles{grid-template-columns:1fr 1fr}.fin{grid-template-columns:repeat(2,1fr)}}
 .dirty{font-size:13px;font-weight:600;color:var(--orange-700);margin-right:6px}
 .grp-f{display:flex;flex-direction:column;gap:14px}
@@ -460,7 +461,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
           <div class="field" style="min-width:250px"><div class="chips" style="min-height:40px;gap:6px;flex-wrap:nowrap"><span class="mini">Emissão:</span><input type="date" value="2026-03-01" style="flex:1;min-width:0"><input type="date" value="2026-04-30" style="flex:1;min-width:0"></div></div>
         </div>
         <div class="tblwrap"><table>
-          <thead><tr><th>Viagem</th><th>Ida</th><th>Vendedor</th><th>Fase</th><th>Financeiro</th><th class="r">Vendido</th><th class="r">Receita</th></tr></thead>
+          <thead><tr><th>Viagem</th><th>Ida</th><th>Vendedor</th><th>Fase</th><th>Financeiro</th><th class="r">Venda</th><th class="r">Receita</th></tr></thead>
           <tbody>
             <tr onclick="location.hash='#/viagem'"><td><div class="primary">Carlos Mendes</div><div class="secondary">Lisboa · Internacional · <span class="code">VG-2026-0042</span></div></td><td class="muted">18/04/2026</td><td class="muted">Ana Paula</td><td><span class="pill p-info">em emissão</span></td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 13.700,00</td><td class="r num"><b>R$ 2.120,00</b></td></tr>
             <tr onclick="location.hash='#/viagem'"><td><div class="primary">Ana Beatriz Souza</div><div class="secondary">Cancún · Internacional · <span class="code">VG-2026-0041</span></div></td><td class="muted">04/04/2026</td><td class="muted">Guilherme</td><td><span class="pill p-primary">confirmada</span></td><td><span class="pill p-info">a receber</span></td><td class="r num">R$ 14.200,00</td><td class="r num"><b>R$ 1.610,00</b></td></tr>
@@ -578,7 +579,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
             <div><small>Comissão da vendedora</small><b>R$ 300,00</b></div><span class="sep"></span>
             <div><small>Despesas da viagem</small><b>R$ 180,00</b></div><span class="sep"></span>
             <div class="res"><small>Resultado da viagem <i class="help" title="Receita das reservas R$ 2.120 − comissão da vendedora R$ 300 − despesas vinculadas R$ 180">?</i></small><b>R$ 1.640,00</b></div>
-            <div style="margin-left:auto;text-align:right"><small style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700">Recebido</small><br><b class="num" style="font-size:18px;color:var(--n-700)">R$ 0,00</b></div>
+            <div style="margin-left:auto;text-align:right"><small style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.05em;font-weight:700">Comissões recebidas</small><br><b class="num" style="font-size:18px;color:var(--n-700)">R$ 0,00</b></div>
           </div>
           <div class="split">
             <div class="block"><div class="bh"><h3>Reservas</h3><span class="meta">2 · clique para abrir</span></div><div class="list">
@@ -605,7 +606,7 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
         <div data-panel="financeiro" style="display:none;flex-direction:column;gap:20px">
           <div class="summary-strip">
             <div><small>Receita prevista</small><b>R$ 2.120,00</b></div><span class="sep"></span>
-            <div><small>Recebido</small><b>R$ 0,00</b></div><span class="sep"></span>
+            <div><small>Comissões recebidas</small><b>R$ 0,00</b></div><span class="sep"></span>
             <div><small>Comissão da vendedora</small><b>R$ 300,00</b> <span class="pill p-neutral">bloqueado</span></div><span class="sep"></span>
             <div><small>Despesas da viagem</small><b>R$ 180,00</b></div><span class="sep"></span>
             <div class="res"><small>Resultado da viagem</small><b>R$ 1.640,00</b></div>
@@ -1061,15 +1062,15 @@ kbd.k{font:11px var(--font-mono);border:1px solid var(--border-strong);border-bo
     <section class="screen" id="s-dashboard">
       <div class="page">
         <div class="page-head">
-          <div class="t"><h2>Relatórios</h2><div class="sub"><span>Abril de 2026 · caixa e competência</span></div></div>
+          <div class="t"><h2>Relatórios</h2><div class="sub"><span>2026 até abril · "quanto realmente sobrou?"</span></div></div>
           <div class="actions"><div class="field" style="min-width:160px"><select><option>2026</option><option>2025</option></select></div><div class="field" style="min-width:180px"><select><option>Vendedor: todos</option></select></div><button class="btn btn-secondary">Exportar CSV</button></div>
         </div>
         <div class="tiles" style="grid-template-columns:repeat(6,1fr)">
-          <div class="tile"><small>Vendido no ano</small><b>R$ 187.400,00</b><span>62 reservas · 41 viagens</span></div>
-          <div class="tile"><small>Receita prevista</small><b>R$ 24.180,00</b><span>margem média 12,9 %</span></div>
-          <div class="tile"><small>Recebido no ano</small><b>R$ 27.630,00</b><a href="#">inclui R$ 6,1 mil de 2025 →</a></div>
-          <div class="tile"><small>Despesas no ano</small><b style="color:var(--red-700)">R$ 9.840,00</b><a href="#/custos">fixas R$ 5,8 mil · viagens R$ 1,2 mil →</a></div>
-          <div class="tile" style="background:var(--navy-800);border-color:var(--navy-800)"><small style="color:#c9cbe6">Resultado operacional</small><b style="color:#fff">R$ 17.790,00</b><span style="color:#c9cbe6">recebido − despesas pagas · margem líquida 9,5 %</span></div>
+          <div class="tile"><small>Venda no ano</small><b>R$ 187.400,00</b><span>62 reservas · 41 viagens</span></div>
+          <div class="tile"><small>Receita recebida</small><b>R$ 27.630,00</b><a href="#">prevista R$ 24.180 · inclui R$ 6,1 mil de 2025 →</a></div>
+          <div class="tile"><small>Despesas pagas</small><b style="color:var(--red-700)">R$ 9.840,00</b><a href="#/custos">fixas R$ 5,8 mil · viagens R$ 1,2 mil →</a></div>
+          <div class="tile" style="background:var(--navy-800);border-color:var(--navy-800)"><small style="color:#c9cbe6">Resultado operacional</small><b style="color:#fff">R$ 17.790,00</b><span style="color:#c9cbe6">receita recebida − despesas pagas</span></div>
+          <div class="tile"><small>Margem operacional</small><b>9,5 %</b><span>resultado ÷ venda · comercial 12,9 %</span></div>
           <div class="tile"><small>Teto MEI 2026 <i class="help" title="Base a confirmar com o contador: receita da agência (comissão + RAV + taxa) por caixa">?</i></small><b>34 %</b><div class="bar" style="margin-top:6px"><i style="width:34%"></i></div><span>R$ 27.630 de R$ 81.000 · alerta em 80 %</span></div>
         </div>
         <div class="three">

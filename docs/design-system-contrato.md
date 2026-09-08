@@ -95,6 +95,14 @@ Pendência é **derivada** (calculada a partir de viagens, documentos e cadastro
 - **Auditoria**: evento complexo tem "Ver detalhes" com diff campo a campo; a timeline fica curta.
 - **Barra do protótipo** (links de teste) não é produto; no app, navegação é sidebar + subnav + tabs.
 
+## 4.5 Freeze (2026-09-08)
+
+Design v1 **congelado** após a quinta revisão externa. Daqui em diante, mudança visual ou de fluxo só por: teste com usuário real · regra de negócio descoberta · dificuldade concreta de implementação · métrica de uso. Nunca por "ficaria mais bonito assim".
+
+Refinamentos finais incorporados: vocabulário "Venda" na lista; "Comissões recebidas" no resumo da viagem; faixa de resultado quebra linha abaixo de 1366px; responsável da pendência entra na descrição abaixo de 1366px; Relatórios abre com Venda · Receita recebida · Despesas pagas · Resultado operacional · Margem operacional.
+
+Regras que valem para sempre: até **6 tabs** horizontais por registro — a sétima vai para "Mais ▾" ou reagrupa; até **6 itens** de subnav por módulo; Nova viagem nunca vira wizard; sidebar continua rasa; nenhuma cor hex no app (`--color-text-inverse`, `--color-text-on-dark-muted`, `--color-*-text` cobrem os casos do mock).
+
 ## 5. Proibido (lint / code review)
 
 hex em componente · margin arbitrária · `font-size` solto · botão com cor custom · modal fora do componente padrão · badge de status fora do mapa · cálculo financeiro duplicado em tela · toast para confirmação simples · `window.alert` · tooltip para informação obrigatória · ícone de outra biblioteca · `@media` com valor fora dos breakpoints.

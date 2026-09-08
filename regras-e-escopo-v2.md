@@ -303,6 +303,8 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 46 | Despesas, não custos | Módulo chama-se **Despesas** (evita confusão com custo do fornecedor na reserva) |
 | 47 | Formas de pagamento | Chips multi; com mais de uma marcada, "Detalhar valores" (forma × valor) opcional |
 | 48 | Lote de recebimento | "Marcar recebidas" em lote só quando recebido = esperado; parcial/divergência é individual |
+| 49 | RAV do cliente | Fórmula `venda − custo` vale para a v1 (comissionada, markup, taxa separada). Câmbio, imposto e desconto explícito entram na v1.1 — não cristalizar como generated column definitiva; revisar com as 3 viagens reais da piloto |
+| 50 | Design congelado | Protótipo v1 aprovado em 2026-09-08 (22 telas). Mudanças só por uso real, regra nova, implementação ou métrica |
 | 35 | Navegação | Sidebar global (módulos) + subnav do módulo (≤ 6 itens) + tabs do registro (cada aba só com seu conteúdo). Acima de 6 itens no módulo: sub-sidebar interna por seções. Sem scroll horizontal de navegação |
 
 ### Pendências
