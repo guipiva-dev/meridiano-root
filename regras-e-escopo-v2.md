@@ -275,7 +275,7 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 17 | Vencimento à operadora | Mantido fora (ver pendência) |
 | 18 | Infra | API na Azure; resto gratuito |
 | 19 | Cliente responsável | Não existe; passageiro titular identifica a viagem |
-| 20 | Fornecedor | Select do cadastro; sem criação inline |
+| 20 | Fornecedor | Select do cadastro; sem criação inline. Exceção D1 (2026-09-09): criação inline mínima — nome + tipo (fornecedor) / nome + CPF opcional (pessoa) — na Nova viagem; cadastro completo continua no módulo próprio |
 | 21 | Viagem nacional/internacional | `viagem.tipo`, obrigatório |
 | 22 | Serviços vendidos | `reserva.tipos_servico[]`, multi, para relatórios |
 | 23 | Tipo de receita | Removido; derivado |

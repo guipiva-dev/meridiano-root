@@ -6,7 +6,7 @@ Backoffice de vendas, comissões e operação para agências de viagem de lazer.
 
 **Especificações (fonte de verdade, nesta ordem):** `regras-e-escopo-v2.md` · `schema-agencia-v2.sql` · `docs/analise-arquitetural-v1.md`. Design congelado (2026-09-08): `docs/design-system-contrato.md` (regras) · `docs/design/prototipo-v1.html` (22 telas) · `frontend/src/styles/tokens.css` (tokens). Planos em `docs/superpowers/plans/`; estado e pendências em `docs/BACKLOG.md`.
 
-**Estado (2026-09-08):** Fase 1 (spec v2) ✓ · Fase 2 (esqueleto .NET, migrations 0001–0011, 39 testes) ✓ · Design v1 congelado (tag `design-v1-freeze`) ✓ · Fase 3.0 (hardening: migration 0012, sessão revalidada, `Guardas`; 75 testes) ✓ · Fase 3.1 (scaffold do front, migration 0013, 82 testes backend, 64 testes front) ✓ · **Fase 3 (módulos) = próxima**: plano-mestre `docs/superpowers/plans/2026-09-08-fase-3-master.md`, subplano 3.2 em `docs/superpowers/plans/2026-09-09-fase-3-2-nova-viagem.md` (10 tasks, 6 ondas) pronto para executar.
+**Estado (2026-09-09):** Fase 1 (spec v2) ✓ · Fase 2 (esqueleto .NET, migrations 0001–0011, 39 testes) ✓ · Design v1 congelado (tag `design-v1-freeze`) ✓ · Fase 3.0 (hardening: migration 0012, sessão revalidada, `Guardas`; 75 testes) ✓ · Fase 3.1 (scaffold do front, migration 0013, 82 testes backend, 64 testes front) ✓ · Fase 3.2 (Nova viagem: 106 testes API + 21 domínio backend, 123 testes Vitest + Playwright e2e 4/4 front; E2E cronometrado 6,0 s @1280 / 6,4 s @1440) ✓ · **próximo: subplano 3.3** (Viagens e reservas), a escrever conforme `docs/superpowers/plans/2026-09-08-fase-3-master.md`.
 
 ## Behavioral guidelines
 

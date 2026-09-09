@@ -1,7 +1,7 @@
 # Backlog de configuração — Meridiano
 
 Pendências do setup baseado no [vibe-coding-toolkit](https://github.com/soumatheusgomes/vibe-coding-toolkit).
-Marque cada item ao concluir. Última revisão: 2026-09-08. Backlog do produto em `docs/BACKLOG.md`.
+Marque cada item ao concluir. Última revisão: 2026-09-09. Backlog do produto em `docs/BACKLOG.md`.
 
 ## Concluído
 
@@ -38,7 +38,7 @@ ESLint strictTypeChecked + jsx-a11y e Biome (formatação), sem sobreposição, 
 
 ### 3. Playwright — concluído 2026-09-08
 
-`e2e/styleguide.spec.ts` com baseline de regressão visual (win32 local + linux, este último rodando no CI). `e2e/login.spec.ts` escrito mas fora do CI (precisa de API + seed). Tela Nova viagem (risco número um) fica para o subplano 3.2.
+`e2e/styleguide.spec.ts` com baseline de regressão visual (win32 local + linux, este último rodando no CI). `e2e/login.spec.ts` escrito mas fora do CI (precisa de API + seed). Tela Nova viagem (risco número um), cronometrado: `e2e/nova-viagem.spec.ts` 4/4, 6,0 s @1280 / 6,4 s @1440 (meta ≤ 300 s) — concluído no subplano 3.2 (2026-09-09).
 
 ## Opcional, adiar até doer
 
