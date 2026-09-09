@@ -120,6 +120,8 @@ Reserva: `status = cancelada`, `cancelada_em`, `motivo_cancelamento` obrigatóri
 
 Viagem: `cancelada` é manual. Cancelar a viagem exige que toda reserva ativa seja cancelada antes (ou junto, na mesma ação). Repasse já pago de viagem cancelada: registrado como está; ajuste é decisão do dono, fora do sistema.
 
+> **Ruling 3.3** — consumo de crédito não altera valores da reserva; vínculo por `reserva_uso_id`; uso único.
+
 ### 4.8 NFSe
 Por reserva: `nfse_status` ∈ {`falta_emitir`, `emitido`, `nao_precisa`}, `nfse_tomador` ∈ {`cliente`, `operadora`}, `nfse_numero`, `nfse_data_emissao`.
 
@@ -203,7 +205,7 @@ Descartado: aprovação em duas etapas, segregação de funções.
 
 ## 9. Operacional
 
-- Histórico de alteração/remarcação; crédito com validade; checklist de requisitos do destino (v1.1); dados do aéreo em `servico.detalhe` (bilhete, localizador da cia, voo, horário local, bagagem, assento); contato de emergência do fornecedor; ocasião da viagem; anexo por reserva; transferência de viagem entre agentes.
+- Histórico de alteração/remarcação; crédito com validade; checklist de requisitos do destino (v1.1); dados do aéreo em `servico.detalhe` (bilhete, localizador da cia, voo, horário local, bagagem, assento); contato de emergência do fornecedor; ocasião da viagem; anexo por reserva; transferência de viagem entre agentes (= `agente_id`, permissão `viagem.transferir`).
 - **Aviso de viagem duplicada**: ao criar viagem para cliente com viagem não concluída, três saídas — abrir a existente, adicionar a reserva nela, criar assim mesmo. Aviso mais forte se as datas se sobrepõem. Nunca bloqueio.
 - **Aviso de reserva duplicada**: mesmo `fornecedor_id + localizador` na agência. Aviso, não bloqueio.
 - Vencimento de pagamento à operadora: **fora** (decisão mantida da v1; ver pendências).
