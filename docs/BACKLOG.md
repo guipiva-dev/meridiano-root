@@ -51,6 +51,8 @@ Cada item vira um plano próprio quando os de que depende fecham:
 - Troca de titular = 2 statements dentro do lock da viagem (índice não deferrable).
 
 ### Deferidas da 3.1
+- `MoneyInput`: clamp de negativo (`allowNegative=false`) só no blur; durante a digitação `-50` emite `-5`/`-50` (corrigir em `mudar`).
+- `App.test.tsx` não assegura a chamada de `instalarAtalhos()` no `App` (setup de teste instala por conta própria).
 - `destinoSeguro` deve rejeitar `/\` e whitespace no início do destino (`new URL(v, origin).origin` para validar em vez de regex).
 - `sair()` deve limpar o cache do `queryClient` em `finally`, não só no caminho feliz.
 - Módulo Financeiro invisível para o perfil Contador com as permissões do brief (`movimentar|conciliar`) vs. as do documento mestre (`movimentar|ver_dre`) — decidir em 3.5.
