@@ -6,7 +6,7 @@ Backoffice de vendas, comissões e operação para agências de viagem de lazer.
 
 **Especificações (fonte de verdade, nesta ordem):** `regras-e-escopo-v2.md` · `schema-agencia-v2.sql` · `docs/analise-arquitetural-v1.md`. Design congelado (2026-09-08): `docs/design-system-contrato.md` (regras) · `docs/design/prototipo-v1.html` (22 telas) · `frontend/src/styles/tokens.css` (tokens). Planos em `docs/superpowers/plans/`; estado e pendências em `docs/BACKLOG.md`.
 
-**Estado (2026-09-08):** Fase 1 (spec v2) ✓ · Fase 2 (esqueleto .NET, migrations 0001–0011, 39 testes) ✓ · Design v1 congelado (tag `design-v1-freeze`) ✓ · Fase 3.0 (hardening: migration 0012, sessão revalidada, `Guardas`; 75 testes) ✓ · **Fase 3 (front + módulos) = próxima**: plano-mestre `docs/superpowers/plans/2026-09-08-fase-3-master.md`, subplano 3.1 pronto para executar.
+**Estado (2026-09-08):** Fase 1 (spec v2) ✓ · Fase 2 (esqueleto .NET, migrations 0001–0011, 39 testes) ✓ · Design v1 congelado (tag `design-v1-freeze`) ✓ · Fase 3.0 (hardening: migration 0012, sessão revalidada, `Guardas`; 75 testes) ✓ · Fase 3.1 (scaffold do front, migration 0013, 82 testes backend, 64 testes front) ✓ · **Fase 3 (módulos) = próxima**: plano-mestre `docs/superpowers/plans/2026-09-08-fase-3-master.md`, subplano 3.2 (Nova viagem) a planejar.
 
 ## Behavioral guidelines
 
@@ -36,7 +36,7 @@ Always use the exact commands here — don't guess.
 - **Test:** `cd backend && dotnet test` (Docker precisa estar rodando; se o engine pausou, reabrir Docker Desktop e aguardar `docker info`)
 - **Build:** `cd backend && dotnet publish src/Meridiano.Api -c Release -o out`
 - **Run/Dev:** `cd backend && docker compose up -d && dotnet run --project src/Meridiano.Api`
-- **Front (Fase 3, após scaffold):** `cd frontend && npm install` · `npm run dev` · `npm run lint` · `npm run build`
+- **Front (Fase 3, após scaffold):** `cd frontend && npm install` · `npm run dev` · `npm run lint` · `npm run build` · `npx playwright test e2e/styleguide.spec.ts`
 - **Smoke do schema:** copiar `docs/schema-v2-smoke.mjs` para uma pasta com `@electric-sql/pglite` e rodar `node test.mjs` (imprime `ALL OK`)
 - **Job:** `cd backend && dotnet run --project src/Meridiano.Api -- job <nome>`
 

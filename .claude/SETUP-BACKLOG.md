@@ -28,22 +28,17 @@ Nenhum. Próximo passo: escrever `docs/superpowers/plans/<data>-fase-3-*.md` em 
 
 ## Pendências, em ordem
 
-### 1. Quality gates do frontend (primeira task do scaffold da Fase 3)
+### 1. Quality gates do frontend (primeira task do scaffold da Fase 3) — concluído 2026-09-08
 
-ESLint (type-aware + regras React) e Biome (formatação + conjunto pequeno de regras), sem sobreposição. Teto de 350 linhas por arquivo. Regra nova nasce em `warn`, sobe para `error` ao zerar. Adicionar `npm run lint` ao CI do `frontend/`.
+ESLint strictTypeChecked + jsx-a11y e Biome (formatação), sem sobreposição, mais `scripts/check-tokens.mjs` (proíbe hex/`px` fora de `tokens.css`, valida breakpoints 700/1024/1280/1366/1440). `npm run lint` no CI do `frontend/`. Feito no subplano 3.1 (`frontend/.github/workflows/ci.yml`, `frontend/eslint.config.*`, `frontend/biome.json`).
 
-Prompt pronto: [08-eslint-quality-gates-install.md](https://github.com/soumatheusgomes/vibe-coding-toolkit/blob/main/docs/prompts/08-eslint-quality-gates-install.md) com `MAX_LINES=350`. Burndown: [02-eslint-warning-burndown.md](https://github.com/soumatheusgomes/vibe-coding-toolkit/blob/main/docs/prompts/02-eslint-warning-burndown.md).
+### 2. CI do frontend e do root — concluído 2026-09-08
 
-Lint de design (contrato §5): proibir cor hex e `px` fora de `tokens.css` — regra ESLint/Biome ou grep no CI.
+`frontend/.github/workflows/ci.yml`: `npm ci`, lint, typecheck, test, build, e Playwright da `/styleguide` (job `e2e`, contra Chromium headless). Root: sem validação de links de docs — adiada, sem evidência de necessidade ainda.
 
-### 2. CI do frontend e do root
+### 3. Playwright — concluído 2026-09-08
 
-- `frontend/.github/workflows/ci.yml`: `npm ci`, lint, typecheck, build, Playwright cronometrado da tela Nova viagem (contrato §7).
-- Root: opcional, só validar links dos docs.
-
-### 3. Playwright
-
-Poucos testes, cronometrados, começando pela tela de lançamento (risco número um, spec §14). Instalar junto com o scaffold.
+`e2e/styleguide.spec.ts` com baseline de regressão visual (win32 local + linux, este último rodando no CI). `e2e/login.spec.ts` escrito mas fora do CI (precisa de API + seed). Tela Nova viagem (risco número um) fica para o subplano 3.2.
 
 ## Opcional, adiar até doer
 
