@@ -80,6 +80,8 @@ Backend:
 - `ix_reserva_fornecedor_loc` não cobre `lower(trim())`.
 - Valor de repasse pago ignorado silenciosamente no PUT (simétrico: 422 `repasse_pago`).
 - 5 códigos de validação sem teste dedicado.
+- PUT que limpa `dataIda`/`dataVolta` não remove as pendências automáticas geradas antes (checkin/posviagem/recompra ficam órfãs) → 3.3.
+- `sem_permissao_vendedor` responde 422 (plano) enquanto os demais gates de permissão respondem 403 `sem_permissao`; unificar quando a UI de troca de vendedor existir.
 
 Frontend:
 - Erros locais de validação persistem até o próximo save.
@@ -91,6 +93,10 @@ Frontend:
 - `SecondaryDetails` não é componente próprio; `aria-expanded` sem `aria-controls`.
 - `somarReservas` duplica null-coalescing de `paraValoresReserva`.
 - E2E: `getByLabel` precisou de `exact: true` (tooltip com aria-label "fornecedor" colide).
+- **3.3 (obrigatório):** `paraRequest` reenvia `status: "cancelada"` no PUT, mas `ReservaGravacao.ValidarAsync` só aceita `pendente`/`emitida` — ao existir cancelamento, o PUT de uma viagem com reserva cancelada dá 422 `status_invalido`. Decidir em 3.3: omitir canceladas do lote ou aceitar `cancelada` no backend.
+- Front envia `repasseValor: null` no PUT quando o usuário não vê resultado (backend ignora sem `ViagemVerResultado`, ver `ViagensService.cs`); omitir o campo no front por defesa em profundidade.
+- Cards de reserva sem id usam key por índice (`nova-${i}`): remover do meio pode trocar o nó DOM/foco entre reservas não salvas.
+- "Salvar e sair" com erro de validação local só para o spinner do modal; erros ficam na página atrás do modal.
 
 ### Deferidas da Fase 2 (revisões de task e revisão final)
 - RLS em `log_acesso` (nada lê a tabela ainda; login insere sem `app.agencia_id`).
