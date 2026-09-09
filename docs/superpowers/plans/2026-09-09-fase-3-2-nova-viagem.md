@@ -38,13 +38,6 @@
 | 4 | T9 (seed + E2E + styleguide) | precisa de tudo |
 | 5 | T10 (docs, root) | fechamento |
 
----|---|---|
-| 0 | T1 (backend base), T5 (front base) | repos diferentes; nada depende ainda |
-| 1 | T2, T3 (backend), T6, T7 (front) | T2/T3 usam fixture e `CalculoReserva` de T1, pastas disjuntas; T6/T7 usam `calculoReserva.ts`/`api/viagens.ts` de T5, pastas disjuntas |
-| 2 | T4 (backend), T8 (front) | T4 estende `ViagensService` (T3); T8 monta a página com T6+T7 e os contratos de T2–T4 |
-| 3 | T9 (seed + E2E) | precisa de tudo |
-| 4 | T10 (docs, root) | fechamento |
-
 ---
 
 ## Contrato de API (fonte única para backend e front)
