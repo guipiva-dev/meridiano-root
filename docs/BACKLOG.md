@@ -266,6 +266,29 @@ Frontend:
 - `NU1510` NoWarn é project-wide em `Meridiano.Api.csproj`.
 - ~~`alter default privileges for role meridiano` é específico por ambiente; aplicar no Supabase na Fase 4.~~ Fechada na Fase 4: migration `0017_supabase_hardening.sql` revoga tudo de `anon`/`authenticated`/`service_role` (inclusive default privileges do role corrente) e `usage on schema public` de PUBLIC; verificação real por `curl` no PostgREST fica no smoke de produção (`docs/deploy.md` §12).
 
+### Rulings da Fase 4 (plano R1–R12 em `docs/superpowers/plans/2026-09-11-fase-4-piloto.md`; execução no ledger `.superpowers/sdd/2026-09-11-fase-4-piloto/progress.md`)
+Plano — custo se errado:
+- R1 "Importar planilha" = 3 viagens lançadas à mão; importador é v1.1 (spec §10) — nenhum.
+- R2 Bootstrap da primeira agência por SQL one-shot com token de convite (`scripts/bootstrap-agencia.sql`), sem C#, `Program.cs` intocado — exige BYPASSRLS + pooler em modo sessão (documentado em `docs/deploy.md` §9).
+- R3 PostgREST fechado por migration 0017 + remover `public` das exposed schemas — reversível com `grant`.
+- R4 CI faz deploy com service principal (`AZURE_CREDENTIALS`); GHCR privado + PAT `read:packages`; OIDC só com mais de um ambiente — rotação manual de um secret.
+- R5 Jobs = Container Apps Jobs cron (UTC), mesma imagem, `--args job <nome>`, sem `ConnectionStrings__Migrator` — nenhum.
+- R6 UptimeRobot a 30 min, não 5 (cota de 180 k vCPU-s) — cold start percebido; `min-replicas 1` (~US$ 10/mês) se incomodar.
+- R7 Backup `pg_dump -Fc -n public --no-owner --no-privileges` → R2; retenção 30 d = lifecycle rule; drill de restore antes de todo deploy com migration nova — nenhum.
+- R8 FQDN padrão do ACA no piloto; Resend exige domínio verificado — sem domínio, sem e-mail.
+- R9 Segredos no ACA por `--secrets` + `secretref:` — nenhum.
+- R10 Gabarito da planilha preenchido antes de lançar; divergência nunca "ajusta a planilha" — nenhum.
+- R11 Tempo humano por cronômetro do observador, meta ≤ 300 s para 4 reservas — nenhum.
+- R12 Frontend não muda na fase; achados de UI viram plano 4.1 — defeito de UI convive com o piloto.
+Execução (2026-09-11):
+- P1 T0 pôde editar `Meridiano.Api.Tests.csproj` (`<None>` copia o script ao output) — nenhum.
+- T1: loop `for` de deploy aborta no primeiro `az` que falhar (fail-fast; CI vermelho, re-run) — um re-run manual.
+- T0: `revoke usage on schema public from public` incondicional na 0017 (implementador; revisor de segurança confirmou; PUBLIC herda USAGE por padrão) — role interna do Supabase perder USAGE, reversível.
+- Minors deferidos: `backup.yml` sem `shell: bash`/`pipefail` (sem pipe hoje); objeto `meridiano-<dia>.dump` sobrescrito por dispatch manual no mesmo dia; `postgres:17` tag flutuante.
+- **Usuário:** piloto local antes da nuvem (imagem integrada, bootstrap, jobs, drill no compose; T5 no stack local) — repetir smoke em produção (já previsto em T4).
+- Drill: `pg_dump -n public` não leva `create extension` → pré-criar `pgcrypto`/`pg_trgm` antes do `pg_restore` — nenhum (idempotente).
+- Contagem: base era 258 testes API, não 257 (drift do plano) — nenhum.
+
 ### Achados do piloto local (Fase 4, 2026-09-11 — imagem integrada `meridiano:smoke` contra o compose)
 Backend:
 - `JobRunner` resolve `IEnumerable<IJob>` e por isso **todo job exige `Armazenamento__*`** (`ExpurgoAnexosJob` pede `IArmazenamentoArquivo`; `AmazonS3Client` sem `Endpoint` mata o processo no boot, exit 139, até no `ping`). Runbook passa as vars em todos os jobs. Melhoria: `JobRunner` resolver só o job pedido (`IServiceProvider` + nome) — 1 arquivo.
