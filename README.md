@@ -14,7 +14,7 @@ Backoffice de vendas, comissões e operação para agências de viagem de lazer.
 
 ## Estado
 
-Ver `docs/BACKLOG.md`. Resumo: especificação v2 e esqueleto do backend concluídos; design v1 congelado em 2026-09-08 (`design-v1-freeze`); Fase 3 (front + módulos) é a próxima.
+Ver `docs/BACKLOG.md` e a linha de estado em `CLAUDE.md`. Resumo (2026-09-11): Fases 1–3 concluídas (spec v2, backend, design v1 `design-v1-freeze`, front + todos os módulos); Fase 4 (piloto) em andamento — código de deploy pronto, piloto local validado, reviews externos aplicados, migrations 0001–0018; falta operar a nuvem (`docs/deploy.md`) e lançar as 3 viagens da planilha.
 
 ## Mapa de documentos
 
