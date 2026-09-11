@@ -41,6 +41,18 @@
 | R11 | **Contador** (C7): `navegacao.ts` Financeiro aceita `financeiro.ver_dre`; páginas escondem escrita por `pode()`; backend aceita `FinanceiroVerDre` nos GETs. Sidebar badge de "comissões atrasadas" (contrato §4.2) → 3.6. | Deferida da 3.1. |
 | R12 | **Seleção de viagem** na despesa (opcional) = combobox sobre `GET /busca?q` (`buscaApi`, congelado, importável) mostrando só o grupo `viagens`; na tab Financeiro da viagem o campo vem fixo e escondido. | Reuso; sem endpoint novo. |
 
+## Rulings de execução (decididos durante as ondas, 2026-09-09/10)
+
+| # | Decisão | Motivo |
+|---|---|---|
+| E1 | Aba/contador **`recebidas`** = reservas **conciliadas** (não encerradas) com `recebimento_operadora` no mês; `kpis.recebidoMes` usa o `mes` do filtro (default mês atual). | A letra do brief ("existe movimento no mês") contradiz o cenário do próprio brief. Custo: recebimento parcial do mês aparece em Pendentes, não em Recebidas; o tile muda com o seletor de mês. |
+| E2 | **Ordem de locks supersedida** (regra transversal, vale para T1/T2/T4): travar as viagens logo após o advisory de competência e **reler a elegibilidade sob o lock**; ids de viagem ordenados pelo SQL (`order by viagem_id`), nunca por `Guid` em C#. | TOCTOU no lote e na divergência; a ordem de `Guid` em C# não é a ordem de `uuid` do Postgres. |
+| E3 | Dinheiro vindo de formulário é **arredondado** (2 casas, `AwayFromZero`) **antes** de validar. | `valor: 0.001` passava do `<= 0`, virava `0.00` no insert e estourava `movimento_sinal` → 500. |
+| E4 | **Contador recebe 403 em `GET /repasses`** (o brief dizia 200). | `Permissoes.cs` é congelado (C13) e `ContadorSet` não tem `RepasseVerTodos`. Custo: Contador sem visão de repasses até 3.6 (BACKLOG). |
+| E5 | KPIs de despesas falam do **universo do mês** (`mes` + `viagemId` + `soVinculadas`), ignorando `categoria`/`situacao`; a lista e o `Total` usam o recorte completo. | Cartão que muda com filtro secundário mente sobre o mês. Uma ida ao banco (`count(*) filter`). |
+| E6 | Subtítulo de Despesas usa **"R$ X a pagar"**, não "{n} a pagar". | `vencidas + vencemAte7Dias` não é a contagem de "a pagar" e o DTO não tem `aPagarQtd`. |
+| E7 | `rotasModulos.test.tsx` (congelado de T0) recebe 1 linha em T6: heading "Conciliação" → "Comissões a receber". | Título real da página; custo nenhum. |
+
 ---
 
 ## Ondas (3.5)

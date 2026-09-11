@@ -41,6 +41,19 @@
 | R11 | **`DocumentosTab` da viagem** (arquivo de 3.4) passa a mostrar, além dos anexos, um bloco "Documentos dos passageiros" (`GET /clientes/{id}/documentos` por passageiro, só tipo · número (se permissão) · validade com badge) — leitura; edição na página da pessoa (link). | Deferida da 3.3. |
 | R12 | **UF** = `Select` com as 27 siglas (constante em `lib/documentos.ts`); **Origem** = `Input` livre (`origem_lead` é texto); **Tags** = chips + input (Enter adiciona, Backspace vazio remove a última); **Grupo** no formulário da pessoa tem opção "+ Criar grupo…" que abre `GrupoInlineModal` (nome + tipo) e seleciona o criado. | Protótipo `#s-pessoa`. |
 
+## Rulings de execução (decididos durante as ondas, 2026-09-09/10)
+
+| # | Decisão | Motivo |
+|---|---|---|
+| E1 | `ix_cliente_agencia_cpf` **removido** da migration 0015 (T0, compartilhada com 3.5). | Duplica `ux_cliente_cpf` (mesmas colunas e predicado). O DB local de quem rodou a 0015 antes da correção ainda tem o índice (DbUp não reaplica) — `drop index` manual (BACKLOG). |
+| E2 | `PessoasService.CriarAsync` **removido**; `PessoasEndpoints` usa `ClientesService` por DI. | Sem outro chamador depois de `ClienteRequest` (R6). |
+| E3 | SQL do brief de `PendenciasService.ListarDaPessoaAsync` **supersedido**: com `ClienteVerProprios`, pendências **de viagem** só das viagens do próprio vendedor. | Spec §7.1 — a visibilidade da pessoa não pode vazar título/código de viagem alheia. Custo: o externo deixa de ver pendência de viagem de outro vendedor em que a pessoa dele é passageira (aceitável). |
+| E4 | `PUT /clientes/{id}` **preserva o CPF gravado** quando o autor não tem `ClienteVerDocumento` (o DTO volta sem `cpf`, então o request traria `null`). | Defesa em profundidade; a matriz de perfis atual não tem `ClienteEditar` sem `ClienteVerDocumento`. |
+| E5 | **Sem fetch eager de documentos** ao abrir a pessoa: a tab Documentos consulta só quando aberta e fica **sem contador**. | `GET /clientes/{id}/documentos` grava `log_acesso_documento`; logar a cada abertura da página é ruído LGPD. Contador via `ResumoClienteDto` em 3.6 (BACKLOG). |
+| E6 | `FornecedorRequest.Ativo` passa a `bool?` com coalesce; `GET /fornecedores/{id}/reservas` de outra agência → 422 `nao_encontrado`. | `bool Ativo = true` fazia PUT parcial **reativar** fornecedor desativado; cross-tenant segue o padrão 422 da 3.2. |
+| E7 | `rotasModulos.test.tsx` (arquivo congelado de T0) recebe ajustes de heading por T6/T8 (`/clientes/:id`, `/clientes/grupos` → "Grupos e empresas"). | Intenção dos testes preservada; custo nenhum. |
+| E8 | T10 (E2E de 3.4) e T11 de 3.5 executadas por **um** implementador. | Stack de dev compartilhado (API :5000, Vite :5173) não suporta dois E2E simultâneos. |
+
 ---
 
 ## Ondas (3.4)

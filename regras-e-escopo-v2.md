@@ -107,6 +107,8 @@ Atalho de tela: "marcar comissão recebida" cria um `recebimento_operadora` com 
 ### 4.4 Conciliação
 Reserva está **conciliada** quando `Σ (recebimento_operadora + estorno_operadora) ≥ valor_esperado_operadora`, ou quando `conciliacao_encerrada = true` com `divergencia_motivo` (operadora pagou menos e não vai pagar o resto). Reserva com esperado = 0 não entra na conciliação.
 
+> **Ruling 3.5** — encerrar divergência é mão única na v1: **reabrir conciliação não existe** (BACKLOG). A competência travada ao encerrar é a da `data_compra` (§8). A aba "Recebidas" lista reservas conciliadas com `recebimento_operadora` no mês; recebimento parcial continua em "Pendentes".
+
 ### 4.5 Previsão de pagamento da comissão
 Por fornecedor, em janelas (`regra_pagamento_fornecedor`: vendas de 1 a 14 pagam dia 20; de 15 a 31 pagam dia 5 do mês seguinte) ou prazo em dias. A API calcula `data_prevista_comissao` ao criar a reserva, **grava** e mantém editável. Dia inexistente no mês → último dia do mês.
 
@@ -137,6 +139,8 @@ MEI: DAS é despesa fixa (v1.1). Dashboard monitora receita recebida acumulada n
 - Status: `bloqueado` → `a_pagar` → `pago`. Vai a `a_pagar` quando toda reserva ativa da viagem com esperado > 0 está conciliada (calculado pela API ao registrar movimento). Pagamento: `pago_em`, em lote por vendedor ("pagar todos a_pagar de fulano").
 - Entra na DRE (v1.1) como despesa, lido daqui — não há segunda fonte.
 - Dono e agentes internos têm `gera_repasse = false`. Pró-labore do dono é despesa fixa (v1.1).
+
+> **Ruling 3.5** — `valor` fica **editável enquanto o repasse não está pago** (`PUT /repasses/{id}/valor`; pago → 422 `repasse_pago`) e renova o `xmin` da viagem, porque está no formulário de edição. O pagamento em lote é **por vendedor e com data** (`pagoEm ≤ hoje`, competência de `pagoEm`, tudo ou nada). "Ver extrato" do protótipo fica fora da v1 (BACKLOG).
 
 ## 6. Status — dois eixos, calculados
 
@@ -216,6 +220,8 @@ Descartado: aprovação em duas etapas, segregação de funções.
 - Job diário: pendências derivadas com data — validade de passaporte (180 dias antes; **urgente** se há viagem que exige), visto/ESTA por destino, seguro sem apólice confirmada, contato de emergência (30 dias) — por `chave_unica`; somem quando resolvidas. Resumo por e-mail.
 - Na pessoa, a aba Pendências mostra só as abertas por padrão ("Mostrar concluídas" para ver todas); "+ Nova pendência" exige data.
 - Atendimentos da pessoa agrupados por mês; anos anteriores recolhidos.
+
+> **Ruling 3.4** — "atendimentos" **é a tabela `interacao`** (canal ∈ `whatsapp|ligacao|presencial|email|outro`, `resumo`, `ocorrido_em`, `usuario_id` = quem registrou), CRUD com soft delete. Canais são lista fixa; não há atendimento automático na v1, então o filtro "só automáticos" do protótipo fica fora (BACKLOG). O agrupamento por mês é do front. A aba Pendências da pessoa lista as dela **e** as das viagens em que é passageira — com `ClienteVerProprios`, só das viagens do próprio vendedor.
 - Jobs mensais: expurgo de auditoria; expurgo de anexos vencidos.
 
 ## 10. Escopo
@@ -287,7 +293,7 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 27 | Grupo/empresa de clientes | `grupo_cliente` (família, empresa, outro), opcional em `cliente` |
 | 28 | Fase financeira | `sem_receita` → `nao_prevista`, `quitada` → `recebida` (§6.1) |
 | 29 | Vigência da regra de comissão | `regra_pagamento_fornecedor.vigente_desde`; reserva mantém previsão gravada |
-| 30 | CPF em listas | Mascarado (`***.456.789-**`); completo só no detalhe com `cliente.ver_documento` |
+| 30 | CPF em listas | Mascarado (`***.456.789-**`); completo só no detalhe com `cliente.ver_documento`. **Ruling 3.4 (R2):** o CPF no detalhe **não** grava `log_acesso_documento` (o log cobre `documento_cliente` e anexo sensível) — revisar LGPD no piloto. Quem não tem a permissão e faz `PUT /clientes/{id}` não apaga o CPF gravado |
 | 31 | Comissão sugerida | Pré-preenchida pelo % do fornecedor é **sugerida** (input normal + selo "Sugerido: 10 %"), não "calculada" |
 | 32 | Cadastros | Fornecedor, grupo e usuário abrem em página própria, como pessoa; sem painel lateral |
 | 33 | Pendências da pessoa | Checklist na tela da pessoa: passaporte/visto, CPF, contato, emergência, seguro — derivado das viagens e documentos |
@@ -300,7 +306,7 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 41 | Venda × caixa | `valor_cliente` chama-se **Venda ao cliente** (contratado). "Cliente pagou" só existe como movimento de caixa |
 | 42 | Resultado da viagem | Inclui despesas vinculadas: `receita prevista − repasse − despesas`. `vw_resultado_viagem` expõe `venda_total`, `custo_fornecedores`, `despesas_viagem`, `resultado_viagem` |
 | 43 | Fechamento | Congela reservas, movimentos, despesas e repasses com competência no mês (§8) |
-| 44 | Despesa recorrente | Mensal: ao marcar paga (ou no dia 1 via job) cria a próxima com vencimento +1 mês, mesmo valor/categoria/forma, `recorrencia_origem_id`; `recorrencia_ate` opcional; editar afeta só a atual |
+| 44 | Despesa recorrente | Mensal: ao marcar paga (ou no dia 1 via job) cria a próxima com vencimento +1 mês, mesmo valor/categoria/forma, `recorrencia_origem_id`; `recorrencia_ate` opcional; editar afeta só a atual. **Ruling 3.5 (R7):** idempotência por `ux_despesa_sucessora` (`on conflict do nothing`); dia inexistente vira o último dia do mês e o **drift é aceito** (31/01 → 28/02 → 28/03); o job gera **uma** sucessora por origem por execução (cadeia atrasada alcança o presente em execuções seguintes); a sucessora não valida competência, então pode nascer em mês já fechado (BACKLOG) |
 | 45 | Equipe e acessos | Módulo "Usuários" vira **Equipe e acessos**: colaborador (`usuario`) com acesso opcional (`senha_hash` nulo = sem acesso). Estados: acesso ativo · sem acesso · convite pendente · inativo |
 | 46 | Despesas, não custos | Módulo chama-se **Despesas** (evita confusão com custo do fornecedor na reserva) |
 | 47 | Formas de pagamento | Chips multi; com mais de uma marcada, "Detalhar valores" (forma × valor) opcional |
