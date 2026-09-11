@@ -9,10 +9,16 @@
 | 1 — Especificação | `regras-e-escopo-v2.md`, `schema-agencia-v2.sql`, análise arquitetural, 50 decisões registradas | Concluída (2026-09-07/08) | raiz, `docs/analise-arquitetural-v1.md` |
 | 2 — Esqueleto | Solution .NET 10, migrations DbUp 0001–0011, RLS, auth própria, perfis/permissões, ProblemDetails, jobs CLI, CI, endpoint vertical de usuários | Concluída (2026-09-07). 13 testes de domínio + 26 de API, verdes | `backend/` (repo `meridiano-api`), plano em `docs/superpowers/plans/2026-09-07-fase-2-esqueleto.md` |
 | Design | Design system v3, contrato de implementação, protótipo clicável v1 com 22 telas, tokens CSS | **Congelado** em 2026-09-08 após 5 revisões externas (tag `design-v1-freeze` no root) | `docs/design-system-contrato.md`, `docs/design/prototipo-v1.html` + `prototipo-v1/*.png`, `frontend/src/styles/tokens.css` |
-| 3 — Front + módulos | React/Vite/TS servido pela API; módulos viagem/reserva, pessoas, fornecedores, financeiro, pendências, despesas, repasses, fechamento, relatórios | **Em andamento.** Plano-mestre `docs/superpowers/plans/2026-09-08-fase-3-master.md` (7 subplanos, 3.0–3.6, revisado 2026-09-08 após review externa; 5 decisões pendentes D1–D5 no mestre); 3.0 **concluída** (2026-09-08) em `2026-09-08-fase-3-0-hardening.md` (7 tasks, 3 ondas), migrations 0001–0012; 3.1 **concluída** (2026-09-08) em `2026-09-08-fase-3-1-scaffold.md` (12 tasks, 7 ondas), migration 0013, D2/D4 aplicadas; 3.2 **concluída** (2026-09-09) em `2026-09-09-fase-3-2-nova-viagem.md` (10 tasks, 6 ondas), 106 testes API + 21 domínio backend, 123 testes Vitest + Playwright e2e 4/4 front; tempo automatizado (E2E, 4 reservas) 6,0 s @1280 / 6,4 s @1440 (meta ≤ 300 s); 3.3 **concluída** (2026-09-09) em `2026-09-09-fase-3-3-viagens-reservas.md` (16 tasks, 5 ondas), migration 0014, 179 testes API + 22 domínio backend, 237 testes Vitest + Playwright e2e 8/8 front; tempo automatizado (E2E, 4 reservas) 6,0 s @1280 / 7,3 s @1440 (3.2: 6,0 / 6,4); 3.4 e 3.5 **concluídas** (2026-09-10) **em paralelo** sob o contrato `2026-09-09-fase-3-4-3-5-contrato.md` (Task 0 serial e compartilhada) — `2026-09-09-fase-3-4-cadastros.md` (11 tasks, 5 ondas) e `2026-09-09-fase-3-5-financeiro.md` (12 tasks, 4 ondas), migration 0015, 226 testes API + 26 domínio backend, 402 testes Vitest (107 arquivos) + Playwright `cadastros.spec.ts` 4/4 e `financeiro.spec.ts` 4/4 (1280 e 1440), styleguide intocado; tempo automatizado (E2E, 4 reservas) re-medido: 5,8 s @1280 / 6,3 s @1440 (3.3: 6,0 / 7,3) | `frontend/` (repo `meridiano-app`), `backend/src/Meridiano.Api/Modules/` |
+| 3 — Front + módulos | React/Vite/TS servido pela API; módulos viagem/reserva, pessoas, fornecedores, financeiro, pendências, despesas, repasses, fechamento, relatórios | **Em andamento.** Plano-mestre `docs/superpowers/plans/2026-09-08-fase-3-master.md` (7 subplanos, 3.0–3.6, revisado 2026-09-08 após review externa; 5 decisões pendentes D1–D5 no mestre); 3.0 **concluída** (2026-09-08) em `2026-09-08-fase-3-0-hardening.md` (7 tasks, 3 ondas), migrations 0001–0012; 3.1 **concluída** (2026-09-08) em `2026-09-08-fase-3-1-scaffold.md` (12 tasks, 7 ondas), migration 0013, D2/D4 aplicadas; 3.2 **concluída** (2026-09-09) em `2026-09-09-fase-3-2-nova-viagem.md` (10 tasks, 6 ondas), 106 testes API + 21 domínio backend, 123 testes Vitest + Playwright e2e 4/4 front; tempo automatizado (E2E, 4 reservas) 6,0 s @1280 / 6,4 s @1440 (meta ≤ 300 s); 3.3 **concluída** (2026-09-09) em `2026-09-09-fase-3-3-viagens-reservas.md` (16 tasks, 5 ondas), migration 0014, 179 testes API + 22 domínio backend, 237 testes Vitest + Playwright e2e 8/8 front; tempo automatizado (E2E, 4 reservas) 6,0 s @1280 / 7,3 s @1440 (3.2: 6,0 / 6,4); 3.4 e 3.5 **concluídas** (2026-09-10) **em paralelo** sob o contrato `2026-09-09-fase-3-4-3-5-contrato.md` (Task 0 serial e compartilhada) — `2026-09-09-fase-3-4-cadastros.md` (11 tasks, 5 ondas) e `2026-09-09-fase-3-5-financeiro.md` (12 tasks, 4 ondas), migration 0015, 226 testes API + 26 domínio backend, 402 testes Vitest (107 arquivos) + Playwright `cadastros.spec.ts` 4/4 e `financeiro.spec.ts` 4/4 (1280 e 1440), styleguide intocado; tempo automatizado (E2E, 4 reservas) re-medido: 5,8 s @1280 / 6,3 s @1440 (3.3: 6,0 / 7,3); 3.6 **concluída** (2026-09-11) em `2026-09-11-fase-3-6-agenda-relatorios-equipe-auditoria.md` (13 tasks, 5 ondas), migration 0016, 257 testes API + 30 domínio backend, 486 testes Vitest (121 arquivos) + Playwright `operacao.spec.ts` 8/8 (1280 e 1440) e `nova-viagem.spec.ts` 4/4, styleguide intocado; tempo automatizado (E2E, 4 reservas) re-medido: 6,2 s @1280 / 7,7 s @1440 (3.4/3.5: 5,8 / 6,3); branches `feat/fase-3-6` (backend HEAD `04dfba7`, 10 commits sobre `16d9c65`; frontend HEAD `843667a`, 11 commits sobre `f5a4884`; **mergeadas em `main` 2026-09-11** (backend `b949e97`, frontend `f6f0ceb`)). **Próximo:** merge + Fase 4 (piloto). Código da Fase 3 completo; a fase só **fecha** com o checklist humano abaixo | `frontend/` (repo `meridiano-app`), `backend/src/Meridiano.Api/Modules/` |
 | 4 — Piloto | Deploy Azure Container Apps + Supabase, importar planilha, medir tempo de lançamento | Não iniciada | — |
 
-Tempo humano (teste de UX §7, subplanos 3.2 a 3.5): pendente.
+Tempo humano (teste de UX §7, subplanos 3.2 a 3.6): pendente.
+
+### Checklist humano para fechar a Fase 3 (R17 de 3.6) — pendente
+
+- (a) **Teste de UX §7** — alguém que conhece agência e não viu o design executa o roteiro: criar viagem para Carlos Mendes → reserva CVC → informar pagamento → ver quanto deixa → segunda reserva → corrigir a primeira → sair sem salvar. Registrar o tempo humano (linha separada do E2E, aqui) e cada "onde eu clico?".
+- (b) **Piloto §12** — três viagens reais da planilha lançadas; comparar `receita_prevista` / `valor_esperado_operadora` da tela da viagem **e** do Relatório (`docs/relatorios-formulas.md`) com a planilha. Sem isso a Fase 3 **não fecha** e a Fase 4 não começa; não declarar validado.
+- (c) **TZ de produção** — `TZ=America/Sao_Paulo` no Dockerfile + `Timezone=America/Sao_Paulo` na connection string **antes do piloto** (jobs e "hoje" usam `DateTime.Today`/`current_date`; em UTC o dia vira às 21h BRT).
 
 ## Fase 3 — subplanos (detalhe no plano-mestre)
 
@@ -23,8 +29,8 @@ Cada item vira um plano próprio quando os de que depende fecham:
 2. **Nova viagem** (risco número um, **concluído 2026-09-09**) — endpoint transacional viagem + passageiros + reservas + repasse + pendências automáticas, salvar parcial, adicionar reserva depois, pré-preenchimento, criação inline de pessoa (fornecedor: D1), teclado, aviso de viagem semelhante e reserva duplicada, vigência da regra de pagamento, teste E2E cronometrado. Backend `feat/fase-3-2-nova-viagem` (HEAD `2dd5c37`, base `66c3fd4`): módulos Pessoas, Fornecedores, Agencia, Admin, Viagens, `Meridiano.Domain/Financeiro/CalculoReserva.cs`; 106 testes API + 21 domínio. Frontend `feat/fase-3-2-nova-viagem` (HEAD `265945c`, base `b1ec8bc`): 123 testes Vitest, Playwright styleguide 18/18 (win32+linux), `e2e/nova-viagem.spec.ts` 4/4. Tempo automatizado (4 reservas): 6,0 s @1280 / 6,4 s @1440 (meta ≤ 300 s); tempo humano pendente (teste de UX §7). Fechou as pendências listadas em "Fechadas em 3.2" abaixo.
 3. **Viagens e reservas** — `2026-09-09-fase-3-3-viagens-reservas.md` (**concluído 2026-09-09**: 16 tasks, 5 ondas) — lista com filtros recolhidos e `vw_fase_viagem`; detalhe com tabs Resumo · Reservas · Financeiro · Pendências · Documentos · Timeline (protótipo, R3); editar reserva pelo `PUT /viagens/{id}` existente (R1: `PUT /reservas/{id}` não foi criado); remarcação (`reserva_alteracao`, reabre pendências); cancelamento de viagem/reserva com motivo/desfecho/crédito; consumo de crédito uma única vez (`reserva_uso_id`); NFSe por reserva; serviços operacionais; transferência de agente (`agente_id`, `ViagemTransferir`); busca global; anexos com `log_acesso_documento`. Backend `feat/fase-3-3-viagens-reservas` (HEAD `9edb433`, base `64ef818`, 15 commits): migration 0014; 179 testes API + 22 domínio. Frontend `feat/fase-3-3-viagens-reservas` (HEAD `f488107`, base `e2f0b79`, 17 commits): 237 testes Vitest, Playwright styleguide 24/24 (win32+linux), `e2e/viagens.spec.ts` + `e2e/nova-viagem.spec.ts` 8/8 (1280 e 1440). Tempo automatizado (4 reservas) re-medido: 6,0 s @1280 / 7,3 s @1440 (3.2: 6,0 / 6,4). Tempo humano (teste de UX §7): pendente. Fechou as pendências listadas em "Fechadas em 3.3" abaixo.
 4. **Cadastros** — `2026-09-09-fase-3-4-cadastros.md` (**concluído 2026-09-10**: 11 tasks, 5 ondas) — Clientes/Pessoa em página própria com tabs Dados · Documentos · Pendências · Viagens · Atendimentos; lista com filtros recolhidos e contadores; Grupos (família/empresa, vincular/desvincular); Fornecedores com tabs Dados · Financeiro · Reservas e regra de pagamento **versionada** por `vigente_desde` (previsões já gravadas intocadas, teste de invariante). Atendimentos = tabela `interacao` (R5); documentos com `log_acesso_documento` por linha lida; `ClienteVerProprios` em lista, detalhe, viagens, documentos, atendimentos, pendências e anexos. Backend `feat/fase-3-4-3-5` (base `9edb433`, HEAD `aaf784d`, compartilhada com 3.5; **mergeada em main 2026-09-11**, merge `16d9c65`): migration 0015. Frontend `feat/fase-3-4-3-5` (base `f488107`, HEAD `cf450af`; **mergeada em main 2026-09-11**, merge `f5a4884`): `e2e/cadastros.spec.ts` 4/4. Fechou as pendências listadas em "Fechadas em 3.4/3.5" abaixo.
-5. **Financeiro** — `2026-09-09-fase-3-5-financeiro.md` (**concluído 2026-09-10**: 12 tasks, 4 ondas) — Conciliação com os 5 tipos de movimento e KPIs, encerrar divergência com motivo, lote atômico de recebimento (decisão 48), Repasses (`bloqueado → a_pagar → pago`, valor editável até pagar, pagamento em lote por vendedor com data), Despesas com recorrência idempotente (`ux_despesa_sucessora`) e job `recorrencia_despesas`, Fechamento por competência com lock e reabertura auditada (`delete` + `aud_fechamento`). `X-Motivo` migrou para header. Contador enxerga o módulo (C7) mas recebe 403 em `GET /repasses`. Sem migration própria (0015 é da Task 0 compartilhada). `e2e/financeiro.spec.ts` 4/4. Fechou as pendências listadas em "Fechadas em 3.4/3.5" abaixo.
-6. **Agenda, Relatórios, Equipe, Auditoria, jobs** — pendências multi-passageiro, KPIs com fórmulas documentadas, CSV, convite/perfis, auditoria por perfil, RLS em `log_acesso`, jobs (pendências derivadas, resumo e-mail, expurgos, aniversários).
+5. **Financeiro** — `2026-09-09-fase-3-5-financeiro.md` (**concluído 2026-09-10**: 12 tasks, 4 ondas) — Conciliação com os 5 tipos de movimento e KPIs, encerrar divergência com motivo, lote atômico de recebimento (decisão 48), Repasses (`bloqueado → a_pagar → pago`, valor editável até pagar, pagamento em lote por vendedor com data), Despesas com recorrência idempotente (`ux_despesa_sucessora`) e job `recorrencia_despesas`, Fechamento por competência com lock e reabertura auditada (`delete` + `aud_fechamento`). `X-Motivo` migrou para header. Contador enxerga o módulo (C7) mas recebia 403 em `GET /repasses` (fechado em 3.6, R9). Sem migration própria (0015 é da Task 0 compartilhada). `e2e/financeiro.spec.ts` 4/4. Fechou as pendências listadas em "Fechadas em 3.4/3.5" abaixo.
+6. **Agenda, Relatórios, Equipe, Auditoria, jobs** — `2026-09-11-fase-3-6-agenda-relatorios-equipe-auditoria.md` (**concluído 2026-09-11**: 13 tasks, 5 ondas) — Agenda com tabs Pendências (Atrasadas · Hoje · Esta semana) · Embarques e retornos · Documentos vencendo · Créditos vencendo (R1, protótipo vence o mestre; `vw_agenda` não usada), pendência solta (`POST /pendencias`, R3), badges da sidebar (`GET /agenda/badges`: agenda/financeiro/clientes, R4); Relatórios do ano com três eixos separados (competência × caixa × despesas, R6/R7, fórmulas em `docs/relatorios-formulas.md`), teto MEI, receita por mês, nacional × internacional, ranking de fornecedores, serviços vendidos, CSV por reserva (R8); Equipe com `ColaboradorDto` e estado de acesso derivado, criar sem acesso, convite/reenvio, `GET /usuarios/perfis` (R10); Auditoria geral unindo `auditoria` + `log_acesso_documento` (LGPD), filtros, cursor `antesDe`, projeção `verDocumento`, CSV (R11); RLS em `log_acesso` (R12, migration 0016); jobs `pendencias_derivadas` (R13), `resumo_diario_email` (R14), `expurgo_auditoria`/`expurgo_anexos` (R15); aniversários como endpoint, sem job (R5); Contador lê `GET /repasses` (R9); `/agenda` protegida (R16); E2E `operacao.spec.ts`. Backend `feat/fase-3-6` (base `16d9c65`, HEAD `04dfba7`, 10 commits): migration 0016; 257 testes API + 30 domínio. Frontend `feat/fase-3-6` (base `f5a4884`, HEAD `843667a`, 11 commits): 486 testes Vitest (121 arquivos), Playwright `operacao.spec.ts` 8/8 (1280 e 1440), `nova-viagem.spec.ts` 4/4, styleguide intocado. Tempo automatizado (4 reservas) re-medido: 6,2 s @1280 / 7,7 s @1440 (3.4/3.5: 5,8 / 6,3). Merge em `main`: **pendente** (controlador). Tempo humano (UX §7) e piloto §12: pendentes (checklist acima). Fechou as pendências listadas em "Fechadas em 3.6" abaixo.
 
 ## Pendências abertas
 
@@ -101,9 +107,8 @@ Frontend:
 
 ### Deferidas da 3.3
 Backend:
-- `ix_pendencia_viagem` redundante após a migration 0014 — dropar em migration futura.
 - `UrlParaBaixar`/`Sanitizar` de anexo aceita `.`/`..`; truncagem 255 em UTF-16 pode partir surrogate pair.
-- Limite de 25 MB em anexos é só declaratório (URL assinada não vincula `Content-Length`); objeto do storage só some no job `expurgo_anexos` (3.6) — considerar regra de tamanho no bucket ou HEAD após confirmar.
+- Limite de 25 MB em anexos é só declaratório (URL assinada não vincula `Content-Length`); objeto do storage só some no job `expurgo_anexos` (existe desde 3.6) — considerar regra de tamanho no bucket ou HEAD após confirmar.
 - Requisição abortada pelo cliente vira 500 + log Error (`OperationCanceledException`) em `ViagensLista`/`ViagemLeitura`.
 - Rate limit de login (10/min/IP) aperta a suíte E2E.
 - `UsuarioAtual u` não usado nas escritas de `ServicosService`/`CriarNaViagemAsync` (contrato do plano); query extra de `agente_id` antes do lock em `CriarNaViagemAsync`.
@@ -153,11 +158,10 @@ Fechadas pela revisão final da branch (2026-09-11):
 
 ### Deferidas da 3.4
 Backend:
-- `ix_interacao_cliente` é redundante ao lado de `ix_interacao_agencia_cliente` — dropar em migration futura.
 - DB local do dev ainda tem `ix_cliente_agencia_cpf` da primeira execução da 0015 (DbUp não reaplica): `drop index` manual ou `docker compose down -v`.
 - Padrão transversal "campo escondido por permissão volta `null` num PUT": resolvido para `cliente.cpf` e `documento_cliente.numero`; falta conferir os valores sob `ReservaVerValores`.
 - CPF completo no detalhe não grava log (R2) — revisar LGPD no piloto.
-- Contador de documentos na tab da pessoa: sem fetch eager (LGPD), então falta o número — campo em `ResumoClienteDto` em 3.6.
+- Contador de documentos na tab da pessoa: sem fetch eager (LGPD), então falta o número — campo em `ResumoClienteDto` (não entrou em 3.6; segue deferida).
 - Vínculo documento↔anexo não existe no schema (R3); trocar janelas por prazo puro não é suportado (R7, 422 `janelas_obrigatorias`).
 - `interacao` sem auditoria por trigger; filtro "só automáticos" de atendimentos fora da v1 (não há automáticos).
 - Helpers de visibilidade de pessoa duplicados ×4 (2 nomeados no mesmo namespace, 2 inline) — unificar em `VisibilidadeCliente.cs`; guarda `versao_obrigatoria` duplicada em 7 serviços.
@@ -185,12 +189,10 @@ Frontend:
 ### Deferidas da 3.5
 Backend:
 - Reabrir conciliação encerrada (R3) — fora da v1.
-- Contador recebe 403 em `GET /repasses` (`ContadorSet` sem `RepasseVerTodos`, `Permissoes.cs` congelado) — decidir a permissão em 3.6.
 - `GerarProximaAsync` não valida competência da sucessora: a despesa gerada pode nascer em mês já fechado.
 - Drift da recorrência aceito (31/01 → 28/02 → 28/03) e **uma** sucessora por origem por execução do job — cadeia atrasada só alcança o presente em execuções seguintes.
 - Helper de leitura financeira duplicado ×3 (`LeituraFinanceira`/`LeFinanceiro` em Financeiro/Despesas/Fechamento) — com o paralelo encerrado, unificar numa cópia em `Modules/Comum`.
 - `UltimoRecebimentoEm` tem duas definições: em Repasses inclui `recebimento_cliente`, na conciliação só `recebimento_operadora` — alinhar.
-- `encerrar-divergencia` usa o motivo da divergência também como `app.motivo` de período fechado, sem pedir justificativa separada (aceito; registrar a decisão).
 - `GET /repasses` não é paginado (o contrato não pede); filtro natural é por vendedor.
 - `GET /viagens/{id}/movimentos` devolve 200 `[]` para viagem inexistente com `ViagemVer`; `previsto_invalido` é recusado mesmo em aba que ignora o filtro; `RecebidoMes` ignora `fornecedorId`.
 - `FechamentoService.ReceitaRecebida` soma `movimento_financeiro.valor` de todos os tipos, inclusive os negativos (nome enganoso — filtrar ou renomear); contagens de reservas/despesas do mês não excluem reserva cancelada.
@@ -201,7 +203,6 @@ Backend:
 
 Frontend:
 - "Ver extrato" de repasses (R5) — fora da v1.
-- Badge de comissões atrasadas na sidebar (contrato §4.2) → 3.6.
 - "+ Nova despesa" saiu em `primary`; o protótipo usa o laranja (`business`).
 - Quatro modais sem teste (`DivergenciaModal`, `ExcluirMovimentoModal`, `FecharPeriodoModal`, `ReabrirModal`); "Encerrar divergência…" sem teste.
 - Modais seedam estado inicial via `useState(props)` e são montados sem `key` (`PagarRepasseModal` e irmãos): a página precisa de `key` ao trocar de item.
@@ -212,8 +213,50 @@ Frontend:
 - `useMutacaoFinanceira`: args não memorizados no reenvio com motivo; `periodo_fechado` só como bloco.
 - E2E: cada execução polui o banco de dev (uma pessoa, uma viagem, duas despesas) — mesmo custo que `viagens.spec.ts`; seed continua idempotente.
 
+### Fechadas em 3.6 (2026-09-11)
+- (3.5) Badge de comissões atrasadas na sidebar (contrato §4.2) — `GET /agenda/badges` devolve `agenda`/`financeiro`/`clientes`; `Sidebar` consulta a cada 5 min e no foco da janela (R4).
+- (3.5) Contador recebia 403 em `GET /repasses` — `ContadorSet` ganhou `RepasseVerTodos` (R9); `RepassePagar` continua fora.
+- (Fase 2) RLS em `log_acesso` — migration 0016: `select` por `agencia_id = app_agencia_id()`, `insert with check (true)` (login insere antes de haver tenant, por conexão solta — convenção) (R12).
+- (3.3) `ix_pendencia_viagem` e (3.4) `ix_interacao_cliente` redundantes — dropados em 0016.
+- (3.3) Objeto do storage só sumiria num job `expurgo_anexos` que não existia — job criado (R15): apaga objeto e depois a linha (`delete`, não soft), uma linha por transação curta, storage fora da transação; `log_acesso_documento.anexo_id` vira `null` pela FK de 0012.
+- (3.1) Rota `/agenda` sem guarda — `RotaProtegida` com `viagem.ver`/`viagem.ver_proprias` (R16).
+- (3.3) `auditoria.motivo` ficava nulo no cancelamento de viagem/reserva (`ViagensOperacoesEndpoints` chamava `http.Contexto()` sem `req.Motivo`) — o motivo do corpo agora vale como `app.motivo`; achado pelo E2E de 3.6.
+- (3.5) "`encerrar-divergencia` usa o motivo da divergência como `app.motivo` — registrar a decisão" — registrada como Ruling 3.6 em `regras-e-escopo-v2.md` §8 (um motivo só para negócio e auditoria; vale também para o cancelamento).
+
+Fechadas pela revisão final das branches (2026-09-11):
+- `PendenciasService.CarregarBaseAsync` exigia `viagem_id` — pendências soltas e de pessoa agora concluem/adiam/editam (correção de causa raiz, T1).
+- `Rotinas.GerarPendenciasAsync` cancelava as derivadas `pendencia:%` com `viagem_id` ao editar datas da viagem — exclui `chave_unica like 'pendencia:%'` (T5).
+- Upsert diário de `pendencias_derivadas` sobrescrevia a data de uma pendência adiada — guarda `adiada_de` (emenda a R13).
+- Bloco lateral `ProximaViagem*` de Documentos vencendo sem `@apenasVendedor` (externo via viagem do dono) e ramo (b) idem.
+- CSV de Relatórios: coluna "Recebido" → "Comissão recebida"; pluralização "1 reservas" no resumo diário.
+- Front: `useColaborador` reduzido a `useFormularioCadastro` com mapper de erros opcional (parked T9); `DetalhesEventoModal` e `TimelineTab` passaram a compartilhar o helper De/Para (parked T10); carimbo relativo unificado; `Badge` fora do mapa em Equipe/Documentos; convidar sem `catch`; combobox de pessoa só com mouse; `ROTULO_SERVICO` duplicado; loading ausente em Agenda/Auditoria; `keepPreviousData` nas listas filtradas.
+
+### Deferidas da 3.6
+Backend:
+- **TZ de produção antes do piloto**: API e jobs usam `DateTime.Today`/`current_date`; em contêiner UTC o "hoje" vira às 21h BRT — `TZ=America/Sao_Paulo` no Dockerfile + `Timezone=America/Sao_Paulo` na connection string (item da Fase 4; não bloqueou o merge).
+- Cursor da Auditoria por carimbo (`antesDe`) pula empates de `criado_em` (um `POST /viagens` gera 4+ linhas com o mesmo `now()`) — cursor composto `(criado_em, id)`; `Id` não é único na união `auditoria` ∪ `log_acesso_documento` (front chaveia por `tabela+id`).
+- `Total` da Auditoria não desconta os eventos que a projeção por perfil remove de `alteracoes`.
+- `expurgo_anexos` ignora anexos soft-deleted (`excluido_em not null` com `data_descarte` vencida ficam no storage); delete de linha sem try/catch (falha de DB aborta o lote da agência); `ILogger` extra em `ExpurgoAuditoriaJob`.
+- Pendência derivada `concluida` **nunca** renasce e a adiada **não** acompanha nova validade até ser concluída/cancelada (R13 + emenda) — revisar após 30 dias de uso real.
+- Paginação dos blocos da Agenda ("1–3 de 6" do protótipo): teto 100 por bloco sem paginação; `Pendencias` sem `limit` no SQL; `CriarSolta` insere em loop; `ComissoesAtrasadas` não exclui reserva cancelada.
+- Aniversariantes na Agenda (só no resumo diário via `GET /clientes/aniversarios`; protótipo não os mostra).
+- `Csv.Campo` com `double`/`float` usa current culture (só `decimal` em uso); `DateTimeOffset` imprime no próprio offset (T2/T4 convertem para local antes).
+- Equipe: e-mail de convite sai após o commit (não atômico, pré-existente); `req.Perfil` nulo → `DoBanco(null)` indeterminado no PUT (pré-existente); `Nome` só é trimado no create; e-mails literais em `EquipeTests` sem sufixo; sem teste de "convite expirado" nem do 409.
+- Relatórios: `ReceitaPorMes`/`Servicos`/`Vendedores` sem arredondamento explícito em C#; filtro `Fixas` mistura predicado por linha com constante em `FILTER`; o teste do resumo usa `valor_total = valor_cliente` (`rav_cliente = 0`) — o caminho com RAV do relatório não tem teste próprio (fórmula coberta por `CalculoReservaTests`).
+- Testes: falta caso positivo de `/agenda` só com `viagem.ver_proprias`; sem teste `antesDe` + `de`/`ate`; falta assert de `Documentos.Length` para o contador; `AuditoriaTests.cs` com 421 linhas; "Colaborador excluída" (gênero); fake de e-mail falha global; `DateTime.Today` vs `current_date` nos jobs derivados.
+- `GET /viagens/{id}/auditoria` segue com `limit 200` sem cursor (3.3); rate limit de login 10/min/IP derruba suítes E2E **encadeadas** (3.3, reincidiu em 3.6 — rodar uma suíte por vez ou subir o limite em dev).
+
+Frontend:
+- `PessoaCombobox` compartilhado — hoje 4 cópias (Nova viagem, pendência de viagem, pendência solta na Agenda, Documentos).
+- Filtros De/Até da Auditoria vão além do protótipo (`DateInput` sem `Field` visível) — precisa de ruling de design antes de mexer.
+- `download.test.ts` faz asserts dentro do mock sem `try/finally`.
+- 5 warnings ESLint pré-existentes em `NovaViagemPage` + aviso de chunk-size no `build`.
+- Relatórios: heading "Fornecedores" dividido em dois nós; `aria-label` do mês abreviado; `pct1`/`pctTeto` duplicam cálculo.
+- Agenda: `falhou` exportado sem consumidor. Equipe: `apresentacaoStatus` 2× por linha; ordem das linhas Financeiro em `PerfilVe`.
+- E2E `operacao.spec.ts` depende do seed ("Cobrar comissão CVC", Marcos, Bruno) — reaplicar `backend/scripts/seed-dev.sql` antes de rodar; sem cleanup (padrão da casa).
+- (3.4) Contador de documentos na tab da pessoa (`ResumoClienteDto`) — **não** entrou em 3.6; segue deferida.
+
 ### Deferidas da Fase 2 (revisões de task e revisão final)
-- RLS em `log_acesso` (nada lê a tabela ainda; login insere sem `app.agencia_id`).
 - Login multiagência: e-mail é único global (migration 0004); pessoa em duas agências precisa de dois e-mails.
 - `EsqueciSenha` silencioso para usuário convidado sem senha definida; e-mail de convite sai após o commit (falha no Resend gera 500 com linha criada).
 - `ExecutarJob` usa `CancellationToken.None` (sem cancelamento por SIGTERM); sem teste do caminho de falha.

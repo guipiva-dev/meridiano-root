@@ -87,6 +87,8 @@ Venda com markup (passeio direto, transfer): `valor_comissao = 0`, `rav_operador
 
 Reserva cancelada sem `comissao_mantida`: esperado e prevista valem 0.
 
+> **Ruling 3.6 (R6/R7)** — Relatórios do ano trabalham em **três eixos que nunca se somam entre si**: *competência* (`reserva.data_compra`: venda, receita prevista, fornecedores, serviços, nacional × internacional), *caixa* (`movimento_financeiro.data_movimento`, os 5 tipos com o sinal do banco: receita recebida, receita por mês, teto MEI) e *despesas* (`despesa.pago_em`, só pagas). `vw_resultado_viagem` **não** entra em número mensal/anual (mistura previsto com caixa por viagem). "Resultado operacional" = receita recebida − despesas pagas, rotulado assim na tela. Filtro de vendedor (`viagem.vendedor_id`) vale para venda/previsto/recebido/fornecedores/serviços; despesas com vendedor = só as ligadas a viagens dele (fixas = 0); **teto MEI ignora o filtro** (é da agência). `tipos_servico[]`: uma reserva com N tipos conta em N barras ("reservas que incluem cada serviço"); a soma das barras não é o total de reservas. Fórmulas completas em `docs/relatorios-formulas.md`.
+
 ### 4.3 Fluxo do dinheiro
 Padrão: **cliente paga direto à operadora** (`fluxo_pagamento = cliente_paga_operadora`). Exceção: pix/boleto para a agência, que então paga o fornecedor (`cliente_paga_agencia`). `formas_pagamento[]` registra com o que o cliente pagou (pix, boleto, cartão — multi). O sistema não parcela; registra o que aconteceu.
 
@@ -103,6 +105,8 @@ Movimentos (`movimento_financeiro`), sempre por reserva, com data e valor:
 `receita_recebida = Σ valor`. Contas a receber do cliente = reservas com `cliente_paga_agencia` cujo `Σ recebimento_cliente < valor_cliente`.
 
 Atalho de tela: "marcar comissão recebida" cria um `recebimento_operadora` com o valor esperado e a data de hoje, num clique. Digitação extra zero no caso comum.
+
+> **Ruling 3.6 (R6)** — no Relatório, `receita_recebida` do ano é a soma de **todos** os movimentos do ano (os 5 tipos, sinal do banco), inclusive de reservas canceladas e de reservas compradas em anos anteriores (`recebidoDeAnosAnteriores` é um recorte dessa mesma soma, não uma parcela à parte). Caixa é caixa.
 
 ### 4.4 Conciliação
 Reserva está **conciliada** quando `Σ (recebimento_operadora + estorno_operadora) ≥ valor_esperado_operadora`, ou quando `conciliacao_encerrada = true` com `divergencia_motivo` (operadora pagou menos e não vai pagar o resto). Reserva com esperado = 0 não entra na conciliação.
@@ -182,6 +186,8 @@ Enumerações do domínio; a interface apresenta por um único mapa, nunca inven
 
 Permissões nomeadas (`modulo.acao`) numa matriz `Perfil → Permissao[]` em C#, com teste. Tabelas de perfil/permissão entram quando uma agência precisar de perfil customizado.
 
+> **Ruling 3.6 (R9/R10)** — **Contador ganha `repasse.ver_todos`** (repasse é custo da DRE, §5; "relatórios financeiros" inclui lê-los); `repasse.pagar` continua fora. Contador também alcança a Agenda via `viagem.ver` (documentos sem `numero`). Equipe: o estado de acesso do colaborador é **derivado** (§6.1): `inativo` se `!ativo`; `acesso_ativo` se tem `senha_hash`; `convite_pendente` se `convite_token` e `convite_expira_em > agora`; senão `sem_acesso` (convite expirado = `sem_acesso` com data no passado → "Convite expirado · Reenviar"). `POST /usuarios` cria colaborador **sem acesso** (e-mail obrigatório e único); `POST /usuarios/{id}/convite` convida ou reenvia (token novo, 72 h) — já tem senha → 422 `ja_tem_acesso`, inativo → 422 `usuario_inativo`. Inativar = `PUT` com `ativo = false`, com a guarda de último Dono. `GET /usuarios/perfis` expõe a matriz para o bloco "O que este perfil vê".
+
 ### 7.2 Visibilidade de valor
 As permissões que importam: `reserva.ver_valores`, `viagem.ver_resultado`, `repasse.ver_todos`, `financeiro.ver_dre`, `cliente.ver_documento`. Enforçadas na **API**: o DTO simplesmente não contém o campo. Esconder na tela não protege; o navegador não acessa o banco.
 
@@ -205,6 +211,8 @@ As permissões que importam: `reserva.ver_valores`, `viagem.ver_resultado`, `rep
 - **LGPD**: `log_acesso_documento` grava quem viu qual documento/anexo sensível e quando. Anexos em bucket privado com URL assinada e `data_descarte`; job apaga arquivo e linha.
 - **Retenção** da auditoria: job mensal expurga acima de `agencia.config.retencao_auditoria_meses` (padrão 24), preservando `DELETE`.
 
+> **Ruling 3.6 (R11/R12/R15/E16)** — "Motivo obrigatório" é **um** motivo: o texto enviado no corpo do cancelamento de viagem/reserva (e o da divergência encerrada, 3.5) vale como `app.motivo` da auditoria e como justificativa de período fechado; não se pede um `X-Motivo` separado nesses casos (o header continua nas escritas que não têm motivo de negócio próprio: excluir movimento, reabrir período, editar em período fechado). Auditoria geral (`GET /auditoria`) une `auditoria` e `log_acesso_documento` (LGPD: "visualizou o passaporte de …"); eventos LGPD são visíveis a qualquer `auditoria.ver` porque não expõem conteúdo; a projeção por perfil remove `cpf`/`contato_emergencia` de quem não tem `cliente.ver_documento`. `log_acesso` tem RLS de leitura por tenant e `insert with check (true)` (o login insere antes de haver tenant). Expurgos: `expurgo_auditoria` preserva `acao = 'DELETE'`; `expurgo_anexos` apaga o objeto no storage e depois a linha (`delete`, não soft), uma linha por transação curta, storage fora da transação; a falha de um anexo não impede os demais.
+
 Descartado: aprovação em duas etapas, segregação de funções.
 
 ## 9. Operacional
@@ -223,6 +231,8 @@ Descartado: aprovação em duas etapas, segregação de funções.
 
 > **Ruling 3.4** — "atendimentos" **é a tabela `interacao`** (canal ∈ `whatsapp|ligacao|presencial|email|outro`, `resumo`, `ocorrido_em`, `usuario_id` = quem registrou), CRUD com soft delete. Canais são lista fixa; não há atendimento automático na v1, então o filtro "só automáticos" do protótipo fica fora (BACKLOG). O agrupamento por mês é do front. A aba Pendências da pessoa lista as dela **e** as das viagens em que é passageira — com `ClienteVerProprios`, só das viagens do próprio vendedor.
 - Jobs mensais: expurgo de auditoria; expurgo de anexos vencidos.
+
+> **Ruling 3.6 (R5/R13/R14/E15)** — **Pendências derivadas** (job diário, `origem = 'automatica'`, upsert por `(agencia_id, chave_unica)`): atualiza título/data/prioridade/responsável enquanto `aberta`, **reabre** se `cancelada`, **nunca** mexe em `concluida` (concluída manual não renasce; revisar após 30 dias de uso) e **nunca sobrescreve a data de uma pendência adiada**; condição resolvida → aberta vira `cancelada`. Responsável = `viagem.agente_id ?? viagem.vendedor_id`, senão o Dono ativo mais antigo; passaporte aponta a viagem internacional futura mais próxima. "Seguro sem apólice confirmada" = nenhuma reserva ativa da viagem com `'seguro' = any(tipos_servico)` nem `servico.tipo = 'seguro'` (não existe campo de apólice). Visto/ESTA por destino fica fora da v1. Editar datas da viagem **não** cancela as derivadas (`chave_unica like 'pendencia:%'`). **Resumo diário** por e-mail: um por usuário ativo **com senha** e perfil `dono`/`financeiro`/`agente` (Dono/Financeiro veem tudo; Agente só onde é responsável): pendências de hoje, atrasadas, embarques de hoje e amanhã, aniversariantes de hoje, comissões atrasadas (só com permissão financeira); vazio total → não envia. **Aniversários** não têm job nem tabela: `GET /clientes/aniversarios?dias=7` deriva de `cliente.data_nascimento` e alimenta o resumo; a Agenda não os mostra (não está no protótipo). Pendência **solta** (sem viagem, pessoa opcional) nasce em `POST /pendencias` pela Agenda.
 
 ## 10. Escopo
 
