@@ -40,6 +40,14 @@ ESLint strictTypeChecked + jsx-a11y e Biome (formatação), sem sobreposição, 
 
 `e2e/styleguide.spec.ts` com baseline de regressão visual (win32 local + linux, este último rodando no CI). `e2e/login.spec.ts` escrito mas fora do CI (precisa de API + seed). Tela Nova viagem (risco número um), cronometrado: `e2e/nova-viagem.spec.ts` 4/4, 6,0 s @1280 / 6,4 s @1440 (meta ≤ 300 s) — concluído no subplano 3.2 (2026-09-09).
 
+## Lições da execução paralela 3.4 ∥ 3.5 (2026-09-10/11)
+
+- **`.superpowers/sdd/regras-implementador.md`** (mantido) — regras para implementadores em árvore compartilhada: sem commit, sem `git clean`/`stash`/`reset`, `--artifacts-path` privado em todo `dotnet build/test` (senão `MSB3027`/`CS2012`), comandos só em foreground (Monitor/`run_in_background` fazem o subagente parar), Dapper `timestamptz`→`DateTime` e `text[]`→classe com propriedades. Colar no brief de toda task de 3.6.
+- **Rate limit mata subagentes em voo** (2× em 2026-09-10): árvore preservada; retomar por `SendMessage` com "cheque `git diff` e continue". Ledger `.superpowers/sdd/<plano>/progress.md` é o mapa de recuperação.
+- **Teto de implementadores**: backend ≤ 4 simultâneos (solution compila inteira); front sem teto prático. Reviews podem correr sem limite (só leitura).
+- **Testes de rota com título de página** (`rotasModulos.test.tsx`) quebram quando a página real substitui `EmConstrucao`: prever no brief da task de página, não como arquivo congelado.
+- Candidato a hook: bloquear `git clean|stash|reset|checkout --` em subagentes (PreToolUse Bash) — só se voltar a acontecer.
+
 ## Opcional, adiar até doer
 
 - **Vault Obsidian + servidor MCP** — só quando a memória do Claude passar de ~130 linhas de índice.
