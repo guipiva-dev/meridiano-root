@@ -1,6 +1,6 @@
 # Meridiano — Runbook de produção (Fase 4)
 
-Fonte: `docs/superpowers/plans/2026-09-11-fase-4-piloto.md` (rulings R2–R9). Spec §11. Estado: **escrito em 2026-09-11, ainda não executado** — marcar cada bloco ao executar e registrar data/resultado na seção "Smoke pós-deploy".
+Fonte: `docs/superpowers/plans/2026-09-11-fase-4-piloto.md` (rulings R2–R9). Spec §11. Estado: **escrito em 2026-09-11; smoke local feito (seção 12), nuvem ainda não executada** — marcar cada bloco ao executar e registrar data/resultado na seção "Smoke pós-deploy".
 
 Regras que valem para tudo aqui:
 - Nenhum segredo neste arquivo, no repo, no histórico do shell (`read -s VAR`) nem na memória do agente. Só o **nome** do segredo.
@@ -99,7 +99,7 @@ FQDN=$(az containerapp show -g $RG -n $APP --query properties.configuration.ingr
 az containerapp update -g $RG -n $APP --set-env-vars Email__BaseUrl=https://$FQDN
 ```
 
-- [ ] Primeiro boot aplica 0001–0017 no banco vazio: `az containerapp logs show -g $RG -n $APP --tail 200` mostra 17 `Executing Database Server script` e `Upgrade successful`. A linha `Cannot load library libgssapi_krb5.so.2` no boot é ruído do Npgsql (sonda GSS; auth é por senha) — ignorar.
+- [ ] Primeiro boot aplica 0001–0018 no banco vazio (0018 = `senha_alterada_em`, `sessao_usuario` novo, `data_protection_key`): `az containerapp logs show -g $RG -n $APP --tail 200` mostra 18 `Executing Database Server script` e `Upgrade successful`. A linha `Cannot load library libgssapi_krb5.so.2` no boot é ruído do Npgsql (sonda GSS; auth é por senha) — ignorar.
 - [ ] `curl https://$FQDN/health` → `Healthy`; `curl -sI https://$FQDN/ | head -1` → 200 (front embutido).
 
 ## 7. Azure — jobs (cron em UTC; BRT = UTC−3)
@@ -193,7 +193,7 @@ for j in ping recorrencia-despesas pendencias-derivadas resumo-diario-email expu
 
 ## 12. Smoke pós-deploy (T4 do plano) — registrar data e resultado
 
-Feito **localmente** em 2026-09-11 (imagem `meridiano:smoke` contra o compose): 17 migrations em banco vazio ✓ · `/health` ✓ · front ✓ · carimbos `-03:00` ✓ · bootstrap + `definir-senha` + login ✓ · jobs `ping`/`pendencias_derivadas`/`resumo_diario_email` exit 0 com `sucesso = true` ✓ · drill dump→restore→"No new scripts need to be executed" ✓.
+Feito **localmente** em 2026-09-11 (imagem `meridiano:smoke` contra o compose): 17 migrations em banco vazio ✓ (0018 veio depois, coberta por `MigrationsTests`; na nuvem esperar 18) · `/health` ✓ · front ✓ · carimbos `-03:00` ✓ · bootstrap + `definir-senha` + login ✓ · jobs `ping`/`pendencias_derivadas`/`resumo_diario_email` exit 0 com `sucesso = true` ✓ · drill dump→restore→"No new scripts need to be executed" ✓.
 
 Em produção (pendente):
 - [ ] Trilha do Dono: login → cliente "Smoke Teste" → anexo PDF (objeto em `meridiano-anexos`, download por URL assinada) → convite de colaborador de teste (e-mail chega, link com o FQDN) → excluir os dados de teste.
