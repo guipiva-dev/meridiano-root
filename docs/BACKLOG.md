@@ -18,7 +18,7 @@ Tempo humano (teste de UX §7, subplanos 3.2 a 3.6): pendente.
 
 - (a) **Teste de UX §7** — alguém que conhece agência e não viu o design executa o roteiro: criar viagem para Carlos Mendes → reserva CVC → informar pagamento → ver quanto deixa → segunda reserva → corrigir a primeira → sair sem salvar. Registrar o tempo humano (linha separada do E2E, aqui) e cada "onde eu clico?".
 - (b) **Piloto §12** — três viagens reais da planilha lançadas; comparar `receita_prevista` / `valor_esperado_operadora` da tela da viagem **e** do Relatório (`docs/relatorios-formulas.md`) com a planilha. Sem isso a Fase 3 **não fecha** e a Fase 4 não começa; não declarar validado.
-- (c) **TZ de produção** — `TZ=America/Sao_Paulo` no Dockerfile + `Timezone=America/Sao_Paulo` na connection string **antes do piloto** (jobs e "hoje" usam `DateTime.Today`/`current_date`; em UTC o dia vira às 21h BRT).
+- (c) ~~**TZ de produção**~~ — **feito 2026-09-11**: `ENV TZ=America/Sao_Paulo PGTZ=America/Sao_Paulo` no Dockerfile (PGTZ vira `Timezone` da sessão Npgsql sem tocar na connection string; teste `InfraTests.PGTZ_define_timezone_da_sessao`).
 
 ## Fase 3 — subplanos (detalhe no plano-mestre)
 
@@ -233,7 +233,7 @@ Fechadas pela revisão final das branches (2026-09-11):
 
 ### Deferidas da 3.6
 Backend:
-- **TZ de produção antes do piloto**: API e jobs usam `DateTime.Today`/`current_date`; em contêiner UTC o "hoje" vira às 21h BRT — `TZ=America/Sao_Paulo` no Dockerfile + `Timezone=America/Sao_Paulo` na connection string (item da Fase 4; não bloqueou o merge).
+- ~~TZ de produção antes do piloto~~: feito 2026-09-11 via `ENV TZ`/`PGTZ` no Dockerfile (ver checklist (c)).
 - Cursor da Auditoria por carimbo (`antesDe`) pula empates de `criado_em` (um `POST /viagens` gera 4+ linhas com o mesmo `now()`) — cursor composto `(criado_em, id)`; `Id` não é único na união `auditoria` ∪ `log_acesso_documento` (front chaveia por `tabela+id`).
 - `Total` da Auditoria não desconta os eventos que a projeção por perfil remove de `alteracoes`.
 - `expurgo_anexos` ignora anexos soft-deleted (`excluido_em not null` com `data_descarte` vencida ficam no storage); delete de linha sem try/catch (falha de DB aborta o lote da agência); `ILogger` extra em `ExpurgoAuditoriaJob`.
