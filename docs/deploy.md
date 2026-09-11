@@ -55,6 +55,7 @@ create role meridiano_api login password '<senha forte gerada>';   -- sem create
 
 - [ ] Buckets `meridiano-anexos` e `meridiano-backup` (localização automática).
 - [ ] `meridiano-backup` → *Settings → Object lifecycle rules*: apagar objetos após **30 dias** (retenção do spec §11 é esta regra, não código).
+- O dump inclui `data_protection_key` (chaves que assinam o cookie de sessão, XML sem cifra — migration 0018): quem lê o backup forja sessões. Token do bucket só no GitHub Actions; nunca compartilhar dump.
 - [ ] *Manage R2 API Tokens*: token `meridiano-api` (Object Read & Write, só `meridiano-anexos`) → `r2-access`/`r2-secret`; token `meridiano-backup` (Object Read & Write, só `meridiano-backup`) → `R2_ACCESS_KEY_ID`/`R2_SECRET_ACCESS_KEY`.
 - [ ] Endpoint S3: `https://$R2_ACCOUNT.r2.cloudflarestorage.com` (região `auto`, já é o default do `ArmazenamentoS3`).
 
