@@ -3,3 +3,4 @@ frontend/
 .superpowers/
 .env
 *.local.json
+.playwright-mcp/
