@@ -339,7 +339,8 @@ Operação: registros QA da auditoria (pessoa/grupo/fornecedor/despesa/colaborad
 Deferidos (follow-up):
 - Backend: `Guardas.Site` aceita host de 1 rótulo; telefone de colaborador sem `Guardas.Telefone`; `ocasiao`/`contato`/`origemLead` sem limite; TOCTOU no DELETE de cliente (sem lock, padrão pré-existente); viagem/reserva/usuário não trimam texto; `LimitesTextoTests` só POST; crédito de qualquer status bloqueia exclusão de cliente (intencional).
 - Frontend: `download.ts` parse JSON falho vira mensagem genérica e `revokeObjectURL` síncrono (Firefox); `siteValido` mais estrito que o back; `PageHeader` teste só afirma classe (Playwright humano cobre); `MoneyInput.test` "clique seleciona" flake sob carga; `DespesaModal` `texto_longo` cai em bloco (maxLength já bloqueia).
-- Não testado: perfis além do Dono (mesma pendência da rodada 1); responsividade móvel (auditor não conseguiu viewport).
+- Base de testes atualizada 12/09 14:47 BRT com o build novo; `backend/scripts/seed-senhas-perfis.sql` dá senha `meridiano123` a um usuário por perfil (`ana.agente@`, `financeiro@`, `contador@`, `ana@viva.dev`). Roteiro de reteste para o auditor: `docs/piloto/reteste-homologacao-2.md`.
+- Não testado ainda: visão por perfil (agora possível) e responsividade móvel (auditor não conseguiu viewport).
 
 ### Versão 1.1 (fora da v1, já registradas)
 - RAV com câmbio, imposto e desconto explícito (decisão 49).
