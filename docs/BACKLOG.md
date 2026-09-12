@@ -340,7 +340,8 @@ Deferidos (follow-up):
 - Backend: `Guardas.Site` aceita host de 1 rótulo; telefone de colaborador sem `Guardas.Telefone`; `ocasiao`/`contato`/`origemLead` sem limite; TOCTOU no DELETE de cliente (sem lock, padrão pré-existente); viagem/reserva/usuário não trimam texto; `LimitesTextoTests` só POST; crédito de qualquer status bloqueia exclusão de cliente (intencional).
 - Frontend: `download.ts` parse JSON falho vira mensagem genérica e `revokeObjectURL` síncrono (Firefox); `siteValido` mais estrito que o back; `PageHeader` teste só afirma classe (Playwright humano cobre); `MoneyInput.test` "clique seleciona" flake sob carga; `DespesaModal` `texto_longo` cai em bloco (maxLength já bloqueia).
 - Base de testes atualizada 12/09 14:47 BRT com o build novo; `backend/scripts/seed-senhas-perfis.sql` dá senha `meridiano123` a um usuário por perfil (`ana.agente@`, `financeiro@`, `contador@`, `ana@viva.dev`). Roteiro de reteste para o auditor: `docs/piloto/reteste-homologacao-2.md`.
-- Não testado ainda: visão por perfil (agora possível) e responsividade móvel (auditor não conseguiu viewport).
+- **Reteste 12/09 (Playwright, `docs/piloto/reteste-homologacao-2-resultado.md`)**: 22/23 PASS; 3 falhas corrigidas e reverificadas no navegador (frontend `8334dce`, tooltip `HEAD`): MED-02 regredido pelo `flex:none` + `width:100%` dos selects; título do detalhe quebrava por caractere em 390 px; Financeiro/Contador/Vendedor viam link "Nova viagem" e o formulário (servidor já bloqueava 403). Perfis: 5 contas logam, sem 500. Observações não corrigidas: banner "viagem semelhante" ao editar viagem existente; venda total inclui reserva cancelada na edição; Clientes/Fornecedores mostram "0" ao carregar (mesmo padrão do MED-07).
+- Mobile: lista, detalhe, nova viagem e clientes sem scroll horizontal em 390 px (verificado).
 
 ### Versão 1.1 (fora da v1, já registradas)
 - RAV com câmbio, imposto e desconto explícito (decisão 49).
