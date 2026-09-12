@@ -336,7 +336,9 @@ Fechados no código: reserva sem fornecedor bloqueada no front com erro no card 
 
 Operação: registros QA da auditoria (pessoa/grupo/fornecedor/despesa/colaborador "extremo") agora podem ser excluídos/inativados pela UI.
 
-Deferidos (follow-up):
+Deferidos → **fechados em `fix/pendencias` 2026-09-12** (backend `4f14e9f`, frontend `de7a61f`; migration **0022** índice `lower(email)` em `log_acesso` + saneamento de trim; 308 API + 38 domínio, 691 Vitest): site 1 rótulo, telefone de colaborador, limites `ocasiao`/`origemLead`/`contato`/`contatoEmergencia`, trim gravado, teste PUT, 429 com `codigo` + `Retry-After`, **período fechado na edição de reserva (§8) só quando a reserva realmente muda** (round-trip idêntico passa), Agenda teto 100 por bloco (`Total` ≤ 300); front: venda total exclui cancelada na edição, banner "semelhante" ignora a própria, "—" ao carregar em Clientes/Fornecedores/Grupos, `download.ts` (`resposta_invalida` + revoke assíncrono), flake do `MoneyInput` estabilizada, `texto_longo` inline em despesa, timeout 30 s no upload. Ainda aberto: TOCTOU no DELETE de cliente (aceito no piloto); `enviarArquivo`/anexos na base de testes (operação).
+
+Histórico do que estava deferido:
 - Backend: `Guardas.Site` aceita host de 1 rótulo; telefone de colaborador sem `Guardas.Telefone`; `ocasiao`/`contato`/`origemLead` sem limite; TOCTOU no DELETE de cliente (sem lock, padrão pré-existente); viagem/reserva/usuário não trimam texto; `LimitesTextoTests` só POST; crédito de qualquer status bloqueia exclusão de cliente (intencional).
 - Frontend: `download.ts` parse JSON falho vira mensagem genérica e `revokeObjectURL` síncrono (Firefox); `siteValido` mais estrito que o back; `PageHeader` teste só afirma classe (Playwright humano cobre); `MoneyInput.test` "clique seleciona" flake sob carga; `DespesaModal` `texto_longo` cai em bloco (maxLength já bloqueia).
 - Base de testes atualizada 12/09 14:47 BRT com o build novo; `backend/scripts/seed-senhas-perfis.sql` dá senha `meridiano123` a um usuário por perfil (`ana.agente@`, `financeiro@`, `contador@`, `ana@viva.dev`). Roteiro de reteste para o auditor: `docs/piloto/reteste-homologacao-2.md`.
