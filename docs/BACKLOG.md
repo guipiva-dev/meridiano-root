@@ -311,6 +311,24 @@ Operação:
 - Jobs pela imagem: `docker run … meridiano:smoke job <nome>` (args após o ENTRYPOINT) — `ping`, `pendencias_derivadas`, `resumo_diario_email` exit 0, `job_execucao.sucesso = true`; resumo diário rodou sem `Email__ResendApiKey` e saiu 0 porque o resumo estava vazio (agência recém-criada) — comportamento com conteúdo e sem chave não verificado.
 - Stack local do piloto: agência "Agência Piloto Local", banco sem `seed-dev.sql`; E2E do front dependem do seed — reaplicar antes de rodar Playwright.
 
+### Homologação 2026-09-11 → correções 2026-09-12 (plano `docs/superpowers/plans/2026-09-12-correcoes-homologacao.md`, ledger `.superpowers/sdd/2026-09-12-correcoes-homologacao/progress.md`)
+Auditoria completa via Playwright na base de testes (41 achados: 1 bloqueador, 4 altos, 16 médios, 16 baixos, 4 melhorias; relatório artifact "Homologação Meridiano"). Branch `fix/homologacao` mergeada em `main` (backend `b27bc35`, frontend `b8bfef8`, sem push). 18 tasks + 1 fix wave, cada uma com revisão; migrations **0019–0021**; 292 API + 38 domínio, 611 Vitest.
+
+Fechados no código: reserva "Marcar emitida" (`PUT /reservas/{id}/status`); "hoje" no fuso da agência (`Relogio.Hoje()` + `set_config('TimeZone','America/Sao_Paulo')` por transação); upload com allowlist + mensagem de falha + retry + expurgo de pendentes; CPF/CNPJ com dígito; telefone/e-mail; nomes únicos de fornecedor/grupo (0019); recebimento acima do esperado exige `confirmarExcedente`; excluir movimento visível (kebab estava recortado por `overflow:hidden`); remarcar com nova venda ao cliente; NFSe emitida exige tomador; crédito com validade passada recusado; despesa recorrente × viagem bloqueada e resultado da viagem só com pagas (0020); teto numérico 22003 → 422; bloqueio progressivo de login por conta sem enumeração (0021, `security definer`); Agenda "Próximos 30 dias" e créditos vencidos fora; CSV com rótulos; MoneyInput (seleção no foco, sem negativo silencioso); erros presos; títulos/rótulos/plurais; mobile sem scroll horizontal; 404; Notificações/Ajuda removidos.
+
+Operação (não é código):
+- **Anexos na base de testes**: `Armazenamento__Endpoint` precisa ser URL alcançável pelo navegador (MinIO atrás do tunnel ou R2). Smoke de upload entra no runbook.
+- **Jobs diários não rodam no compose local**: agendar `job pendencias_derivadas` etc. (cron/host) ou validar só na nuvem (ACA Jobs).
+- Base de homolog journalou a 0019 na versão anterior (dedupe simples); índice idêntico — verificar `\d fornecedor` ou recriar a base.
+- Após migrar: `select count(*) from despesa where recorrente and viagem_id is not null` deve ser 0.
+
+Falso positivo da auditoria: "+ Documento grava documento vazio" — o script de auditoria clicou Salvar; F7 provou com teste que nada grava antes do Salvar.
+
+Deferidos (follow-up):
+- Backend: índice `lower(email)` em `log_acesso` (0022); rate limiter por IP devolve 429 sem `codigo` (`OnRejected`); `novoValorCliente`/edição de reserva sem gate de período fechado (definir política §8 uma vez); fornecedor inativo bloqueia nome igual; Agenda `Take(100)` sem `limit` SQL na janela de 30 dias; dualidade `Atrasada` (Agenda calcula em C#, Pendências em `current_date` — ambos BRT, não "corrigir" para UTC); lockout é oráculo de DoS por e-mail (aceito, §7.3); **PG17: `create or replace view` zera `security_invoker` — toda view recriada precisa repetir `with (security_invoker = on)`** (comentário do 0012 está errado); `Relogio` exige tzdata na imagem.
+- Frontend: `MoneyInput` conta dígitos após `.` como inteiros (≥10 dígitos); outros `MenuAcoes` dentro de `.bloco { overflow:hidden }` podem estar recortados; `enviarArquivo` sem timeout; front restringe viagem cancelada a estorno/reembolso enquanto o back também aceita `pagamento_fornecedor` (intencional); `components/Reserva` importa `aplicarViagem` de `pages/viagens/detalhe/useViagem` (mover para `api/viagens.ts`); `e2e/login.spec.ts` "senha errada" conta para o bloqueio — ≤5 execuções/15 min sem limpar `log_acesso`.
+- Não testado na homologação: visão por perfil (Agente/Financeiro/Contador/Vendedor externo) — só o Dono tem senha; seed de um usuário com senha por perfil na base de testes.
+
 ### Versão 1.1 (fora da v1, já registradas)
 - RAV com câmbio, imposto e desconto explícito (decisão 49).
 - DRE completa (despesa hoje é simples).

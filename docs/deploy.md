@@ -99,7 +99,7 @@ FQDN=$(az containerapp show -g $RG -n $APP --query properties.configuration.ingr
 az containerapp update -g $RG -n $APP --set-env-vars Email__BaseUrl=https://$FQDN
 ```
 
-- [ ] Primeiro boot aplica 0001–0018 no banco vazio (0018 = `senha_alterada_em`, `sessao_usuario` novo, `data_protection_key`): `az containerapp logs show -g $RG -n $APP --tail 200` mostra 18 `Executing Database Server script` e `Upgrade successful`. A linha `Cannot load library libgssapi_krb5.so.2` no boot é ruído do Npgsql (sonda GSS; auth é por senha) — ignorar.
+- [ ] Primeiro boot aplica 0001–0021 no banco vazio (0018 = `senha_alterada_em`, `sessao_usuario` novo, `data_protection_key`; 0019 nomes únicos de fornecedor/grupo com dedupe; 0020 `vw_resultado_viagem` só despesas pagas + saneamento; 0021 `contar_falhas_login` `security definer` — o papel da migration precisa de BYPASSRLS como já exige `localizar_usuario_login`): `az containerapp logs show -g $RG -n $APP --tail 200` mostra 21 `Executing Database Server script` e `Upgrade successful`. A linha `Cannot load library libgssapi_krb5.so.2` no boot é ruído do Npgsql (sonda GSS; auth é por senha) — ignorar.
 - [ ] `curl https://$FQDN/health` → `Healthy`; `curl -sI https://$FQDN/ | head -1` → 200 (front embutido).
 
 ## 7. Azure — jobs (cron em UTC; BRT = UTC−3)
@@ -203,3 +203,11 @@ Em produção (pendente):
 - [ ] Backup real: `gh workflow run backup`; `aws s3 ls s3://meridiano-backup/ --endpoint-url …` lista o objeto; drill da seção 10 com ele.
 - [ ] UptimeRobot: monitor HTTP em `https://$FQDN/health`, **30 min**, alerta para o Dono e para a Build Solutions. *Metrics → Replica count* volta a 0 entre pings.
 - [ ] Custo após 48 h: Cost Management do RG ≈ 0; Supabase Usage < 10 % de 500 MB; R2 < 1 GB. Anotar os três números aqui.
+
+## Notas da homologação (2026-09-12)
+
+- `Armazenamento__Endpoint` **tem de ser alcançável pelo navegador** (o upload é um PUT direto na URL assinada). No compose local atrás do Cloudflare Tunnel, `http://localhost:9000` não serve: expor o MinIO no tunnel ou usar R2. Smoke: anexar um PDF numa viagem e ver a linha aparecer.
+- Jobs diários: o compose local não agenda nada. Para homologar pendências derivadas (passaporte vencendo etc.), rodar `docker run … meridiano:smoke job pendencias_derivadas` à mão ou confiar no ACA Jobs em nuvem.
+- Fuso: a API define `TimeZone=America/Sao_Paulo` por transação e `Relogio.Hoje()` no C#; `TZ`/`PGTZ` da imagem não são mais determinantes. A imagem precisa de `tzdata` (Debian `aspnet:10.0` tem; não trocar para alpine/chiseled sem adicionar).
+- Pós-migração: `select count(*) from despesa where recorrente and viagem_id is not null` → 0; `\d fornecedor` mostra `ux_fornecedor_agencia_nome`.
+- Login: 5 falhas em 15 min bloqueiam a conta (60/300/900 s). Suítes E2E que testam senha errada contam; limpar `log_acesso` entre execuções repetidas.
