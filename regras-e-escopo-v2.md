@@ -26,7 +26,7 @@ agência, pasta por agência no storage.
 
 | Termo | Definição |
 |---|---|
-| **Pessoa / cliente** | Registro em `cliente`. Todo viajante é uma pessoa; a viagem não tem "cliente responsável" — o passageiro **titular** é o contato e o nome que identifica a viagem. |
+| **Pessoa / cliente** | Registro em `cliente`. **CPF e data de nascimento obrigatórios** (POST/PUT; pedido do piloto 2026-09-13 — cliente legado sem eles precisa completar na próxima edição). Todo viajante é uma pessoa; a viagem não tem "cliente responsável" — o passageiro **titular** é o contato e o nome que identifica a viagem. |
 | **Grupo / empresa** | `grupo_cliente`: agrupa pessoas (família, empresa, grupo de amigos) para organizar o cadastro e filtrar. Opcional; uma pessoa pertence a no máximo um grupo. Não é entidade financeira. |
 | **Viagem** | O processo: passageiros (um titular), um destino, um período, tipo **nacional** ou **internacional**. Agrupa reservas. |
 | **Reserva** | Uma compra num portal/fornecedor. Tem localizador, valores e conciliação própria. |
@@ -70,7 +70,7 @@ Regras estruturais:
 ## 4. Regras financeiras
 
 ### 4.1 Valores digitados por reserva
-`valor_total` (o total cobrado pelo fornecedor — **as taxas já estão dentro dele**; `valor_taxas` é só quanto desse total é taxa, informativo), `valor_comissao`, `rav_operadora`, `valor_cliente` (o que o cliente pagou no total), `taxa_servico` (opcional, ver 4.2), `rav_cliente_modo`, `tipos_servico[]`, `formas_pagamento[]` (pix, boleto, cartão — pode marcar mais de uma). Tudo em **BRL**. Se a compra foi em outra moeda, `moeda`, `cambio` e `valor_total_original` são informativos.
+`valor_total` (o total cobrado pelo fornecedor — **as taxas já estão dentro dele**; `valor_taxas` é só quanto desse total é taxa, informativo), `valor_comissao`, `rav_operadora`, `valor_cliente` (o que o cliente pagou no total), `taxa_servico` (opcional, ver 4.2), `rav_cliente_modo`, `tipos_servico[]`, `formas_pagamento[]` (pix, boleto, cartão, dinheiro — pode marcar mais de uma; dinheiro desde a 0024, pedido do piloto). Tudo em **BRL**. Se a compra foi em outra moeda, `moeda`, `cambio` e `valor_total_original` são informativos.
 
 Pré-preenchimento (requisito de velocidade): `valor_comissao` sugerido por `fornecedor.percentual_comissao_padrao × valor_total`; `taxa_servico` sugerida pela configuração da agência. Usuário só corrige.
 

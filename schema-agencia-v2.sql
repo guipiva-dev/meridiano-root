@@ -341,7 +341,7 @@ create table reserva (
   -- PAGAMENTO DO CLIENTE
   fluxo_pagamento           text not null default 'cliente_paga_operadora'
                               check (fluxo_pagamento in ('cliente_paga_operadora','cliente_paga_agencia')),
-  formas_pagamento          text[] not null default '{}' check (formas_pagamento <@ array['pix','boleto','cartao']),
+  formas_pagamento          text[] not null default '{}' check (formas_pagamento <@ array['pix','boleto','cartao','dinheiro']),  -- dinheiro: 0024
 
   -- PREVISÃO E CONCILIAÇÃO (calculada pela API, gravada, editável)
   data_prevista_comissao    date,
