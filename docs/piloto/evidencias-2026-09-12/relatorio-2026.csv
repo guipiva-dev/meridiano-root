@@ -1,0 +1,24 @@
+﻿Código;Cliente;Destino;Tipo;Vendedor;Fornecedor;Localizador;Compra;Status;Venda;Custo;Comissão;RAV operadora;RAV cliente;Taxa de serviço;Receita prevista;Comissão recebida;Previsão comissão;Situação;Serviços
+VG-2026-0001;Carlos Mendes;São Cristovão;Nacional;Dono Dev;CVC;1552325;11/09/2026;Em emissão;4850,00;4850,00;352,00;0,00;0,00;0,00;352,00;352,00;20/09/2026;Recebida;Aéreo
+VG-2026-0001;Carlos Mendes;São Cristovão;Nacional;Dono Dev;Azul Viagens;HGBIX3;11/09/2026;Em emissão;11300,00;11300,00;1130,00;0,00;0,00;0,00;1130,00;1000,00;11/10/2026;Divergente;Hospedagem
+VG-2026-0002;QA Teste Homolog;<b>XSS</b> & <img src=x onerror=alert(1)>;Internacional;Dono Dev;CVC;QA1ABC;11/09/2026;Emitida;11000,00;10800,00;1000,00;100,00;200,00;0,00;1300,00;2050,00;20/09/2026;Recebida;Aéreo
+VG-2026-0002;QA Teste Homolog;<b>XSS</b> & <img src=x onerror=alert(1)>;Internacional;Dono Dev;Decolar;;11/09/2026;Cancelada;1000,00;800,00;0,00;0,00;200,00;0,00;0,00;0,00;26/10/2026;Não prevista;Passeio
+VG-2026-0003;Lúcia Mendes;Salvador;Nacional;Marcos Castro;Azul Viagens;AZL999;11/09/2026;Em emissão;5000,00;5000,00;250,00;0,00;0,00;0,00;250,00;250,00;11/10/2026;Recebida;Hospedagem
+VG-2026-0004;Carlos Mendes;Teste cancelamento;Internacional;Dono Dev;CVC;1552325;11/09/2026;Cancelada;2000,00;2000,00;200,00;0,00;0,00;0,00;0,00;0,00;20/09/2026;Não prevista;Seguro
+VG-2026-0005;QA Pessoa Extrema 20260912;QA <script>alert(1)</script> DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD;Internacional;QA Vendedora Externa;CVC;QA-EXT-0001-LLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLLL;11/09/2026;Cancelada;12000,00;10000,00;1000,00;200,00;2000,00;0,00;0,00;0,00;20/09/2026;Não prevista;Aéreo, Hospedagem
+VG-2026-0006;Carlos Mendes;Lisboa E2E;Internacional;Dono Dev;Decolar;E2EMTXSK6UW-1;11/09/2026;Em emissão;3200,00;3000,00;0,00;0,00;200,00;0,00;200,00;0,00;26/10/2026;Não prevista;Aéreo
+VG-2026-0006;Carlos Mendes;Lisboa E2E;Internacional;Dono Dev;CVC;E2EMTXSK6UW;11/09/2026;Cancelada;10500,00;10000,00;0,00;0,00;500,00;0,00;0,00;0,00;20/09/2026;Não prevista;Aéreo
+VG-2026-0007;Carlos Mendes;Porto E2E;Internacional;Dono Dev;CVC;E2EMTXSKH0N;11/09/2026;Em emissão;10500,00;10000,00;0,00;0,00;500,00;0,00;500,00;0,00;20/09/2026;Não prevista;Aéreo
+VG-2026-0008;Carlos Mendes;Lisboa E2E;Internacional;Dono Dev;CVC;E2EMTXVQKRU;12/09/2026;Cancelada;10500,00;10000,00;0,00;0,00;500,00;0,00;0,00;0,00;20/09/2026;Não prevista;Aéreo
+VG-2026-0008;Carlos Mendes;Lisboa E2E;Internacional;Dono Dev;Decolar;E2EMTXVQKRU-1;12/09/2026;Em emissão;3200,00;3000,00;0,00;0,00;200,00;0,00;200,00;0,00;27/10/2026;Não prevista;Aéreo
+VG-2026-0009;Carlos Mendes;Lisboa FIN 89732;Internacional;Dono Dev;Decolar;FINMTXVQKYS;12/09/2026;Emitida;10000,00;10000,00;1000,00;100,00;0,00;0,00;1100,00;1100,00;27/10/2026;Recebida;Aéreo
+VG-2026-0010;Carlos Mendes;Porto E2E;Internacional;Dono Dev;CVC;E2EMTXVQPNY;12/09/2026;Em emissão;10500,00;10000,00;0,00;0,00;500,00;0,00;500,00;0,00;20/09/2026;Não prevista;Aéreo
+VG-2026-0011;Carlos Mendes;Lisboa FIN 1206;Internacional;Dono Dev;Decolar;FINMTXVQTR3;12/09/2026;Emitida;10000,00;10000,00;1000,00;100,00;0,00;0,00;1100,00;1100,00;27/10/2026;Recebida;Aéreo
+VG-2026-0012;Carlos Mendes;Lisboa E2E;Internacional;Dono Dev;Decolar;E2EMTXVQU5D-1;12/09/2026;Em emissão;3200,00;3000,00;0,00;0,00;200,00;0,00;200,00;0,00;27/10/2026;Não prevista;Aéreo
+VG-2026-0012;Carlos Mendes;Lisboa E2E;Internacional;Dono Dev;CVC;E2EMTXVQU5D;12/09/2026;Cancelada;10500,00;10000,00;0,00;0,00;500,00;0,00;0,00;0,00;20/09/2026;Não prevista;Aéreo
+VG-2026-0013;Carlos Mendes;Porto E2E;Internacional;Dono Dev;CVC;E2EMTXVQZ9B;12/09/2026;Em emissão;10500,00;10000,00;0,00;0,00;500,00;0,00;500,00;0,00;20/09/2026;Não prevista;Aéreo
+VG-2026-0014;QA NOVA AUDITORIA 20260912 1205;Lisboa QA Financeira 1205;Internacional;Dono Dev;CVC;QA1205FIN;12/09/2026;Cancelada;1300,00;1000,00;200,00;50,00;300,00;0,00;0,00;150,00;20/09/2026;Não prevista;Aéreo
+VG-2026-0015;Carlos Mendes;RT2 DestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDestinoDest;Internacional;Dono Dev;CVC;RT2LOCXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX;12/09/2026;Em emissão;5500,00;5000,00;500,00;0,00;500,00;0,00;1000,00;500,00;20/09/2026;Recebida;Aéreo
+VG-2026-0018;Carlos Mendes;QA Auditoria Paris A;Internacional;Dono Dev;CVC;QAAUD1;12/09/2026;Cancelada;13000,00;12000,00;1000,00;100,00;1000,00;0,00;0,00;2100,00;20/09/2026;Não prevista;Aéreo, Hospedagem
+VG-2026-0018;Carlos Mendes;QA Auditoria Paris A;Internacional;Dono Dev;Azul Viagens;QAAUD2;12/09/2026;Cancelada;8000,00;8000,00;400,00;0,00;0,00;0,00;0,00;0,00;12/10/2026;Não prevista;Hospedagem
+VG-2026-0019;Lúcia Mendes;QA Divergência Recife;Nacional;Dono Dev;CVC;QADIV1;12/09/2026;Em emissão;2000,00;2000,00;200,00;0,00;0,00;0,00;200,00;150,00;12/10/2026;Divergente;Hospedagem

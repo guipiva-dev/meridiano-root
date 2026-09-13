@@ -99,7 +99,7 @@ FQDN=$(az containerapp show -g $RG -n $APP --query properties.configuration.ingr
 az containerapp update -g $RG -n $APP --set-env-vars Email__BaseUrl=https://$FQDN
 ```
 
-- [ ] Primeiro boot aplica 0001–0021 no banco vazio (0018 = `senha_alterada_em`, `sessao_usuario` novo, `data_protection_key`; 0019 nomes únicos de fornecedor/grupo com dedupe; 0020 `vw_resultado_viagem` só despesas pagas + saneamento; 0021 `contar_falhas_login` `security definer` — o papel da migration precisa de BYPASSRLS como já exige `localizar_usuario_login`): `az containerapp logs show -g $RG -n $APP --tail 200` mostra 21 `Executing Database Server script` e `Upgrade successful`. A linha `Cannot load library libgssapi_krb5.so.2` no boot é ruído do Npgsql (sonda GSS; auth é por senha) — ignorar.
+- [ ] Primeiro boot aplica 0001–0023 no banco vazio (0022 índice `lower(email)` + trim; 0023 repasse `cancelado` + saneamento `valor_cliente = 0` + `vw_resultado_viagem` ignora repasse cancelado) (0018 = `senha_alterada_em`, `sessao_usuario` novo, `data_protection_key`; 0019 nomes únicos de fornecedor/grupo com dedupe; 0020 `vw_resultado_viagem` só despesas pagas + saneamento; 0021 `contar_falhas_login` `security definer` — o papel da migration precisa de BYPASSRLS como já exige `localizar_usuario_login`): `az containerapp logs show -g $RG -n $APP --tail 200` mostra 23 `Executing Database Server script` e `Upgrade successful`. A linha `Cannot load library libgssapi_krb5.so.2` no boot é ruído do Npgsql (sonda GSS; auth é por senha) — ignorar.
 - [ ] `curl https://$FQDN/health` → `Healthy`; `curl -sI https://$FQDN/ | head -1` → 200 (front embutido).
 
 ## 7. Azure — jobs (cron em UTC; BRT = UTC−3)

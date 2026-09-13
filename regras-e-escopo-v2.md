@@ -164,7 +164,7 @@ Enumerações do domínio; a interface apresenta por um único mapa, nunca inven
 | Situação da comissão (viagem) | `nao_prevista` Não prevista · `a_receber` A receber · `parcial` Parcial · `atrasada` Atrasada · `recebida` Recebida |
 | Situação da comissão (reserva) | `nao_prevista` · `a_receber` · `parcial` · `atrasada` · `recebida` · `divergente` (encerrada com diferença) |
 | Reserva | `pendente` Em emissão · `emitida` Emitida · `cancelada` Cancelada |
-| Repasse | `bloqueado` Bloqueado · `a_pagar` Liberado · `pago` Pago; `valor` nulo → "Informar valor" |
+| Repasse | `bloqueado` Bloqueado · `a_pagar` Liberado · `pago` Pago · `cancelado` Cancelado (viagem cancelada com repasse não pago; pago fica como está); `valor` nulo → "Informar valor" (só com reserva ativa) |
 | Período | aberto · pendências (aberto com comissões em atraso) · fechado |
 | Despesa | `a_pagar` A pagar · `vencida` (a pagar com vencimento < hoje, derivado) · `paga` Paga |
 | Pendência | `aberta` · `urgente` (prioridade) · `atrasada` (aberta com data < hoje, derivado) · `concluida` · `cancelada` |
@@ -189,7 +189,7 @@ Permissões nomeadas (`modulo.acao`) numa matriz `Perfil → Permissao[]` em C#,
 > **Ruling 3.6 (R9/R10)** — **Contador ganha `repasse.ver_todos`** (repasse é custo da DRE, §5; "relatórios financeiros" inclui lê-los); `repasse.pagar` continua fora. Contador também alcança a Agenda via `viagem.ver` (documentos sem `numero`). Equipe: o estado de acesso do colaborador é **derivado** (§6.1): `inativo` se `!ativo`; `acesso_ativo` se tem `senha_hash`; `convite_pendente` se `convite_token` e `convite_expira_em > agora`; senão `sem_acesso` (convite expirado = `sem_acesso` com data no passado → "Convite expirado · Reenviar"). `POST /usuarios` cria colaborador **sem acesso** (e-mail obrigatório e único); `POST /usuarios/{id}/convite` convida ou reenvia (token novo, 72 h) — já tem senha → 422 `ja_tem_acesso`, inativo → 422 `usuario_inativo`. Inativar = `PUT` com `ativo = false`, com a guarda de último Dono. `GET /usuarios/perfis` expõe a matriz para o bloco "O que este perfil vê".
 
 ### 7.2 Visibilidade de valor
-As permissões que importam: `reserva.ver_valores`, `viagem.ver_resultado`, `repasse.ver_todos`, `financeiro.ver_dre`, `cliente.ver_documento`. Enforçadas na **API**: o DTO simplesmente não contém o campo. Esconder na tela não protege; o navegador não acessa o banco.
+As permissões que importam: `reserva.ver_valores`, `viagem.ver_resultado`, `repasse.ver_todos`, `financeiro.ver_dre`, `cliente.ver_documento`, `fornecedor.ver` (todos os perfis exceto vendedor externo — a % de comissão da agência é informação comercial). Enforçadas na **API**: o DTO simplesmente não contém o campo. Esconder na tela não protege; o navegador não acessa o banco.
 
 **Vendedor é posição na viagem; perfil é permissão.** Dono que vende aparece como vendedor e continua vendo tudo.
 
