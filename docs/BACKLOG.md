@@ -360,6 +360,15 @@ Relatório: `docs/piloto/auditoria-homologacao-3-2026-09-12.md`. Branch `fix/hom
 
 **Deviações do design congelado registradas:** tokens `--table-scroll-shadow`; breakpoint 700 no header (era 480); root `html` sem `font-size` (o contrato já previa 16 px).
 
+### Auditoria externa 2026-09-13 (rodada 4, docx, 16 achados) → correções 2026-09-13 (briefs `.superpowers/sdd/auditoria-r4/briefs.md`, branch `fix/auditoria-r4`)
+
+- **Aplicado:** BLQ-01 resultado da viagem desconta todas as despesas vinculadas, pagas ou não (**migration 0025**, desfaz o filtro da 0020; ruling do dono). ALT-01 reserva cancelada com recebido > esperado vira `estorno_pendente` (aba divergências, contador, `/pendentes` do fechamento, encerrar divergência). ALT-03 alerta/pendência de passaporte só para viagem com reserva ativa. MED-06 filtro "Valores de reserva" só UPDATE. MED-09 `NaoAutenticadoException` (401 só dela) + log do motivo em `ValidacaoSessao`. MED-04 "Nova viagem" fora do subnav. MED-05 filtros compactos em Relatórios/Conciliação. MED-07 toast "Arquivo pronto". MED-08 telefone sem quebra. BAI-01 `plural()` nos contadores. MED-02 subtítulo "—" em Equipe.
+- **Não reproduzido em código:** ALT-02 e-mail do cliente (round-trip testado na API e no front; perguntar ao auditor se houve 401/reseed no meio). MED-01 movimentos defasados (invalidação cobre a chave; verificar no navegador). MED-03 ordem de Tab (sidebar vem antes no DOM; parada no DIV = região rolável focável do Chrome).
+- **Rejeitado com motivo:** BAI-02 "cancelada" minúsculo (protótipo). Botão disabled laranja pálido (contrato). MEL-01 padrões de toolbar (escopo de design, pós-piloto).
+- **Rejeitado (dono, 2026-09-13):** bloquear fechamento com pendências de conciliação — `estorno_pendente` só aparece na lista `/pendentes` do fechamento, como as demais.
+- **Aberto:** suíte Playwright com 16 specs quebrados já em `main` (não é regressão da rodada 4): helper `POST /clientes` do e2e sem CPF/nascimento (obrigatórios desde o backlog r3), banco local com dados de homologação em vez do seed dev (pendência "Cobrar comissão CVC", viagem semelhante, "Vendas de 1 a 14" duplicado) e snapshots do styleguide desatualizados (modal 214→216 px).
+- **Aberto:** perfis, viewports e leitor de tela: rodada humana/Playwright dedicada.
+
 ### Versão 1.1 (fora da v1, já registradas)
 - RAV com câmbio, imposto e desconto explícito (decisão 49).
 - DRE completa (despesa hoje é simples).
