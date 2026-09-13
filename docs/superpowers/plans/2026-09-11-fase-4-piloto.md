@@ -71,6 +71,8 @@ Segredos (nome → onde): `cs-api`, `cs-migrator`, `resend-key`, `r2-access`, `r
 | 1 | T3 (runbook `docs/deploy.md` + provisionar Supabase/R2/Resend/Azure + primeiro deploy + bootstrap) — **controlador/humano, serial** | precisa da imagem publicada (T1), da 0017 e do bootstrap (T0), do backup (T2) |
 | 2 | T4 (smoke pós-deploy + drill de restauração + UptimeRobot) — controlador/humano | precisa do ambiente vivo |
 | 3 | T5 (piloto §12 + teste de UX §7) — humano com a agência; dias, não horas | precisa do smoke verde |
+
+> **Estado 2026-09-13:** piloto local homologado em 3 rodadas (última: `docs/piloto/auditoria-homologacao-3-2026-09-12.md`, reteste 10/10). Storage local exposto no tunnel. T5 pode começar no ambiente local; T3/T4 (nuvem) continuam pendentes.
 | 4 | T6 (docs de fechamento, memória) | fechamento |
 
 Propriedade de arquivos (onda 0):

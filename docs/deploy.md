@@ -206,7 +206,7 @@ Em produção (pendente):
 
 ## Notas da homologação (2026-09-12)
 
-- `Armazenamento__Endpoint` **tem de ser alcançável pelo navegador** (o upload é um PUT direto na URL assinada). No compose local atrás do Cloudflare Tunnel, `http://localhost:9000` não serve: expor o MinIO no tunnel ou usar R2. Smoke: anexar um PDF numa viagem e ver a linha aparecer.
+- `Armazenamento__Endpoint` **tem de ser alcançável pelo navegador** (o upload é um PUT direto na URL assinada). No compose local atrás do Cloudflare Tunnel, `http://localhost:9000` não serve: expor o MinIO no tunnel (feito no piloto: `mediterraneo-storage.bspdv.com.br` → `localhost:9000`, endpoint em variável de usuário `Armazenamento__Endpoint`; a API assina com esse host e o CSP `connect-src` é derivado dele) ou usar R2. Smoke: anexar um PDF numa viagem e ver a linha aparecer (verificado 13/09: `PUT` 200 no host público).
 - Jobs diários: o compose local não agenda nada. Para homologar pendências derivadas (passaporte vencendo etc.), rodar `docker run … meridiano:smoke job pendencias_derivadas` à mão ou confiar no ACA Jobs em nuvem.
 - Fuso: a API define `TimeZone=America/Sao_Paulo` por transação e `Relogio.Hoje()` no C#; `TZ`/`PGTZ` da imagem não são mais determinantes. A imagem precisa de `tzdata` (Debian `aspnet:10.0` tem; não trocar para alpine/chiseled sem adicionar).
 - Pós-migração: `select count(*) from despesa where recorrente and viagem_id is not null` → 0; `\d fornecedor` mostra `ux_fornecedor_agencia_nome`.

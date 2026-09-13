@@ -332,4 +332,6 @@ Todos os itens de código foram corrigidos na branch `fix/homologacao-3`, mergea
 
 **Fica com a operação:** B01 (`Armazenamento__Endpoint` do piloto → R2/MinIO acessível pelo navegador; o front agora mostra "Não foi possível enviar o arquivo ao armazenamento (<host>…)" em vez de silêncio) e a aplicação da migration 0023 no banco de piloto (saneia `valor_cliente = 0` → total nas reservas legadas, o que corrige o RAV −total do VG-2026-0018 e similares).
 
-Veredito revisado: com B01 resolvido na configuração, **EU COLOCARIA EM PRODUÇÃO: SIM** (piloto).
+Reteste no ambiente (13/09): 10/10 PASS, B01 fechado — `docs/piloto/reteste-homologacao-3-resultado.md`.
+
+Veredito revisado: **EU COLOCARIA EM PRODUÇÃO: SIM** (piloto).
