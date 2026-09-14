@@ -42,7 +42,7 @@ agência, pasta por agência no storage.
 | **Movimento financeiro** | Um evento de caixa ligado a uma reserva: recebimento da operadora, recebimento do cliente, pagamento ao fornecedor, estorno, reembolso. Com data e valor. |
 | **Receita recebida** | Soma dos movimentos da reserva (entradas positivas, saídas negativas). Caixa. |
 | **Conciliação** | Comparar o recebido da operadora com o valor esperado. Fecha quando iguala, ou manualmente com motivo de divergência. |
-| **Repasse** | Valor pago ao vendedor externo por uma viagem. **Digitado pelo dono**, não calculado. |
+| **Repasse** | Valor pago ao vendedor externo por uma viagem. Informado em **% da comissão total da viagem** (comissão + RAV, sem taxa de serviço) e recalculado enquanto não pago, ou digitado em R$ (ruling 2026-09-14). |
 | **Despesa** | Gasto da agência (fixo, imposto, operacional, marketing, outro) com vencimento, pago/pago em, forma; opcionalmente vinculada a uma viagem. |
 | **Resultado da viagem** | `receita prevista das reservas − repasse − despesas vinculadas à viagem`. "Receita da agência" é só a parte das reservas. |
 | **Competência** | Mês de referência. Comercial: mês da `data_compra` da reserva. Financeira: mês da `data_movimento`. |
@@ -87,10 +87,14 @@ Venda com markup (passeio direto, transfer): `valor_comissao = 0`, `rav_operador
 
 Reserva cancelada sem `comissao_mantida`: esperado e prevista valem 0.
 
+> **Ruling 2026-09-14 (tela simplificada)** — A tela mostra **um RAV só**, calculado: `RAV = total cobrado do cliente − total da reserva` (cobrado começa igual ao total; negativo = desconto). `Total da comissão = comissão + RAV`; `Receita da agência = total da comissão + taxa de serviço`. Comissão tem campos **% e R$** lado a lado (% sobre o total da reserva); a viagem mostra a **comissão média** = Σ comissão ÷ Σ total das reservas ativas. `rav_operadora` e `rav_cliente_modo` saem da tela: reserva nova grava `0` e `via_operadora`; valores legados continuam no banco e aparecem no resumo quando `rav_operadora > 0`. Taxa de serviço fica na área principal com explicação. Resumo da reserva é exibido como conta (cobrado − reserva = RAV; + comissão = total da comissão; + taxa = receita). Rótulos únicos na viagem: Total cobrado · Custo das reservas · Receita da agência · Comissão do vendedor · Despesas da viagem · Resultado da viagem.
+
 > **Ruling 3.6 (R6/R7)** — Relatórios do ano trabalham em **três eixos que nunca se somam entre si**: *competência* (`reserva.data_compra`: venda, receita prevista, fornecedores, serviços, nacional × internacional), *caixa* (`movimento_financeiro.data_movimento`, os 5 tipos com o sinal do banco: receita recebida, receita por mês, teto MEI) e *despesas* (`despesa.pago_em`, só pagas). `vw_resultado_viagem` **não** entra em número mensal/anual (mistura previsto com caixa por viagem). "Resultado operacional" = receita recebida − despesas pagas, rotulado assim na tela. Filtro de vendedor (`viagem.vendedor_id`) vale para venda/previsto/recebido/fornecedores/serviços; despesas com vendedor = só as ligadas a viagens dele (fixas = 0); **teto MEI ignora o filtro** (é da agência). `tipos_servico[]`: uma reserva com N tipos conta em N barras ("reservas que incluem cada serviço"); a soma das barras não é o total de reservas. Fórmulas completas em `docs/relatorios-formulas.md`.
 
 ### 4.3 Fluxo do dinheiro
 Padrão: **cliente paga direto à operadora** (`fluxo_pagamento = cliente_paga_operadora`). Exceção: pix/boleto para a agência, que então paga o fornecedor (`cliente_paga_agencia`). `formas_pagamento[]` registra com o que o cliente pagou (pix, boleto, cartão — multi). O sistema não parcela; registra o que aconteceu.
+
+> **Ruling 2026-09-14** — Toda viagem lançada já está paga ao fornecedor: a agência não controla pagamento a fornecedor. O campo **Fluxo sai da tela**; reserva nova grava `cliente_paga_operadora`. A coluna e `vw_receber_cliente` continuam para dados legados.
 
 Movimentos (`movimento_financeiro`), sempre por reserva, com data e valor:
 
@@ -139,7 +143,7 @@ MEI: DAS é despesa fixa (v1.1). Dashboard monitora receita recebida acumulada n
 ## 5. Repasse ao vendedor externo
 
 - Uma linha em `repasse` por viagem com vendedor que `gera_repasse`. Criada com a viagem.
-- **`valor` é digitado pelo dono.** `usuario.percentual_padrao` existe só como sugestão na tela.
+- **`percentual` (0–100) ou `valor` em R$.** Com `percentual`, a API recalcula `valor = round(greatest(0, Σ(valor_comissao + rav_operadora + rav_cliente)) × percentual / 100, 2)` sobre as reservas ativas (cancelada com `comissao_mantida` conta) sempre que a viagem muda (`Rotinas.ReavaliarRepasseAsync`), exceto repasse `pago` ou viagem cancelada. Digitar o valor (formulário ou `PUT /repasses/{id}/valor`) zera o `percentual`. `usuario.percentual_padrao` é sugestão na tela (migration 0026, ruling 2026-09-14).
 - Status: `bloqueado` → `a_pagar` → `pago`. Vai a `a_pagar` quando toda reserva ativa da viagem com esperado > 0 está conciliada (calculado pela API ao registrar movimento). Pagamento: `pago_em`, em lote por vendedor ("pagar todos a_pagar de fulano").
 - Entra na DRE (v1.1) como despesa, lido daqui — não há segunda fonte.
 - Dono e agentes internos têm `gera_repasse = false`. Pró-labore do dono é despesa fixa (v1.1).
@@ -278,7 +282,7 @@ Sem: Redis, fila, MediatR, CQRS, repository, microserviços, Kubernetes.
 | 2 | Autorização | Negócio no C#; tenant por policy no Postgres |
 | 3 | Vendedor externo | Só visualização |
 | 4 | Fluxo de pagamento | Cliente paga direto à operadora; pix/dinheiro passa pela agência |
-| 5 | RAV | Fica com a agência; repasse é digitado pelo dono |
+| 5 | RAV | Fica com a agência; repasse em % da comissão total (comissão + RAV) ou digitado em R$ (ruling 2026-09-14) |
 | 6 | Multa | Informativa, não interfere |
 | 7 | Cancelamento | Caso a caso: sem reembolso, reembolso ou crédito — registrado por desfecho |
 | 8 | RAV do cliente | Dois modos: retido pela agência ou via operadora |

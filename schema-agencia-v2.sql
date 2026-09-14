@@ -470,6 +470,7 @@ create table repasse (
   viagem_id    uuid not null references viagem(id) on delete restrict,
   usuario_id   uuid not null references usuario(id),
   valor        numeric(12,2) check (valor >= 0),              -- NULO até o dono informar
+  percentual   numeric(5,2) constraint repasse_percentual_faixa check (percentual >= 0 and percentual <= 100),  -- % da comissão total da viagem; valor recalculado enquanto não pago (0026)
   status       text not null default 'bloqueado' check (status in ('bloqueado','a_pagar','pago','cancelado')),  -- cancelado: viagem cancelada com repasse não pago (0023)
   liberado_em  timestamptz,
   pago_em      date,
