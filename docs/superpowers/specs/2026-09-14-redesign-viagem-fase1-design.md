@@ -81,7 +81,7 @@ Sticky, largura por breakpoint (§5). Substitui `TripSummary` na página; `somar
 ### 5. Responsividade
 - ≥ 1440: coluna principal até ~1000 px + painel 340 px.
 - 1280–1439: painel 300 px.
-- < 1280: painel vira **barra fixa inferior** (Total cobrado · Receita · Resultado · Salvar viagem); `ResultSummary` volta para dentro do corpo da reserva aberta; o Salvar do cabeçalho some para não duplicar a ação laranja.
+- < 1280: painel vira **barra fixa inferior** (Total cobrado · Receita · Resultado), mesmo nó do DOM reposicionado por CSS. "Salvar viagem" continua só no cabeçalho, que já é fixo — sem duplicar a ação laranja nem o nome acessível. O cálculo detalhado da reserva fica fora; a linha de resultado em texto do corpo da reserva (§3 D) cobre.
 - < 1024 (tablet): grids do bloco e do corpo passam a 6 colunas; linha recolhida esconde Localizador e Receita.
 
 ### 6. Estados
