@@ -66,6 +66,7 @@ Regras estruturais:
 - Pessoas podem pertencer a um **grupo/empresa** (`cliente.grupo_id`): organização e filtro do cadastro, não regra financeira.
 - `viagem.vendedor_id` é obrigatório: quem vendeu. `viagem.agente_id`: quem opera (transferível).
 - Horários de serviço (voo, check-in) são **hora local do lugar**, sem fuso (`timestamp`). Carimbos de sistema são `timestamptz`.
+- **Viagem só salva completa (ruling 2026-09-14):** salvar (criar ou editar) exige data de ida, data de volta e ao menos uma reserva de qualquer status (cancelada conta). Não se aplica a operações de reserva, adicionar reserva pelo detalhe, cancelar ou transferir viagem. Viagens antigas incompletas só são barradas no próximo salvamento; sem migration.
 
 ## 4. Regras financeiras
 

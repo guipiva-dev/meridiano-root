@@ -4,7 +4,7 @@ Complementa `design-system.md` (decisões visuais). Este documento é regra para
 
 ## 1. Congelado
 
-Identidade navy + azul + laranja · laranja = ação de negócio (uma por tela) · azul = ação normal · amarelo = só atenção · verde = só estado · sidebar 220 · controles 40px · reserva expandida/recolhida com resumo · painel financeiro por reserva · Salvando → ✓ Salvo local · toast só longe do ponto de ação · cinco estados de campo · modal só para decisão/risco · linha de tabela inteira clicável · KPI com próxima ação · Manrope para interface e valores · mono só para códigos.
+Identidade navy + azul + laranja · laranja = ação principal da tela (uma por tela) · azul = ação normal · amarelo = só atenção · verde = só estado · sidebar 220 · controles 40px · reserva expandida/recolhida com resumo · painel financeiro por reserva · Salvando → ✓ Salvo local · toast só longe do ponto de ação · cinco estados de campo · modal só para decisão/risco · linha de tabela inteira clicável · KPI com próxima ação · Manrope para interface e valores · mono só para códigos.
 
 Muda só com descoberta em uso real, e via este documento.
 
@@ -31,7 +31,7 @@ Não construir 40 componentes antes das telas. Não paralelizar tudo: Nova viage
 - `Field` ≠ `Input`. `Field` cuida de label, obrigatório, helper, tooltip, erro (`aria-describedby`). `Input` só do controle. `<Field label="Comissão" tooltip="…" error={…}><MoneyInput/></Field>`.
 - Estados de campo são props semânticas, não componentes: `<MoneyInput calculated />`, `readOnly`, `disabled`; `<Field state="error" />`. `calculated` é semântico; o visual pode mudar sem tocar telas.
 - `MoneyInput` / `MoneyValue` são componentes próprios: pt-BR, duas casas, prefixo R$, direita, tabular, negativo, vazio, readonly/calculated, máscara que não quebra edição.
-- `Button` tem cinco variantes e nenhuma prop de cor: `business` (laranja) · `primary` (azul) · `secondary` (borda) · `tertiary` (texto) · `danger` (vermelho). `business` só para a ação que conclui ou avança o trabalho de negócio naquele contexto. Nunca em salvar, editar, voltar, abrir, exportar.
+- `Button` tem cinco variantes e nenhuma prop de cor: `business` (laranja) · `primary` (azul) · `secondary` (borda) · `tertiary` (texto) · `danger` (vermelho). `business` só para a **ação principal** da tela — a que conclui o trabalho naquele contexto (ex.: Salvar viagem no formulário de viagem). Uma por tela. Nunca em voltar, abrir, exportar, nem em ações repetidas por item.
 - `Badge` recebe `tone` (`info` `success` `warning` `danger` `neutral`), nunca cor. Status de domínio passa por um mapa único: `<ReservationStatusBadge status />`, `<TripPhaseBadge fase />`. Nenhuma tela decide a cor de "em emissão".
 - Status vem da API em português (`pendente` `emitida` `cancelada`; fases `sem_reserva` … `quitada`). Uma função `apresentacaoStatus(status)` devolve texto, tom e ícone. Não traduzir para enums em inglês no front.
 - `ReservationCard` é componente de domínio, não `GenericCollapsibleCard`: header compacto (número, fornecedor, localizador, status, serviços, venda, receita, toggle) + body (`BookingFields` `ServiceChips` `FinancialFields` `ResultSummary` `SecondaryDetails`).
@@ -61,7 +61,7 @@ Não construir 40 componentes antes das telas. Não paralelizar tudo: Nova viage
 ## 4.1 Ajustes da revisão do protótipo v1 (2026-09-08)
 
 - **Sugerido ≠ calculado.** Valor pré-preenchido por regra que o usuário pode editar (comissão pelo % do fornecedor) é um input normal com selo `Sugerido: 10 %`. O estado visual `calculated` fica só para valores derivados que a tela não edita (RAV do cliente, esperado, receita).
-- **Laranja, uma vez.** Header global "+ Nova viagem" é `secondary`. `business` (laranja) só na ação contextual da página: lista de viagens → "+ Nova viagem"; Nova viagem → "+ Adicionar reserva"; repasses → "Pagar"; conciliação → "Marcar recebidas".
+- **Laranja, uma vez.** Header global "+ Nova viagem" é `secondary`. `business` (laranja) só na ação contextual da página: lista de viagens → "+ Nova viagem"; Nova viagem / Edição → "Salvar viagem" ("+ Adicionar reserva" é `secondary`); repasses → "Pagar"; conciliação → "Marcar recebidas". Ruling 2026-09-14 (redesign da viagem, design descongelado).
 - **Estados de domínio** vêm de um mapa único (`regras-e-escopo-v2` §6.1). Não existe "sem receita"; é "não prevista" ou "a receber".
 - **Cadastros em página própria** (pessoa, fornecedor, grupo, usuário). Nada de painel lateral para edição; listas abrem a página ao clicar na linha. Ações da página: `Fechar` (tertiary) e `Salvar` (primary). "Cancelar" só existe como ação de negócio ("Cancelar reserva…", "Cancelar viagem…").
 - **Privacidade em listas.** CPF mascarado (`***.456.789-**`); passaporte e documentos nunca em listagem; completo só na página da pessoa com `cliente.ver_documento`, e o acesso vai para `log_acesso_documento`.
@@ -98,6 +98,8 @@ Pendência é **derivada** (calculada a partir de viagens, documentos e cadastro
 ## 4.5 Freeze (2026-09-08)
 
 Design v1 **congelado** após a quinta revisão externa. Daqui em diante, mudança visual ou de fluxo só por: teste com usuário real · regra de negócio descoberta · dificuldade concreta de implementação · métrica de uso. Nunca por "ficaria mais bonito assim".
+
+2026-09-14: descongelado pelo dono para o redesign da viagem (Fases 1–3, spec `docs/superpowers/specs/2026-09-14-redesign-viagem-fase1-design.md`).
 
 Refinamentos finais incorporados: vocabulário "Venda" na lista; "Comissões recebidas" no resumo da viagem; faixa de resultado quebra linha abaixo de 1366px; responsável da pendência entra na descrição abaixo de 1366px; Relatórios abre com Venda · Receita recebida · Despesas pagas · Resultado operacional · Margem operacional.
 
