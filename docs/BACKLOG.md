@@ -397,6 +397,15 @@ Relatório: `docs/piloto/auditoria-homologacao-3-2026-09-12.md`. Branch `fix/hom
 - **Deferido (revisão final):** "Expandir/Recolher" guardado nos valores do form (desfazer edição manual não limpa "Alterações não salvas") — pré-existente; `onSalvarESair` não liga o aviso de atenção; `botoes-1440` do styleguide quebra em 3 linhas.
 - E2E: `npx playwright test e2e/nova-viagem.spec.ts e2e/viagens.spec.ts` — **8/8 PASS** (1280 e 1440), nenhuma regressão nos 4 specs de `viagens.spec.ts`. Tempo automatizado (4 reservas), duas medições: 7,2 s / 6,7 s @1280 e 7,3 s / 7,2 s @1440 — dentro do ruído de máquina frente à meta 6,2 s @1280 / 7,7 s @1440 (3.6); não é regressão desta branch.
 
+### Redesign viagem — Fase 2 (2026-09-15) (plano `docs/superpowers/plans/2026-09-15-redesign-viagem-fase2.md`, spec `docs/superpowers/specs/2026-09-15-redesign-viagem-fase2-design.md`, ledger `.superpowers/sdd/2026-09-15-redesign-viagem-fase2/progress.md`, branch `feat/redesign-viagem-f2` frontend, **sem merge**)
+- **Rulings do dono:** aba Resumo removida do detalhe — `?tab=resumo` cai em Reservas; botão "Editar" passa a `business` (laranja); "Transferir viagem" e "Cancelar viagem…" saem soltos do cabeçalho e vão para o menu "Mais ações"; nas ações da reserva, só "Marcar emitida" e "Editar" ficam visíveis — Remarcar/NFSe/Duplicar/Cancelar reserva… vão para o menu "Mais ações da reserva".
+- **Regressão da Fase 1 corrigida:** `ReservaDetalheCard` ainda referenciava classes já removidas de `Reserva.module.css`.
+- **Painel do detalhe (`PainelViagem`):** números da viagem, passageiros e próximas pendências, ao lado das abas; abaixo de 1280 px sobe para acima das abas em 3 colunas. Histórico de alterações (timeline) só carrega ao abrir a aba.
+- **Deferido:** skeleton do painel testado só visualmente (sem asserção automatizada); dois rodapés aparecem quando o card de reserva duplicado está aberto; `?reserva=` só testado no hook, não em E2E; fixture local de pendência no teste do painel (`PainelViagem.test`).
+- **Pendências para Fase 3 (fora do escopo desta fase):** conteúdo das abas Financeiro (ainda usa `FaixaResumo`, que quebra "Receita recebida" em telas estreitas), Pendências, Documentos e Timeline; os 6 modais de ação da reserva.
+- Frontend `feat/redesign-viagem-f2` (base `06d5a14`): T1 `aa56709` · T2 `62c27b9` · T3 `f0d4ed0` · T4 `99e4ef0` (inclui 1 rodada de correção visual pós-review).
+- E2E: `npx playwright test e2e/viagens.spec.ts e2e/nova-viagem.spec.ts e2e/styleguide.spec.ts` — **32/32 PASS** (8 + 24, 1280 e 1440); `viagens.spec.ts` atualizado para cancelar a reserva pelo menu "Mais ações da reserva" → "Cancelar reserva…" (o botão direto saiu da tela nesta fase).
+
 ### Versão 1.1 (fora da v1, já registradas)
 - RAV com câmbio, imposto e desconto explícito (decisão 49).
 - DRE completa (despesa hoje é simples).
